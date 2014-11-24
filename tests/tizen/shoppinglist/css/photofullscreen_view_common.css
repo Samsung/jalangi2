@@ -1,0 +1,109 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+ 
+#photofullscreen-view .container .bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 122px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #000000;
+    opacity: 0.7;
+    z-Index:1002;
+}
+
+#photofullscreen-view button {
+    background-color: #6D6D6D;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 85px;
+}
+
+#photofullscreen-view .text_button button {
+    background-color: #000000;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 85px;
+    vertical-align: middle;
+}
+
+#photofullscreen-view button#photofullscreen_view_close_button {
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+    z-Index:1002;
+    opacity: 0.7;
+}
+#photofullscreen-view button#photofullscreen_view_close_button {
+    background-image: url("../images/btn_exit_01.png");
+}
+#photofullscreen-view button#photofullscreen_view_close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+
+#photofullscreen-view .text_button {    
+    position: relative;
+    float: left;
+    height: 85px;
+    margin-left: 14px;
+    margin-top: 18px;
+}
+#photofullscreen-view #photofullscreen_view_save_text_button {
+    float: right;
+    margin-right: 14px;
+}
+
+#photofullscreen-view button#photofullscreen_view_save_button {
+    background-image: url("../images/btn_save_01.png");
+}
+#photofullscreen-view button#photofullscreen_view_save_button:active {
+    background-image: url("../images/btn_save_02.png");
+}
+
+#photofullscreen-view button#photofullscreen_view_delete_button {
+	margin-left: 14px;
+    background-image: url("../images/btn_delete_01.png");
+}
+#photofullscreen-view button#photofullscreen_view_delete_button:active {
+    background-image: url("../images/btn_delete_02.png");
+}
+
+#photofullscreen-view button#photofullscreen_view_change_button {
+    margin-left: 20px;
+    background-image: url("../images/btn_change_01.png");
+}
+#photofullscreen-view button#photofullscreen_view_change_button:active {
+    background-image: url("../images/btn_change_02.png");
+}
+
+#photofullscreen-view #photofullscreen_view_item_photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#photofullscreen_view_itemCanvas,
+#photofullscreen_view_itemVideo {
+    width: 388px;
+    height: 303px;
+    
+    -webkit-border-radius: 10px;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 6px;
+    background-color: #226699;
+    cursor: pointer;
+}
+

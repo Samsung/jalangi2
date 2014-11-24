@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://github.com/01org/webapps-tenframe" version="1.0" viewmodes="fullscreen">
+    <icon src="icon.png"/>
+    <content src="index.html"/>
+<name>tenframe</name>
+<tizen:application id="CNz2a9A5WB" required_version="1.0"/>
+<tizen:setting screen-orientation="landscape" contextmenu="enable"/>
+</widget>

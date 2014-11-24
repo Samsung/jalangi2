@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+-->
+<html>
+<head>
+    <meta id="viewport_meta" name="viewport" content="" />
+    <script type="text/javascript">
+        var viewport_meta = document.getElementById('viewport_meta');
+        var w = (screen.orientation.indexOf("portrait") == 0)?screen.availWidth:screen.availHeight;
+        viewport_meta.setAttribute('content','width='+w+', user-scalable=no');
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ten Frame</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"></link>
+    <link rel="stylesheet" type="text/css" href="css/license.css"></link>
+    <link rel="stylesheet" type="text/css" href="css/help.css"></link>
+</head>
+<body>
+    <div id="home_page" class="game_page">
+        <div id="home_bg"></div>
+        <div id="home_pirates"></div>
+        <div id="home_pirates_text">PIRATE RESCUE</div>
+        <div id="home_rockets"></div>
+        <div id="home_rockets_text">ROCKET LAUNCH</div>
+        <div id="home_bowling"></div>
+        <div id="home_bowling_text">BOWLING ALLEY</div>
+        <div id="licensebtnl"> i </div>
+        <div id="home_help" class="helplaunch"> ? </div>
+    </div>
+    <div id="help_dialog" class="helpdialog">
+         <div class="inner">
+           <div id="help_close" class="close"> x </div>
+           <div id="help_contents" class="contents">
+Have fun while learning counting and math in these three mini-games!<br>
+<ul><li>
+PIRATES GAME: Save the stranded pirates in Pirate Rescue! 
+Count enough pirates for each rescue ship until they’re all saved!
+</li>
+<li>
+ROCKETS LAUNCH: Help the rockets take off for the stars in Rocket Ship! 
+Add and subtract fuel cells until the rockets are all fueled up and ready to go!
+</li>
+<li>
+BOWLING ALLEY: Try for strikes in Bowling Alley! Can you add up your score at the end?
+</li></ul>
+If you want to try another game, or start the current one over, just click the down arrow in the top right corner. Click Home to choose another game, or + to try your current game again.
+           </div>
+         </div>
+    </div>
+    <div id="licensepage" style="display: none">
+        <div id="licensetext"><div id="licensescroll"></div></div>
+        <div id="licensebtnq" class="licensebtn">Back</div>
+    </div>
+    <div id="pirates_page" class="game_page" style="display: none">
+        <div id="pirates_bg1" class="pirates_bg"></div>
+        <div id="pirates_island"></div>
+        <div id="pirates_ship_distant"></div>
+        <div id="pirates_msg1" class="msg_default">There are <b></b> pirates on the island.<br>Help load them onto ships.</div>
+        <div id="pirates_msg2" class="msg_default">This ship can hold <b></b> more pirates.<br>Drag the pirates to the ship.</div>
+        <div id="pirates_msg3" class="msg_default">Good Job! We'll be back for more.</div>
+        <div id="pirates_msg4" class="msg_default">Good Job! All pirates are rescued.</div>
+        <div id="pirates_ship">
+            <div id="pirates_slots"></div>
+            <div id="pirates_saved"></div>
+        </div>
+        <div id="pirates_stranded" class="stranded"></div>
+        <div id="pirates_waves"></div>
+    </div>
+    <div id="pirates_win_page" class="game_page" style="display: none">
+        <div id="pirates_bg2" class="pirates_bg"></div>
+        <div id="pirates_msg5" class="winmsg1">Great job!</div>
+        <div id="pirates_msg6" class="winmsg2">You rescued <b></b> pirates in 4 boats.</div>
+        <div id="pirates_boat1" class="pirates_boat"></div>
+        <div id="pirates_boat2" class="pirates_boat"></div>
+        <div id="pirates_boat3" class="pirates_boat"></div>
+        <div id="pirates_boat4" class="pirates_boat"></div>
+        <div id="pirates_grid1" class="pirates_grid"></div>
+        <div id="pirates_grid2" class="pirates_grid"></div>
+        <div id="pirates_grid3" class="pirates_grid"></div>
+        <div id="pirates_grid4" class="pirates_grid"></div>
+    </div>
+    <div id="rockets_page" class="game_page" style="display: none">
+        <div class="rockets_bg"></div>
+        <div id="rockets_fuellight"></div>
+        <div id="rockets_rocket">
+            <div id="rocket_flame"></div>
+            <div id="rocket_body"></div>
+            <div id="rockets_fueltarget"></div>
+        </div>
+        <div id="rockets_fueldepot"></div>
+        <div id="rockets_fueltank"></div>
+        <div id="rockets_fuelguage"></div>
+        <div class="rockets_bottle bottle1">
+            <div id="rockets_add4" class="rockets_plus"></div>
+            <div id="rockets_subtract4" class="rockets_minus"></div>
+            <div class="rockets_drop bdrop1"></div>
+            <div class="rockets_drop bdrop2"></div>
+            <div class="rockets_drop bdrop3"></div>
+            <div class="rockets_drop bdrop4"></div>
+        </div>
+        <div class="rockets_bottle bottle2">
+            <div id="rockets_add3" class="rockets_plus"></div>
+            <div id="rockets_subtract3" class="rockets_minus"></div>
+            <div class="rockets_drop bdrop1"></div>
+            <div class="rockets_drop bdrop2"></div>
+            <div class="rockets_drop bdrop3"></div>
+        </div>
+        <div class="rockets_bottle bottle3">
+            <div id="rockets_add2" class="rockets_plus"></div>
+            <div id="rockets_subtract2" class="rockets_minus"></div>
+            <div class="rockets_drop bdrop1"></div>
+            <div class="rockets_drop bdrop2"></div>
+        </div>
+        <div class="rockets_bottle bottle4">
+            <div id="rockets_add1" class="rockets_plus"></div>
+            <div id="rockets_subtract1" class="rockets_minus"></div>
+            <div class="rockets_drop bdrop1"></div>
+        </div>
+        <div id="rockets_smoke">
+            <div id="rocket_smoke1"></div>
+        </div>
+        <div id="rockets_msg1a" class="msg_default">
+        The rocket tells you how<br>much fuel it needs.
+        </div>
+        <div id="rockets_msg1b" class="msg_default">
+        Click the fuel tanks on the left to add the right amount of fuel.
+        </div>
+        <div id="rockets_msg1c" class="msg_default">
+        Click '+' to add fuel and click '–' to remove fuel.
+        </div>
+        <div id="rockets_msg1d" class="msg_default">
+        When you’ve added the right amount, the light turns green and your rocket takes off!
+        </div>
+        <div id="rockets_msg1e" class="msg_default">
+        Don’t go over or the light turns red!
+        </div>
+
+        <div id="rockets_status">
+            <div id="rocketicon1" class="rocketicon"></div>
+            <div id="rocketicon2" class="rocketicon"></div>
+            <div id="rocketicon3" class="rocketicon"></div>
+            <div id="rocketicon4" class="rocketicon"></div>
+            <div id="rocketicon5" class="rocketicon"></div>
+            <div id="rockets_msg2">You've launched <b></b> of 5 rockets</div>
+        </div>
+    </div>
+    <div id="rockets_win_page" class="game_page" style="display: none">
+        <div class="rockets_bg"></div>
+        <div id="rockets_msg3" class="winmsg1">Great job!</div>
+        <div id="rockets_msg4" class="winmsg2">You launched <b>5</b> rockets.</div>
+        <div id="rockets_mini1" class="rockets_mini"></div>
+        <div id="rockets_mini2" class="rockets_mini"></div>
+        <div id="rockets_mini3" class="rockets_mini"></div>
+        <div id="rockets_mini4" class="rockets_mini"></div>
+        <div id="rockets_mini5" class="rockets_mini"></div>
+    </div>
+    <div id="bowling_page" class="game_page" style="display: none">
+        <div id="bowling_bg"></div>
+        <div id="bowling_scorecard">
+            <div id="bowling_inset">Game <n>1</n> of 5</div>
+            <div id="bowling_label1" class="bowling_label">FIRST THROW</div>
+            <div id="bowling_label2" class="bowling_label">SECOND THROW</div>
+            <div id="bowling_label3" class="bowling_label">SUM</div>
+            <div id="bowling_scoregrid"></div>
+            <div id="bowling_val1" class="bowling_val"></div>
+            <div id="bowling_val2" class="bowling_val"></div>
+            <div id="bowling_val3" class="bowling_val"></div>
+        </div>
+        <div id="bowling_numbertray"></div>
+        <div id="bowling_woodbg">
+            <div id="bowling_msg1" class="bowling_msg"><b>Get ready to bowl!</b><br>1. Wait for the ball to line up just right<br>2. Click "Roll the ball"</div>
+            <div id="bowling_msg2" class="bowling_msg"><b>Well done!</b><br>You scored<br><n>5</n><br>on your first throw.<br>Click "Roll the ball" again<br>for your second throw.</div>
+        </div>
+        <div id="bowling_lane">
+            <div id="bowling_pin1shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin2shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin3shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin4shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin5shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin6shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin7shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin8shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin9shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin10shadow" class="bowlingpinshadow"></div>
+            <div id="bowling_pin1" class="bowlingpin"></div>
+            <div id="bowling_pin2" class="bowlingpin"></div>
+            <div id="bowling_pin3" class="bowlingpin"></div>
+            <div id="bowling_pin4" class="bowlingpin"></div>
+            <div id="bowling_pin5" class="bowlingpin"></div>
+            <div id="bowling_pin6" class="bowlingpin"></div>
+            <div id="bowling_pin7" class="bowlingpin"></div>
+            <div id="bowling_pin8" class="bowlingpin"></div>
+            <div id="bowling_pin9" class="bowlingpin"></div>
+            <div id="bowling_pin10" class="bowlingpin"></div>
+            <div id="bowling_ball_rolling" style="opacity: 0"></div>
+            <div id="bowling_ball"></div>
+        </div>
+        <div id="bowling_rollbutton">Roll the ball</div>
+        <div id="bowling_overlay"></div>
+        <div id="bowling_dialog_container"></div>
+        <div id="bowling_dialog">
+            <div id="bowling_correct" class="dialogtext"><b>Great job!</b><br>You chose the right answer!<br>You have <n></n> more games to go.</div>
+            <div id="bowling_incorrect" class="dialogtext"><b>Oops.</b><br>You chose the wrong answer.<br>Try again!</div>
+            <div id="bowling_next" class="dialogbtn">Continue</div>
+            <div id="bowling_tryagain" class="dialogbtn">Try Again</div>
+            <div id="bowling_quit" class="dialogbtn">Quit</div>
+        </div>
+    </div>
+    <div id="bowling_win_page" class="game_page" style="display: none">
+        <div id="bowling_rawbg"></div>
+        <div id="bowling_msg3"><b>Great job!</b><br>You played <b>5</b> games.</div>
+        <div id="bowling_mini1" class="bowling_mini"></div>
+        <div id="bowling_mini2" class="bowling_mini"></div>
+        <div id="bowling_mini3" class="bowling_mini"></div>
+        <div id="bowling_mini4" class="bowling_mini"></div>
+        <div id="bowling_mini5" class="bowling_mini"></div>
+    </div>
+    <div id="game_menu_border" style="display: none">
+        <div id="game_menu">
+            <div id="game_menu_new">NEW GAME</div>
+            <div id="game_menu_home">MAIN MENU</div>
+            <div id="game_menu_tab"></div>
+            <div id="game_menu_button"></div>
+        </div>
+    </div>
+    <audio class="pirate_bgloop" loop="loop" preload="auto"><source src="audio/ocean.ogg" type="audio/ogg" /></audio>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/license.js"></script>
+    <script src="js/help.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/pirates.js"></script>
+    <script src="js/rockets.js"></script>
+    <script src="js/bowling.js"></script>
+</body>
+</html>

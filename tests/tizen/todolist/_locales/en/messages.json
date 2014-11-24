@@ -1,0 +1,164 @@
+{
+    "appName": {
+        "message": "Todo List",
+        "description": "The name of the app."
+    },
+    "appDescription": {
+        "message": "A simple, fun todo app that allows you to assign priority via font size and category via color.",
+        "description": "The description of the app."
+    },
+
+    "Today": {
+        "message": "Today"
+    },
+    "Sun": {
+        "message": "Sun",
+        "description": "Short for Sunday"
+    },
+    "Mon": {
+        "message": "Mon",
+        "description": "Short for Monday"
+    },
+    "Tue": {
+        "message": "Tue",
+        "description": "Short for Tuesday"
+    },
+    "Wed": {
+        "message": "Wed",
+        "description": "Short for Wednesday"
+    },
+    "Thu": {
+        "message": "Thu",
+        "description": "Short for Thursday"
+    },
+    "Fri": {
+        "message": "Fri",
+        "description": "Short for Friday"
+    },
+    "Sat": {
+        "message": "Sat",
+        "description": "Short for Saturday"
+    },
+
+    "Sunday": {
+        "message": "Sunday"
+    },
+    "Monday": {
+        "message": "Monday"
+    },
+    "Tuesday": {
+        "message": "Tuesday"
+    },
+    "Wednesday": {
+        "message": "Wednesday"
+    },
+    "Thursday": {
+        "message": "Thursday"
+    },
+    "Friday": {
+        "message": "Friday"
+    },
+    "Saturday": {
+        "message": "Saturday"
+    },
+
+    "text": {
+        "message": "text",
+        "description": "Label for the textarea when editing new todo item"
+    },
+    "priority": {
+        "message": "priority",
+        "description": "Priority of a todo item"
+    },
+    "color": {
+        "message": "color"
+    },
+
+    "morning": {
+        "message": "Morning"
+    },
+    "afternoon": {
+        "message": "Afternoon"
+    },
+    "evening": {
+        "message": "Evening"
+    },
+    "save": {
+        "message": "Save",
+        "description": "The save button in the edit item dialog"
+    },
+    "delete": {
+        "message": "Delete",
+        "description": "The delete button in the edit item dialog"
+    },    
+    "close": {
+        "message": "close",
+        "description": "Closes the edit item dialog"
+    },
+    "welcome_back": {
+        "message": "Welcome back!",
+        "description": "Header message."
+    },
+    "add_task": {
+        "message": "ADD TASK"
+    },
+    "add_partof_day": {
+        "message": "Add part of day"
+    },
+    "add_priority": {
+        "message": "Add priority"
+    },
+    "add_color": {
+        "message": "Add color"
+    },
+    "visible_days": {
+    	"message": "Visible days"
+    },
+    "default_view": {
+    	"message": "Default view"
+    },
+    "sort_item_by": {
+    	"message": "Sort item by"
+    },
+    "settings": {
+        "message": "SETTINGS"
+    },    
+    "week": {
+    	"message": "Week"
+    },    
+    "day": {
+    	"message": "Day"
+    },    
+    "time": {
+    	"message": "Time"
+    },    
+    "priority": {
+    	"message": "Priority"
+    },    
+    "done": {
+    	"message": "Done"
+    },    
+    "undone": {
+    	"message": "Undone"
+    },    
+    "change_day": {
+    	"message": "Change Day"
+    },    
+    "edit": {
+    	"message": "Edit"
+    },
+    "delete": {
+    	"message": "Delete"
+    },
+    "move_to_date": {
+    	"message": "MOVE TO DATE"
+    },
+    "month": {
+    	"message": "MONTH"
+    },
+    "year": {
+    	"message": "YEAR"
+    }
+    
+
+}

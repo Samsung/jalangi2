@@ -1,0 +1,195 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#edititem-view .container .title-bar {
+    height: 112px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #2E2E2E;
+}
+
+
+/*************************************************/
+#edititem-view form label {
+    font-family: 'OpenSans-Regular';
+    font-size: 35px;
+    color: #414042;
+    text-shadow: none;
+    margin-left: 10px;
+}
+
+#edititem-view form input[type="text"] {
+    height: 110px;
+    /* width: 400px; */
+    margin-top: 13px;
+    font-family: 'OpenSans-Italic';
+    font-size: 40px;
+    color: #414042;
+    background-color: #CCCCCC;
+    border: 0px solid #000000;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+#edititem-view form .form_button {
+    background-color: #CCCCCC;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat; 
+    height: 85px;
+    width: 85px;
+}
+
+#edititem-view #item_store img {
+    position: relative;
+    float: left;
+    bottom: 97px; /* (85+12) */
+}
+
+#edititem-view #item_list img {
+    position: relative;
+    float: left;
+    bottom: 81px; /*(52+ 29) */
+    left: 22px;
+}
+
+#edititem-view #edititem_list_button,
+#edititem-view #edititem_stores_button {
+    position: relative;
+    float: right;
+    right: 10px;
+    bottom: 97px; /* (85+12) */
+}
+
+#edititem-view #edititem_list_button,
+#edititem-view #edititem_stores_button {
+    background-image: url("../images/icon_select_01.png");
+}
+#edititem-view #edititem_list_button:active,
+#edititem-view #edititem_stores_button:active {
+    background-image: url("../images/icon_select_02.png");
+}
+
+#edititem-view .text_button .text {
+    font-family: 'OpenSans-Regular';
+    font-size: 36px;
+    display: inline-block;
+    color: #D9D9D9;
+    text-shadow: none;
+    vertical-align: middle;
+}
+
+#edititem-view #edititem_view_addfrom_favorites_button .text,
+#edititem-view #edititem_view_delete_text_button .text {
+    color: #939598;
+}
+
+#edititem-view .bottom-bar #edititem_view_save_text_button {
+    position: relative;
+    float: right;
+    height: 85px;
+    margin-right: 14px;
+    margin-top: 18px;
+}
+#edititem-view .bottom-bar #edititem_view_addfrom_favorites_button,
+#edititem-view .bottom-bar #edititem_view_delete_text_button {
+    position: relative;
+    float: left;
+    height: 85px;
+    margin-left: 14px;
+    margin-top: 18px;
+}
+
+#edititem-view button {
+    background-color: #4D4D4D;;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat; 
+    height: 85px;
+    width: 85px;
+    vertical-align: middle;
+}
+
+#edititem-view button#edititem_view_save_button {
+    background-image: url("../images/btn_save_01.png");
+}
+#edititem-view button#edititem_view_save_button:active {
+    background-image: url("../images/btn_save_02.png");
+}
+
+#edititem-view button#edititem_view_fav_button {
+    background-image: url("../images/btn_addFromFaves_01.png");
+}
+#edititem-view button#edititem_view_fav_button:active {
+    background-image: url("../images/btn_addFromFaves_02.png");
+}
+
+#edititem-view button#edititem_view_delete_button {
+    background-image: url("../images/btn_delete_01.png");
+}
+#edititem-view button#edititem_view_delete_button:active {
+    background-image: url("../images/btn_delete_02.png");
+}
+
+/********************************************/
+#edititem-view .title-bar label {
+    font-family: 'OpenSans-Regular';
+    font-size: 52px;
+    color: #939598;
+    text-shadow: none;
+    margin-left: 25px;
+    margin-top: 14px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+#edititem-view button#edititem_view_close_button,
+#edititem-view button#edititem_view_addto_favorites_button {
+    background-color: #2E2E2E;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+    height: 85px;
+    width: 85px;
+}
+#edititem-view button#edititem_view_close_button {
+    background-image: url("../images/btn_exit_01.png");
+}
+#edititem-view button#edititem_view_close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+
+#edititem-view button#edititem_view_addto_favorites_button {
+    background-image: url("../images/btn_faves_01.png");
+}
+#edititem-view button#edititem_view_addto_favorites_button:active {
+    background-image: url("../images/btn_faves_02.png");
+}
+
+#edititem-view #photo_content #edititem_view_add_photo label {
+    display: inline-block;
+    font-family: 'OpenSans-Italic';
+    font-size: 40px;
+    color: #414042;
+    margin-left: 0px;
+}
+#edititem-view #photo_content #edititem_view_add_photo img {
+    margin-left: 118px;
+}
+
+.mirror {
+    -webkit-transform: scale( -1, 1 );
+}
+

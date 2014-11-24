@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/********************************************/
+#edit-list-view .container .title-bar {
+    height: 112px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #2E2E2E;
+}
+
+#edit-list-view .container .bottom-bar {
+    height: 122px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #4D4D4D;
+}
+
+#edit-list-view .bottom-bar #save_text_button {
+    position: relative;
+    float: right;
+    height: 85px;
+    margin-right: 14px;
+    margin-top: 18px;
+}
+
+#edit-list-view .text_button .text {
+    font-family: 'OpenSans-Regular';
+    font-size: 36px;
+    display: inline-block;
+    color: #D9D9D9;
+    text-shadow: none;
+    vertical-align: middle;
+}
+
+#edit-list-view button#save_button {
+     background-color: #4D4D4D;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    height: 85px;
+    width: 85px;
+    vertical-align: middle;
+    background-image: url("../images/btn_save_01.png");
+}
+
+#edit-list-view button#save_button:active {
+    background-image: url("../images/btn_save_02.png");
+}
+
+/********************************************/
+#edit-list-view .title-bar label {
+    font-family: 'OpenSans-Regular';
+    font-size: 52px;
+    color: #939598;
+    text-shadow: none;
+    margin-left: 25px;
+    margin-top: 14px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+#edit-list-view button#close_button {
+    background-color: #2E2E2E;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat; 
+    
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+    height: 85px;
+    width: 85px;
+    background-image: url("../images/btn_exit_01.png");
+}
+
+#edit-list-view button#close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+
+#edit-list-view .list_name label,
+#edit-list-view .list_color label {
+    font-family: 'OpenSans-Regular';
+    font-size: 45px;
+    display: inline-block;
+    color: #111111;
+    text-shadow: none;
+}
+
+#edit-list-view form fieldset {
+    position: relative;
+    float: left;
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+}
+
+#edit-list-view form input[type="text"] {
+    font-family: 'OpenSans-Italic';
+    font-size: 40px;
+    color: #414042;
+    background-color: #CCCCCC;
+    border: 0px solid #000000;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+#edit-list-view .colorbutton {
+    float: left;
+    width: 85px;
+    height: 85px;
+}
+
+.color_box {
+    width: 48px;
+    height: 48px;
+    border: 2px;
+    border-style: solid;
+    border-color: #414042;
+    border-radius: 2px;
+}
+
+#edit-list-view .color_box {
+    margin-top: 16px;
+    margin-left: 16px;
+}

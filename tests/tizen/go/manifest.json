@@ -1,0 +1,17 @@
+{
+  "name": "__MSG_name__",
+  "description": "__MSG_description__",
+  "version": "1.0.2",
+  "default_locale": "en",
+  "icons": { "16":"Go_Icon_16.png", "48": "Go_Icon_48.png", "128": "Go_Icon_128.png" },
+  "app": {
+    "launch": {
+        "local_path": "index.html",
+        "container": "panel",
+	"width": 1024, 
+	"height":600
+    }
+  },
+  "homepage_url" : "https://01.org/webapps/content/go", 
+  "update_url" : "https://01.org/webapps/content/go/update.xml" 
+}

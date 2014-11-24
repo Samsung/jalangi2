@@ -1,0 +1,542 @@
+/* Fonts */
+
+@font-face {
+    font-family: 'Lato Light';
+    src: url('fonts/Lato-Lig.ttf');
+}
+
+@font-face {
+    font-family: 'Lato Regular';
+    src: url('fonts/Lato-Reg.ttf');
+}
+
+@font-face {
+    font-family: 'Lato Black';
+    src: url('fonts/Lato-Bla.ttf');
+}
+
+
+/* Variables */
+
+@spacer-small: 0.3em;
+@spacer-medium: @spacer-small * 2;
+@spacer-large: @spacer-small * 3;
+@spacer-xlarge: @spacer-small * 4;
+@spacer-xxlarge: @spacer-small * 5;
+
+@font-size-small: 12px;
+@font-size-medium: 14px;
+@font-size-large: 16px;
+@font-size-xlarge: 18px;
+@font-size-xxlarge: 20px;
+
+@day-color: #ccc;
+@title-color: #fff;
+@shadow-color: #777;
+
+@hilight-factor: 1.1;
+@reflection-image: -webkit-linear-gradient(top, rgba(131, 131, 131, 0.52) 0%, rgba(131, 131, 131, 0) 100%);
+
+/* Mixins */
+
+.rounded-corners-subtle {
+    border-radius: @spacer-small;
+}
+.rotate (@degrees: -90deg) {
+	-webkit-transform: rotate(@degrees);
+	-moz-transform: rotate(@degrees);
+	-o-transform: rotate(@degrees);
+	transform: rotate(@degrees);
+}
+.box-sizing(@value: border-box) {
+    -webkit-box-sizing: @value;
+    -moz-box-sizing: @value;
+    box-sizing: @value;
+}
+.reflection-mixin(@height: 44px, @borderRadius: 3px) {
+	height: @height; 
+	background-image: @reflection-image;
+	border-radius: @borderRadius;
+}
+
+/* Elements */
+
+body {
+    font-family: 'Lato Regular', Helvetica, sans;
+    background-color: #222;
+    overflow-y: hidden;
+}
+
+.ui-page {
+    background: #000 url('../images/bg-gradient.png') repeat-x left top;
+}
+
+.ui-header {
+    height: 136px;
+    background: none;
+
+    .greeting, .buttons {
+        float: left;
+    }
+
+    .greeting {
+        margin-left: 33px;
+        margin-top: 32px;
+
+        .month {
+            font-family: 'Lato Light';
+            color: #ffffff;
+            font-size: 44px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            cursor: default;
+        }
+
+        .welcome {
+            font-family: 'Lato Black';
+            font-size: 14px;
+            color: #e3378f;
+            text-transform: uppercase;
+            word-spacing: 6px;
+            margin-top: 14px;
+            cursor: default;
+        }
+    }
+
+    .buttons {
+        position: absolute;
+        top: 60px;
+        left: 337px;
+
+        ul {
+            list-style-type: none;
+
+            li {
+                float: left;
+                margin: 0 4px;
+            }
+        }
+    }
+
+    .logo {
+        float: right;
+        background: url('../images/todo-logo.png') no-repeat top left;
+        display: block;
+        height: 116px;
+        width: 157px;
+        margin-right: 33px;
+        margin-top: -11px;
+    }
+}
+
+.ui-content {
+    /* Avoid scrollbars. */
+    overflow: hidden;
+}
+
+#day-view, #week-view {
+    .wrap {
+        position: relative;
+        width: 8px;
+        height: 250px;
+        overflow: hidden;
+
+        .previous, .next {
+            position: absolute;
+            top: 50%;
+        }
+    }
+    .left.wrap {
+        float: left;
+    }
+    .right.wrap {
+        float: right;
+    }
+}
+
+/* Generic day, used both in week-view and day-view. */
+.day {
+    width: 178px;
+    margin-right: 15px;
+    float: left;
+
+    .container {
+        padding: 4px;
+        background-color: @day-color;
+        border-radius: 3px;
+        background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#c1c1c1));
+
+        .header {
+            height: 30px;
+            border-radius: 3px 3px 0 0;
+            background-color: #858585;
+            padding: 4px;
+
+            a.day-view {
+                text-decoration: none;
+            }
+
+            .day-of-month {
+                font-family: 'Lato Black', Helvetica, sans;
+                font-size: 22px;
+                text-shadow: none;
+
+                display: inline;
+                color: @title-color;
+                padding: 0;
+                margin: 0px;
+            }
+            .day-of-week {
+                font-family: 'Lato Light', Helvetica, sans;
+                font-size: 24px;
+
+                display: inline-block;
+                color: @title-color;
+                text-shadow: none;
+                text-transform: uppercase;
+            }
+            .add {
+                float: right;
+                margin-top: 6px;
+            }
+        }
+        .items {
+            background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e9e7e7), to(#fff));
+            border-radius: 0 0 3px 3px;
+            padding: 4px;
+            overflow-y: auto;
+
+            .todo-item {
+                padding: 0;
+                margin-top: 4px;
+                cursor: pointer;
+                text-shadow: none;
+                display: block;
+            }
+            .todo-item:first-child {
+                margin-top: 0;
+            }
+            .todo-item:hover {
+                .text {
+                    background-color: @day-color * @hilight-factor;
+                }
+            }
+            .todo-item.ui-draggable-dragging {
+                box-shadow: 0 0 8px 0px @shadow-color;
+                background-color: @day-color * @hilight-factor;
+                max-width: 170px;
+                .text {
+                    text-overflow: ellipsis;
+                }
+            }
+            .todo-item.black {
+                color: #000000;
+            }
+            .todo-item.pink {
+                color: #e3378f;
+            }
+            .todo-item.orange {
+                color: #fdb27a;
+            }
+            .todo-item.green {
+                color: #77b6a5;
+            }
+            .todo-item.blue {
+                color: #4d8ec7;
+            }
+            .todo-item.grey {
+                color: #9d9d9d;
+            }
+
+            .todo-item.prio-1 {
+                font-size: @font-size-xxlarge;
+            }
+            .todo-item.prio-2 {
+                font-size: @font-size-xlarge;
+            }
+            .todo-item.prio-3 {
+                font-size: @font-size-large;
+            }
+            .todo-item.prio-4 {
+                font-size: @font-size-medium;
+            }
+
+            .todo-item.done {
+                text-decoration: line-through;
+            }
+        }
+    }
+    .container.hovered {
+        background-color: #d2d2d2;
+        border: 2px dashed #888;
+    }
+    .reflection {
+        .reflection-mixin();
+    }
+}
+
+#week-view {
+    .days {
+        padding: 0 14px;
+
+        .day:last-child {
+            margin-right: 0;
+        }
+
+        .day {
+            .container {
+                height: 100%;
+            }
+        }
+    }
+}
+
+#notes-view {
+	.container {
+		padding: 4px;
+     	background-color: @day-color;
+    	border-radius: 3px;
+    	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#c1c1c1));
+
+		.header {
+			height: 32px;
+			border-radius: 3px 3px 0 0;
+         	background-color: #858585;
+         	padding: 4px;
+			
+			.notes-header {
+				font-family: 'Lato Light';
+				font-size: 25px;
+				display: block;
+				padding: 4px;
+				float: left;
+				border-top-right-radius: 5px;
+				border-top-left-radius: 5px;
+			}
+			
+			.icon {
+				float: right;
+				padding: 4px;
+			}
+		}
+		
+		textarea {
+			height: 100%;
+			width: 99%;
+			font-family: 'Lato Light';
+			font-size: 22px;
+			color: #000000;	
+			background-color: @day-color * @hilight-factor;
+            padding: 4px;
+			margin: 0px;
+			resize: none;
+			overflow: auto;
+  			border: none;
+  			line-height: 32px;
+  			
+  			&:focus, &:active  {
+  				box-shadow: none;
+    		}	
+		}
+	}
+	.reflection {
+        .reflection-mixin();
+    } 
+}
+
+#day-view {
+    .day-wrap {
+        position: relative;
+        padding: 0 14px;
+
+        .day {
+            width: 100%;
+            margin: 0px;
+
+            .container {
+                background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#c9c7c7), to(#fff));
+
+                >.morning, >.afternoon, >.evening {
+                    padding: 2px 0;
+                    position: relative;
+                    background: none;
+
+                    .header {
+                        position: relative;
+                        overflow: hidden;
+                        float: left;
+                        height: 108px;
+                        width: 32px;
+                        text-align: center;
+
+                        background: #c9c7c7;
+                        background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d9d7d7), to(#b9b7b7));
+
+                        border-radius: 0;
+
+                        .text {
+                            font-family: 'Lato Light';
+                            font-size: 22px;
+                            color: #969696;
+                            text-shadow: none;
+                            .rotate(-90deg);
+                            display: block;
+                            position: absolute;
+                            top: 43px;
+                            left: -30px;
+                            width: 90px;
+                        }
+                        .a {
+                            position: relative;
+                            float: right;
+                            right: 5px;
+                            width: 22px;
+                            height: 22px;
+                        }
+                    }
+
+                    .items {
+                        padding: 0;
+                        background: none;
+                        overflow-y: auto;
+                        height: 108px;
+
+                        .todo-item {
+                            float: left;
+                            margin: 0 16px 0 0;
+                            padding: 4px 8px;
+                            border: 1px dashed #c9c7c7;
+                        }
+
+                        .todo-item.prio-1 {
+                            font-size: @font-size-xxlarge * 2;
+                        }
+                        .todo-item.prio-2 {
+                            font-size: @font-size-xlarge * 2;
+                        }
+                        .todo-item.prio-3 {
+                            font-size: @font-size-large * 2;
+                        }
+                        .todo-item.prio-4 {
+                            font-size: @font-size-medium * 2;
+                        }
+                    }
+                }
+
+                >.morning, >.afternoon {
+                    border-bottom: 1px solid #b6b5b5;
+                }
+            }
+            .reflection {
+                .reflection-mixin();
+            }
+        }
+    }
+}
+
+#edit-item {
+    background-color: white;
+    .rounded-corners-subtle;
+
+    a, a:active, a:visited, a:hover {
+        text-decoration: none;
+        color: #000;
+    }
+
+    a.close {
+        position: absolute;
+        top: 34px;
+        right: 12px;
+        font-size: 11px;
+        text-decoration: underline;
+    }
+
+    form {
+        fieldset {
+            float: left;
+        }
+        fieldset.text {
+            float: none;
+            margin: 0px;
+        }
+        fieldset.period {
+            margin-top: -10px;
+
+            img {
+                vertical-align: middle;
+            }
+            ul {
+                list-style-type: none;
+            }
+        }
+        fieldset.save {
+            position: absolute;
+            bottom: 10px;
+            right: 8px;
+
+            .text {
+                margin-right: 3px;
+            }
+
+            img {
+                vertical-align: middle;
+            }
+        }
+        label {
+            font-size: 11px;
+        }
+        input[name="text"] {
+            font-size: @font-size-medium;
+            border: 1px solid #ddd;
+            .box-sizing();
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        #priority {
+            margin-right: 24px;
+
+            a {
+                font-family: 'Lato Black', Helvetica, sans;
+                margin-left: 6px;
+            }
+            a.selected {
+                text-decoration: underline;
+            }
+        }
+        #color {
+            table {
+                border-spacing: 0;
+            }
+        }
+        input.save {
+            float: right;
+            margin: 0px;
+        }
+    }
+}
+
+
+/* JQM overrides */
+
+.ui-content {
+    padding: 11px;
+}
+
+
+/* web-ui-fw overrides */
+
+.ui-popupwindow {
+    background: url('../images/new-item-box.png');
+    box-shadow: none;
+    width: 356px;
+    height: 120px;
+    padding: 38px 29px 34px 40px;
+
+    .ui-popupwindow-container-inner {
+        padding: 4px;
+    }
+}
+
+.ui-popupwindow.right {
+    background: url('../images/new-item-box-mirrored.png');
+}

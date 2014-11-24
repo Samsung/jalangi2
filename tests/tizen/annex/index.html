@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+
+    <meta id="viewport_meta" name="viewport" content="" />
+
+    <script type="text/javascript">
+        var viewport_meta = document.getElementById('viewport_meta');
+        var w = (screen.orientation.indexOf("portrait") == 0)?screen.availWidth:screen.availHeight;
+        viewport_meta.setAttribute('content','width='+w+', user-scalable=no');
+    </script>
+    <meta name="author" content="Xinchao He">
+    <link rel="stylesheet" href="css/annex.css"/>
+    <link rel="stylesheet" type="text/css" href="css/license.css"></link>
+      <script src="js/license.js"></script>
+	<script type="text/javascript" src="lib/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/annex.js"></script>
+</head>
+<body onselectstart="return false" ondragstart="return false" style="overflow:hidden;">
+        <div id="licensepage" style="display: none">
+          <div id="licensetext"><div id="licensescroll"></div></div>
+          <div id="licensebtnq" class="licensebtn">Back</div>
+        </div>
+	<div id="open" class="open" >
+	  <img class="open_title" src="images/opening_002_title.png" />
+	  <img id="open_text_bg_1" class="open_text_bg open_text_bg1 display_none" src="images/opening_003_rollover.png" />
+	  <img id="open_text_bg_2" class="open_text_bg open_text_bg2 display_none" src="images/opening_003_rollover.png" />
+	  <img id="open_text_bg_3" class="open_text_bg open_text_bg3 display_none" src="images/opening_003_rollover.png" />
+	  <img id="open_text_bg_4" class="open_text_bg open_text_bg4 display_none" src="images/opening_003_rollover.png" />
+	  <div class="open_text" align="center">
+		<a onClick="World.playSound('snd_navclick');World.init(1);"
+		   onMouseOver="$('#open_text_bg_4').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('#open_text_bg_4').addClass('display_none');"
+		   id="open1"
+		   style="color:#49342d;"></a><br>
+		<a onClick="javascript:World.playSound('snd_navclick');World.init(2);"
+		   onMouseOver="$('#open_text_bg_3').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('#open_text_bg_3').addClass('display_none');"
+		   id="open2"
+		   style="color:#49342d;"></a><br>
+		<a onClick="javascript:World.showHelp();"
+		   onMouseOver="$('#open_text_bg_2').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('#open_text_bg_2').addClass('display_none');"
+		   id="open_help"
+		   style="color:#49342d;"></a><br>
+		<a onClick="javascript:window.close();"
+		   onMouseOver="$('#open_text_bg_1').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('#open_text_bg_1').addClass('display_none');"
+		   id="open_exit"
+		   style="color:#49342d;"></a>
+	  </div>
+          <div id="licensebtnl" style="top: 520px; left: 984px;"> i </div>
+	</div>
+	<div id="view" class="world display_none">
+	  <div class="play1_lable"></div>
+	  <div class="play1_score" id="black_result" align="center">0</div>
+	  <div class="play1_pieces_lable"></div>
+	  <div class="play2_lable"></div>
+	  <div class="play2_score" id="white_result" align="center">0</div>
+	  <div class="play2_pieces_lable"></div>
+	  <div class="stone_selected"><img id="message" /><span id="turn"></span></div>
+	  <div class="left_pieces" id="left_pieces"></div>
+	  <div class="right_pieces" id="right_pieces"></div>
+	  <a onClick="javascript:World.configure();" class="configure"><img src="images/game_006_settingsbtn.png" /></a>
+	  <div class="configure_panel display_none">
+		<div class="configure_panel_func">
+		  <div class="configure_panel_startover">
+			<div class="configure_panel_text"></div>
+		  </div>
+		  <div class="configure_panel_newgame">
+			<div class="configure_panel_text"></div>
+		  </div>
+		  <div class="configure_panel_help">
+			<div class="configure_panel_text"></div>
+		  </div>
+		  <div class="configure_panel_exit">
+			<div class="configure_panel_text"></div>
+		  </div>
+		</div>
+		<img class="configure_panel_arrow" src="images/game_013_settingsarrow.png" />
+	  </div>
+	  <div id="board"></div>
+	  <div id="result" class="result result_wood display_none">
+		<div class="result_win_text" align="center"></div>
+		<img class="result_new_p1_rollover display_none" src="images/winner_004_rollover.png" />
+		<img class="result_new_p2_rollover display_none" src="images/winner_004_rollover.png" />
+		<img class="result_exit_rollover display_none" src="images/winner_005_exitrollover.png" />
+		<a onClick="javascript:World.playSound('snd_navclick');World.init(1);"
+		   onMouseOver="$('img.result_new_p1_rollover').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('img.result_new_p1_rollover').addClass('display_none')"
+		   class="result_new_p1"></a>
+		<a onClick="javascript:World.playSound('snd_navclick');World.init(2);"
+		   onMouseOver="$('img.result_new_p2_rollover').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('img.result_new_p2_rollover').addClass('display_none')"
+		   class="result_new_p2"></a>
+		<a onClick="javascript:window.close();"
+		   onMouseOver="$('img.result_exit_rollover').removeClass('display_none');World.playSound('snd_navmove');"
+		   onMouseOut="$('img.result_exit_rollover').addClass('display_none')"
+		   class="result_exit"></a>
+		<div class="result_quit" onClick="javascript:World.closeResult();"></div>
+	  </div>
+	</div>
+	<div id="help" class="help display_none">
+	  <div class="help_text"  align="center">
+		<div class="help_title"></div>
+		<div class="help_contain"></div>
+	  </div>
+	  <img class="help_exit_img display_none" src="images/rules_002_rollover.png" />
+	  <a onClick="javascript:World.exitHelp();"
+		 onMouseOver="$('img.help_exit_img').removeClass('display_none');World.playSound('snd_navmove');"
+		 onMouseOut="$('img.help_exit_img').addClass('display_none')"
+		 class="help_exit"></a>
+	</div>
+	<audio preload="auto" id="snd_hint">
+	  <source src="sounds/Hint.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_navclick">
+	  <source src="sounds/NavClick.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_navmove">
+	  <source src="sounds/NavMove.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_settingsclick">
+	  <source src="sounds/SettingsClick.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_theme">
+	  <source src="sounds/Theme.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_tileflip">
+	  <source src="sounds/TileFlip.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_tileplace">
+	  <source src="sounds/TilePlace.ogg" />
+	</audio>
+	<audio preload="auto" id="snd_victoryhorns">
+	  <source src="sounds/VictoryHorns.ogg" />
+	</audio>
+<script type="text/javascript">
+	console.log("Hello World!");
+
+</script>
+</body>
+</html>

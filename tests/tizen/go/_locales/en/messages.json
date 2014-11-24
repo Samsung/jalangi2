@@ -1,0 +1,25 @@
+{
+    "alphabet": {
+        "message": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "description": "Single concatination of all alphabet characters, no spaces"
+    },
+    "name": {"message": "Go"},
+    "description": {"message": "A Go game"},
+	"player": {"message": "Player"},
+	"one": {"message": "One"},
+	"two": {"message": "Two"},
+	"rules": {"message": "Rules"},
+	"resume": {"message": "Submit"},
+	"timer_setting": {"message": "Timer..........."},
+	"sound_setting": {"message": "Sound FX...."},
+	"settings": {"message": "Settings"},
+	"play": {"message": "Play"},
+	"quit": {"message": "Quit"},
+	"draw": {"message": "Draw"},
+	"skip": {"message": "Skip"},
+	"score": {"message": "Score"},
+	"restart": {"message": "Restart"},
+	"win": {"message": "Wins"},
+	"newGame": {"message": "New Game"},
+	"help": {"message": "&nbsp;&nbsp;&nbsp;&nbsp;Take turns placing a stone on a vacant intersections (points) of the grid on a Go board. Black moves first. Once placed, a stone may not be moved, and can be removed only if captured. If a player believes he has no useful moves, he may skip his move (pass).<br>&nbsp;&nbsp;&nbsp;&nbsp;Vertically and horizontally adjacent stones of the same color form a chain (also called a string, or group) that shares liberties (adjacent, empty spaces) in common. These chains cannot be divided, and in effect becomes a single larger stone. Chains may be expanded by placing additional stones on adjacent points, and can be connected by placing a stone on a points adjacent to two or more chains of the same color.<br>&nbsp;&nbsp;&nbsp;&nbsp;A chain of stones must have at least one liberty to remain on the board. When a chain is surrounded by opposing stones so that it has no liberties, it is captured and removed from the board.<br>&nbsp;&nbsp;&nbsp;&nbsp;The game ends when both players have passed (clicked Skip) consecutively. The player who scores more points (the number of empty points, or intersections, surrounded by their pieces, plus the number of stones they've captured) wins.<br>&nbsp;&nbsp;&nbsp;&nbsp;For more information on how to play Go, see the Wikipedia article on the game: <span><a style='opacity: 0.6; color: #0000FF' href='http://en.wikipedia.org/wiki/Go_(game)'>http://en.wikipedia.org/wiki/Go_(game)</a></span>."}
+}

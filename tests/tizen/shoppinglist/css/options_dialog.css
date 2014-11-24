@@ -1,0 +1,162 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#optionsdialog,
+#sortbydialog {
+    position: absolute;
+    left: 286px;
+    top: 0px;
+    width: 708px;
+    display: none;
+    z-Index: 1010;
+}
+#optionsdialog.portrait {
+    left: 6px;
+}
+#optionsdialog.landscape {
+    left: 286px;
+}
+
+#sortbydialog {
+    height: 576px;
+}
+#sortbydialog.portrait {
+    left: 6px;
+    top: 352px;
+}
+#sortbydialog.landscape {
+    left: 286px;
+    top: 72px;
+}
+
+#optionsdialog #title_pane,
+#sortbydialog #title_pane {
+    height: 112px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #2E2E2E;
+}
+#optionsdialog #options_pane,
+#sortbydialog #sortoptions_pane {
+    height: 580px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #E6E7E8;
+}
+
+#sortbydialog #sortoptions_pane {
+    height: 464px;
+}
+
+#optionsdialog #title_pane label,
+#sortbydialog #title_pane label {
+    font-family: 'OpenSans-Regular';
+    font-size: 42px;
+    width: 570px;
+    text-shadow: none;
+    text-overflow: ellipsis; 
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 27px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+#optionsdialog #title_pane label,
+#sortbydialog #title_pane label {
+    color: #939598;
+    margin-left: 25px;
+    text-overflow: ellipsis; 
+    overflow: hidden;
+}
+#optionsdialog #options_pane label,
+#sortbydialog #sortoptions_pane label {
+    color: #414042;
+    margin-left: 50px;
+}
+
+#optionsdialog button#options_close_button,
+#sortbydialog button#sortby_close_button {
+    background-color: #2E2E2E;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+    height: 85px;
+    width: 85px;
+    background-image: url("../images/btn_exit_01.png");
+}
+#optionsdialog button#options_close_button:active,
+#sortbydialog button#sortby_close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+
+/****************************************/
+
+#optionsdialog .listitem,
+#sortbydialog .listitem {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 114px;
+    border-bottom: none;
+}
+
+#optionsdialog .listitem:active,
+#sortbydialog .listitem:active {
+    background-color: #CCCCCC;
+}
+
+#optionsdialog .listitem label,
+#sortbydialog .listitem label {
+    position: relative;
+    float: left;
+    display: block;
+    font-family: 'OpenSans-Regular';
+    font-size: 42px;
+    color: #414042;
+    margin-left: 50px;
+    vertical-align: middle;
+    margin-top: 28px;
+    text-shadow: none;    
+}
+#optionsdialog #options_pane .listitem img {
+    position: relative;
+    float: left;
+    height: 60px;
+    width: 60px;    
+    margin-left: 40px;
+    margin-top: 28px;
+}
+
+#sortbydialog .listitem label {
+    margin-left: 40px;
+}
+#sortbydialog .listitem button {
+    position: relative;
+    float: left;
+    height: 60px;
+    width: 60px;    
+    margin-left: 40px;
+    margin-top: 28px;
+
+    background-color: #E6E7E8;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("../images/btn_check_01.png");
+}
+
+#sortbydialog .listitem button.selected {
+    background-image: url("../images/btn_check_03.png");
+}

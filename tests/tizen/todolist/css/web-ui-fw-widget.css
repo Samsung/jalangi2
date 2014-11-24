@@ -1,0 +1,1157 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+.ui-personpicker .loader {
+  margin: 4px auto;
+  width: 32px;
+}
+.ui-personpicker .ui-listview, .ui-personpicker .ui-listview-filter {
+  margin: 0px;
+}
+.ui-personpicker .ui-listview-filter {
+  display: none;
+}
+.ui-personpicker li.ui-personpicker-row .content {
+  width: 100%;
+  display: inline-block;
+}
+.ui-personpicker li.ui-personpicker-row .content .ui-toggleswitch {
+  float: left;
+}
+.ui-personpicker li.ui-personpicker-row .content h3 {
+  float: left;
+  margin: 30px 0 0 20px;
+}
+.ui-personpicker li.ui-personpicker-row .content .avatar {
+  float: right;
+  width: 59px;
+  height: 59px;
+  margin: 7px 14px 7px 4px;
+  border: 1px solid #a3a3a3;
+}
+/* Own CSS */
+/* @selector-size should be an odd number, in order to pixel-perfectly center on a given colour */
+.ui-colorpicker {
+  display: table;
+}
+.ui-colorpicker .colorpicker-hs-container {
+  position: relative;
+  display: table-cell;
+  float: left;
+  width: 256px;
+  height: 256px;
+  padding: 35.5px;
+}
+.ui-colorpicker .colorpicker-hs-container .colorpicker-hs-mask {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+}
+.ui-colorpicker .colorpicker-hs-container .colorpicker-hs-selector {
+  position: absolute;
+  width: 61px;
+  height: 61px;
+  border: 5px solid #000000;
+}
+.ui-colorpicker .colorpicker-l-container {
+  position: relative;
+  float: left;
+  width: 16px;
+  height: 256px;
+  padding-left: 27.5px;
+  padding-right: 27.5px;
+  padding-top: 35.5px;
+  padding-bottom: 35.5px;
+}
+.ui-colorpicker .colorpicker-l-container .colorpicker-l-mask {
+  position: absolute;
+  width: 16px;
+  height: 256px;
+}
+.ui-colorpicker .colorpicker-l-container .colorpicker-l-selector {
+  left: 0px;
+  position: absolute;
+  width: 61px;
+  height: 61px;
+  border: 5px solid #000000;
+}
+.ui-colorpicker .colorpicker-hs-container .sat-gradient {
+    background: none; /* Old browsers */
+    background: -webkit-gradient(linear, left top, left bottom,
+        color-stop(0%,rgba(128,128,128,0)), 
+        color-stop(100%,rgba(128,128,128,1))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(top, 
+        rgba(128,128,128,0) 0%, 
+        rgba(128,128,128,1) 100%); /* FF3.6+ */
+    background: -webkit-linear-gradient(top, 
+        rgba(128,128,128,0) 0%,
+        rgba(128,128,128,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, 
+        rgba(128,128,128,0) 0%,
+        rgba(128,128,128,1) 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, 
+        rgba(128,128,128,0) 0%,
+        rgba(128,128,128,1) 100%); /* IE10+ */
+    background: linear-gradient(top, 
+        rgba(128,128,128,0) 0%,
+        rgba(128,128,128,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#00808080', endColorstr="#808080", GradientType = 0);
+}
+
+.ui-colorpicker .colorpicker-l-container .l-gradient {
+    background: none; /* Old browsers */
+    background: -webkit-gradient(linear, left top, left bottom,
+        color-stop(0%,rgba(0,0,0,1)),
+        color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(top,
+        rgba(0,0,0,1) 0%, 
+        rgba(255,255,255,1) 100%); /* FF3.6+ */
+    background: -webkit-linear-gradient(top, 
+        rgba(0,0,0,1) 0%,
+        rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, 
+        rgba(0,0,0,1) 0%,
+        rgba(255,255,255,1) 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, 
+        rgba(0,0,0,1) 0%,
+        rgba(255,255,255,1) 100%); /* IE10+ */
+    background: linear-gradient(top, 
+        rgba(0,0,0,1) 0%,
+        rgba(255,255,255,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#000000', endColorstr="#ffffff", GradientType = 0);
+}
+.ui-colortitle {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.ui-colortitle h1 {
+  display: table;
+  margin: auto;
+  color: #54a12d;
+}
+.todons-colortitle-disabled h1 {
+  color: #888888;
+}
+/*
+ * Defines one can include in one's own .less file for a common look-and-feel
+ */
+/* From page 60 */
+.jquery-mobile-ui-widget {
+  border-left: 10px solid #c7c7c7;
+  border-bottom: 1px solid #c7c7c7;
+  background: #fafafa;
+}
+.jquery-mobile-ui-widget-top {
+  border-top: 1px solid #c7c7c7;
+}
+.jquery-mobile-ui-label {
+  position: relative;
+  border-bottom: 1px solid #c7c7c7;
+  height: 40px;
+}
+.jquery-mobile-ui-label .jquery-mobile-ui-label-text {
+  font-family: sans-serif;
+  font-size: 120%;
+  position: absolute;
+  text-align: left;
+  vertical-align: bottom;
+  color: #9d9d9d;
+  bottom: 0px;
+  left: 10px;
+}
+.reset-rounded-corners {
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+}
+.reset-border {
+  border: 0;
+}
+.ui-datetimepicker {
+  width: 480px;
+}
+.ui-datetimepicker .datetimepicker-inner-container {
+  padding: 6px 10px;
+  min-height: 68px;
+}
+.ui-datetimepicker .datetimepicker-header {
+  display: block;
+  height: 30px;
+  font-size: 20px;
+  color: #666;
+}
+.ui-datetimepicker .datetimepicker-main {
+  display: inline;
+}
+.ui-datetimepicker .data {
+  padding: 0 10px 0 0;
+  display: inline-block;
+  height: 38px;
+  line-height: 42px;
+  font-size: 24px;
+  text-align: center;
+}
+.ui-datetimepicker .data-last {
+  padding: 0 10px 0 0;
+  display: inline-block;
+  height: 38px;
+  line-height: 42px;
+  font-size: 24px;
+  text-align: center;
+  padding: 0;
+}
+.ui-datetimepicker .date {
+  width: 214px;
+  margin-right: 44px;
+  display: inline;
+}
+.ui-datetimepicker .time {
+  width: 94px;
+  margin-right: 30px;
+  display: inline;
+}
+.ui-datetimepicker div.ampm {
+  width: 64px;
+  display: inline-block;
+  border: 1px solid #e6e6e6;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.ui-datetimepicker span.ampm {
+  width: 100%;
+}
+.ui-datetimepicker .selector {
+  display: none;
+  z-index: 9999;
+  color: white;
+  font-size: 24px;
+  padding: 0;
+  margin: 14px 0 0 0;
+  text-align: center;
+  /* Keep the triangle inside the parent container */
+
+}
+.ui-datetimepicker .selector .selector-triangle {
+  margin: 0px !important;
+}
+.ui-datetimepicker .selector .selector-triangle .selector-triangle-color {
+  border-bottom-color: #d9931a;
+}
+.ui-datetimepicker .selector .container {
+  background: #d9931a;
+}
+.ui-datetimepicker .selector .container > .view {
+  height: 66px;
+}
+.ui-datetimepicker .selector .container .item {
+  padding: 18px 8px 0 8px;
+  float: left;
+}
+.ui-datetimepicker .selector .container .item a {
+  text-decoration: none;
+  color: #ffc14f;
+  height: 66px;
+}
+.ui-datetimepicker .selector .container .item a.current {
+  color: #fff;
+}
+.ui-datetimepicker .selector .container .year {
+  min-width: 65px;
+}
+.ui-datetimepicker .selector .container .month {
+  min-width: 50px;
+}
+.ui-datetimepicker .selector .container .day, .ui-datetimepicker .selector .container .hours, .ui-datetimepicker .selector .container .minutes {
+  min-width: 30px;
+}
+.ui-datetimepicker .selector .container .ampm {
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border: 0;
+  background-color: transparent;
+}
+.todons-datetimepicker-disabled .selector .container {
+  background: #999999;
+}
+.todons-datetimepicker-disabled .selector .selector-triangle .selector-triangle-color {
+  border-bottom-color: #999999;
+}
+.ui-personpicker-page-container .ui-content {
+  padding: 0;
+}
+.ui-personpicker-page-container .ui-header {
+  margin: 15px auto;
+  padding: 0;
+}
+.ui-personpicker-page-container .personpicker {
+  margin: 0px;
+}
+/* Own CSS */
+.ui-progressbar {
+  position: relative;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  height: 10px;
+  background: white;
+}
+
+.ui-boxImg {	
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 10px;
+}
+
+.ui-barImg {
+	position: absolute;
+	top: 0px;
+	height: 10px;
+	width: 0;	
+}
+
+.ui-swipelist-item {
+    -webkit-user-select: none;
+    -user-select: none;
+}
+
+.ui-swipelist-item * {
+    -webkit-user-select: none;
+    -user-select: none;
+}
+
+.ui-swipelist-item-cover {
+    z-index: 99;
+    position: absolute;
+    border: none;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.ui-swipelist-item-cover-inner * {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -user-select: none;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container {
+  display: table;
+  padding-left: 27px;
+  padding-right: 27px;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-arrow-btn-container {
+  display: table-cell;
+  vertical-align: middle;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-arrow-btn {
+  float: left;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container {
+  float: left;
+  position: relative;
+  width: 300px;
+  height: 38px;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .hsvpicker-clrchannel-mask {
+  position: absolute;
+  width: 300px;
+  height: 38px;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .hsvpicker-clrchannel-mask-black {
+  background: #000000;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .hsvpicker-clrchannel-mask-white {
+  background: #ffffff;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .hsvpicker-clrchannel-selector {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 10px;
+  height: 40px;
+  border: 5px solid #000000;
+}
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .sat-gradient {
+    background: rgb(255,0,0); /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top,
+        color-stop(  0%,rgba(255,255,255,1)),
+        color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(left, 
+        rgba(255,255,255,1)   0%, 
+        rgba(255,255,255,0) 100%);
+    background: -webkit-linear-gradient(left,
+        rgba(255,255,255,1)   0%, 
+        rgba(255,255,255,0) 100%);
+    background: -o-linear-gradient(left,
+        rgba(255,255,255,1)   0%, 
+        rgba(255,255,255,0) 100%);
+    background: -ms-linear-gradient(left,
+        rgba(255,255,255,1)   0%, 
+        rgba(255,255,255,0) 100%);
+    background: linear-gradient(left,
+        rgba(255,255,255,1)   0%, 
+        rgba(255,255,255,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#ffffff', endColorstr="#00ffffff", GradientType = 1);
+}
+
+.ui-hsvpicker .hsvpicker-clrchannel-container .hsvpicker-clrchannel-masks-container .val-gradient {
+    background: rgb(255,0,0); /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top,
+        color-stop(  0%,rgba(0,0,0,1)),
+        color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(left, 
+        rgba(0,0,0,1)   0%, 
+        rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(left,
+        rgba(0,0,0,1)   0%, 
+        rgba(0,0,0,0) 100%);
+    background: -o-linear-gradient(left,
+        rgba(0,0,0,1)   0%, 
+        rgba(0,0,0,0) 100%);
+    background: -ms-linear-gradient(left,
+        rgba(0,0,0,1)   0%, 
+        rgba(0,0,0,0) 100%);
+    background: linear-gradient(left,
+        rgba(0,0,0,1)   0%, 
+        rgba(0,0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#000000', endColorstr="#00000000", GradientType = 1);
+}
+.ui-processingbar-container {
+  height: 20px;
+  min-width: 400px;
+  width: 100%;
+}
+.ui-processingbar-container .ui-processingbar-clip {
+  margin: 10px 0px 0px 0px;
+  overflow: hidden;
+  height: 10px;
+}
+.ui-processingbar-container .ui-processingbar-clip .ui-processingbar-bar {
+  background-color: #ffffff;
+  -webkit-background-size: 20px 20px;
+  height: 40px;
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.ui-toggleswitch {
+  position: relative;
+  display: inline-block;
+}
+.ui-toggleswitch .toggleswitch-button-outside {
+  left: 0px;
+  top: 0px;
+  position: absolute;
+}
+.ui-toggleswitch .toggleswitch-button-inside {
+  display: block;
+}
+.ui-toggleswitch .toggleswitch-button-transparent {
+  opacity: 0;
+}
+.ui-toggleswitch .toggleswitch-inner-active {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+.ui-shortcutscroll {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  background-color: rgba(225, 221, 215,0.5);
+  max-width: 20px;
+  min-width: 12px;
+  -webkit-user-select: none;
+  margin:0;
+  padding:0;
+  opacity: 1;
+}
+.ui-shortcutscroll ul{
+	list-style-type: none;
+	margin: 0px;
+	padding: 0;
+}
+.ui-shortcutscroll li {
+  cursor: pointer;
+  color:rgba(0,0,0,0.6);
+  padding: 2px 2px 2px 5px;
+  text-shadow: none !important;
+}
+
+.ui-shortcutscroll-popup {
+  position: absolute;
+  background: rgba(255,255,255,1);
+  padding:10px 30px;
+  -moz-box-shadow: 8px 10px 0px rgb(199, 199, 199);
+	-webkit-box-shadow: 8px 10px 0px rgb(199, 199, 199);
+	box-shadow: 8px 10px 0px rgb(199, 199, 199);
+	text-align: center;
+  font-size: 75px;
+  font-weight: bold;
+  display:none;
+  box-sizing:border-box;
+  color: black;
+}
+.ui-option-header {
+    overflow: hidden;
+}
+
+.ui-option-header-1-row {
+    height: 65px;
+    border: none;
+}
+.ui-option-header-2-row {
+    height: 124px;
+    border: none;
+}
+
+.ui-option-header-row-1 {
+    padding: 5px 5px 5px 5px;
+}
+.ui-option-header-row-2 {
+    margin-top: -2px;
+    padding: 0px 5px 6px 5px;
+}
+
+/* for standard buttons */
+.ui-option-header .ui-btn {
+    display: block;
+    margin: 3px 5px 5px 5px;
+}
+.ui-option-header .ui-btn-text {
+    line-height: 34px;
+}
+.ui-option-header .ui-btn-inner {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* for segmented control */
+.ui-option-header .ui-controlgroup-horizontal .ui-btn {
+    display: inline-block !important;
+    margin: -3px !important;
+}
+.ui-option-header .ui-controlgroup,
+.ui-option-header fieldset.ui-controlgroup {
+    margin-bottom: 0px !important;
+}
+.ui-option-header .ui-controlgroup-horizontal .ui-corner-left {
+    margin-left: 5px !important;
+}
+.ui-option-header .ui-controlgroup-horizontal .ui-corner-right {
+    margin-right: 5px !important;
+}
+/* Own CSS */
+
+.ui-upper-progressbar-container {
+  height: 100px;
+  background: white;
+}
+
+.ui-cancel-container{
+  position: relative;
+  bottom: 0px;
+  height: 60px;
+  background: gray;
+  text-align: center;
+}
+
+.ui-cancel-button {
+  display: inline-block;	
+  background-color: white;
+  color: black;
+  width: 50%;
+  height: 80%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;  
+}
+
+.ui-text1 {
+	position: relative;
+	text-align: center;
+	margin-top: 14px;			
+}
+
+.ui-text2 {
+	float: left;
+	text-align: left;
+	margin-left: 10px;
+	margin-bottom: 14px;			
+}
+
+.ui-text3 {
+	float: right;
+	text-align: right;
+	margin-right: 20px;
+	margin-bottom: 14px;			
+}
+.ui-singleimagedisplay-nocontent {
+    background-image: url('images/web-ui-fw_noContent.png');
+    background-size: cover;
+}
+/* Need to add !important below, because these classes are added before jqm enhancement */
+.ui-colorpickerbutton-input {
+    max-width: 70px;
+    display: inline-block !important;
+}
+
+.ui-colorpickerbutton-input-hidden {
+    display: none !important;
+}
+.jquery-mobile-ui-widget {
+  border-left: 10px solid #c7c7c7;
+  border-bottom: 1px solid #c7c7c7;
+  background: #fafafa;
+}
+.jquery-mobile-ui-widget-top {
+  border-top: 1px solid #c7c7c7;
+}
+.jquery-mobile-ui-label {
+  position: relative;
+  border-bottom: 1px solid #c7c7c7;
+  height: 40px;
+}
+.jquery-mobile-ui-label .jquery-mobile-ui-label-text {
+  font-family: sans-serif;
+  font-size: 120%;
+  position: absolute;
+  text-align: left;
+  vertical-align: bottom;
+  color: #9d9d9d;
+  bottom: 0px;
+  left: 10px;
+}
+.reset-rounded-corners {
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+}
+.reset-border {
+  border: 0;
+}
+/*
+ * Defines one can include in one's own .less file for a common look-and-feel
+ */
+/* From page 60 */
+@charset "utf-8";
+
+.ui-scrollview-clip {
+	position: relative;
+}
+
+.ui-scrollview-view {
+}
+
+.ui-scrolllistview .ui-li-divider {
+	z-index: 10;
+}
+
+.ui-scrollbar {
+	position: absolute;
+	overflow: hidden;
+
+	opacity: 0;
+	-webkit-transition: opacity 500ms;
+	-moz-transition: opacity 500ms;
+	transition: opacity 500ms;
+}
+
+.ui-scrollbar-visible {
+	opacity: 1;
+}
+
+.ui-scrollbar-y {
+	top: 2px;
+	right: 2px;
+	bottom: 8px;
+	width: 5px;
+}
+
+.ui-scrollbar-x {
+	right: 8px;
+	bottom: 2px;
+	left: 2px;
+	height: 5px;
+}
+
+.ui-scrollbar-track {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.ui-scrollbar-thumb {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+
+.ui-scrollbar-y .ui-scrollbar-thumb {
+	width: 5px;
+	height: 100%;
+}
+
+.ui-scrollbar-x .ui-scrollbar-thumb {
+	width: 100%;
+	height: 5px;
+}
+
+/*
+ * the values below are for the group index
+ */
+
+/*
+ * padding here set to zero - otherwise the list scrolls underneith the top heading and can be seen above it
+ */
+.ui-content.ui-scrollview-clip {
+    padding: 0;
+}
+
+/*
+ * this seems to effect how far the top divider is place wrt to the scrollview
+ * without this, it is placed too high, so it is clipped in half
+ */
+.ui-content.ui-scrollview-clip > .ui-listview.ui-scrollview-view {
+    margin: 0px;
+}
+.ui-popupwindow {
+  display: inline-block;
+  position: absolute;
+}
+.ui-popupwindow .ui-popupwindow-container-inner {
+  padding: 6px;
+}
+.ui-popupwindow-screen {
+  background: #000000;
+  opacity: 0;
+}
+.ui-triangle {
+  position: absolute;
+  bottom: 0px;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.ui-triangle-container {
+  height: 10px;
+  position: relative;
+}
+.ui-triangle-container .ui-triangle-top {
+  border-top-width: 0px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.ui-triangle-container .ui-triangle-bottom {
+  border-bottom-width: 0px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.ui-triangle-container-top {
+  top: 0px;
+  margin-top: -10px;
+}
+.ui-triangle-container-bottom {
+  bottom: 0px;
+  margin-bottom: -10px;
+}
+.ui-slider .ui-btn-inner {
+    padding: 4px 0 0 0 !important;
+}
+
+.ui-slider-popup {
+    position: absolute !important;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    font-size: 40px;
+    padding-top: 12px;
+    z-index: 100;
+    opacity: 0.8;
+}
+.ui-volumecontrol {
+  display: table;
+  margin: auto;
+}
+.ui-volumecontrol h1 {
+  display: table;
+  margin: auto;
+  color: #c0c0c0;
+}
+.ui-volumecontrol .ui-volumecontrol-icon {
+  display: table;
+  margin: auto;
+  background-image: url('images/web-ui-fw_volume_icon.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 54px;
+  height: 54px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  padding-left: 104px;
+  padding-right: 104px;
+}
+.ui-volumecontrol .ui-volumecontrol-indicator {
+  position: relative;
+  display: table;
+  margin: auto;
+  width: 175px;
+  height: 263px;
+}
+.ui-volumecontrol .ui-volumecontrol-indicator .ui-volumecontrol-level {
+  position: absolute;
+}
+.ui-volumecontrol .ui-volumecontrol-indicator .ui-volumecontrol-level-set {
+  background: #ffffff;
+}
+.ui-volumecontrol-background {
+    background: rgba(0, 0, 0, 0.666667);
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#aa000000', endColorstr="#aa000000", GradientType = 1);
+}
+
+.ui-volumecontrol .ui-volumecontrol-indicator .ui-volumecontrol-level {
+    position: absolute;
+    background: rgba(1, 1, 1, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient (startColorstr='#40ffffff', endColorstr="#40ffffff", GradientType = 1);
+}
+.todons-huegradient {
+    background: none; /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top,
+        color-stop(  0%          ,rgba(255,  0,  0,1)),
+        color-stop( 16.666666667%,rgba(255,255,  0,1)),
+        color-stop( 33.333333333%,rgba(0  ,255,  0,1)),
+        color-stop( 50%          ,rgba(0  ,255,255,1)),
+        color-stop( 66.666666667%,rgba(0  ,  0,255,1)),
+        color-stop( 83.333333333%,rgba(255,  0,255,1)),
+        color-stop(100%          ,rgba(255,  0,  0,1))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(left, 
+        rgba(255,  0,  0,1)   0%, 
+        rgba(255,255,  0,1)  16.666666667%,
+        rgba(  0,255,  0,1)  33.333333333%,
+        rgba(  0,255,255,1)  50%,
+        rgba(  0,  0,255,1)  66.666666667%,
+        rgba(255,  0,255,1)  83.333333333%,
+        rgba(255,  0,  0,1) 100%);
+    background: -webkit-linear-gradient(left,
+        rgba(255,  0,  0,1)   0%, 
+        rgba(255,255,  0,1)  16.666666667%,
+        rgba(  0,255,  0,1)  33.333333333%,
+        rgba(  0,255,255,1)  50%,
+        rgba(  0,  0,255,1)  66.666666667%,
+        rgba(255,  0,255,1)  83.333333333%,
+        rgba(255,  0,  0,1) 100%);
+    background: -o-linear-gradient(left,
+        rgba(255,  0,  0,1)   0%, 
+        rgba(255,255,  0,1)  16.666666667%,
+        rgba(  0,255,  0,1)  33.333333333%,
+        rgba(  0,255,255,1)  50%,
+        rgba(  0,  0,255,1)  66.666666667%,
+        rgba(255,  0,255,1)  83.333333333%,
+        rgba(255,  0,  0,1) 100%);
+    background: -ms-linear-gradient(left,
+        rgba(255,  0,  0,1)   0%, 
+        rgba(255,255,  0,1)  16.666666667%,
+        rgba(  0,255,  0,1)  33.333333333%,
+        rgba(  0,255,255,1)  50%,
+        rgba(  0,  0,255,1)  66.666666667%,
+        rgba(255,  0,255,1)  83.333333333%,
+        rgba(255,  0,  0,1) 100%);
+    background: linear-gradient(left,
+        rgba(255,  0,  0,1)   0%, 
+        rgba(255,255,  0,1)  16.666666667%,
+        rgba(  0,255,  0,1)  33.333333333%,
+        rgba(  0,255,255,1)  50%,
+        rgba(  0,  0,255,1)  66.666666667%,
+        rgba(255,  0,255,1)  83.333333333%,
+        rgba(255,  0,  0,1) 100%);
+}
+
+/* Full-saturation magic grayscale values were taken from the Gimp */
+.todons-huegradient-disabled {
+    background: none; /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top,
+        color-stop(  0%          ,rgba( 54, 54, 54,1)),
+        color-stop( 16.666666667%,rgba(237,237,237,1)),
+        color-stop( 33.333333333%,rgba(182,182,182,1)),
+        color-stop( 50%          ,rgba(201,201,201,1)),
+        color-stop( 66.666666667%,rgba( 18, 18, 18,1)),
+        color-stop( 83.333333333%,rgba( 73, 73, 73,1)),
+        color-stop(100%          ,rgba( 54, 54, 54,1))); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(left, 
+        rgba( 54, 54, 54,1)   0%, 
+        rgba(237,237,237,1)  16.666666667%,
+        rgba(182,182,182,1)  33.333333333%,
+        rgba(201,201,201,1)  50%,
+        rgba( 18, 18, 18,1)  66.666666667%,
+        rgba( 73, 73, 73,1)  83.333333333%,
+        rgba( 54, 54, 54,1) 100%);
+    background: -webkit-linear-gradient(left,
+        rgba( 54, 54, 54,1)   0%, 
+        rgba(237,237,237,1)  16.666666667%,
+        rgba(182,182,182,1)  33.333333333%,
+        rgba(201,201,201,1)  50%,
+        rgba( 18, 18, 18,1)  66.666666667%,
+        rgba( 73, 73, 73,1)  83.333333333%,
+        rgba( 54, 54, 54,1) 100%);
+    background: -o-linear-gradient(left,
+        rgba( 54, 54, 54,1)   0%, 
+        rgba(237,237,237,1)  16.666666667%,
+        rgba(182,182,182,1)  33.333333333%,
+        rgba(201,201,201,1)  50%,
+        rgba( 18, 18, 18,1)  66.666666667%,
+        rgba( 73, 73, 73,1)  83.333333333%,
+        rgba( 54, 54, 54,1) 100%);
+    background: -ms-linear-gradient(left,
+        rgba( 54, 54, 54,1)   0%, 
+        rgba(237,237,237,1)  16.666666667%,
+        rgba(182,182,182,1)  33.333333333%,
+        rgba(201,201,201,1)  50%,
+        rgba( 18, 18, 18,1)  66.666666667%,
+        rgba( 73, 73, 73,1)  83.333333333%,
+        rgba( 54, 54, 54,1) 100%);
+    background: linear-gradient(left,
+        rgba( 54, 54, 54,1)   0%, 
+        rgba(237,237,237,1)  16.666666667%,
+        rgba(182,182,182,1)  33.333333333%,
+        rgba(201,201,201,1)  50%,
+        rgba( 18, 18, 18,1)  66.666666667%,
+        rgba( 73, 73, 73,1)  83.333333333%,
+        rgba( 54, 54, 54,1) 100%);
+}
+.ui-pagelist {
+    text-align: center;
+}
+.ui-cp-headercontainer {
+  text-align: center;
+}
+.ui-cp-headercontainer h4 {
+  display: inline-block;
+  height: 53px;
+  zoom: 1;
+  *display: inline;
+}
+.ui-cp-next {
+  float: right;
+}
+.ui-cp-previous {
+  float: left;
+}
+.ui-cp-weekday {
+  clear: both;
+  padding-bottom: 2px;
+  padding-top: 4px;
+}
+.ui-cp-date {
+  width: 62px;
+  height: 44px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 30px;
+  zoom: 1;
+  margin: 0px;
+  padding: 1px;
+  *display: inline;
+}
+.ui-cp-date-disabled {
+  margin-left: -1px;
+  margin-top: -1px;
+  border: 1px solid transparent;
+  color: #888;
+}
+.ui-cp-month {
+  height: 25px !important;
+  line-height: 25px !important;
+  padding-bottom: 2px;
+  background-color: #E6E6E6;
+  color: #000000;
+}
+.ui-cp-container {
+  border: 0px;
+  width: 468px;
+  height: 424px;
+  padding-bottom: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 13px;
+  background-color: #E6E6E6;
+  z-index: 400;
+}
+.ui-cpcontainer-hidden {
+  display: none;
+}
+.ui-calendarbtncommon {
+  margin-left: -1px;
+  margin-top: -1px;
+  border: 1px solid #B0B0B0;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 0 1px 1px #f6f6f6;
+}
+.ui-btn-up-lastdaybutton {
+  color: #0000FF;
+}
+.ui-btn-up-firstdaybutton {
+  color: #FF0000;
+}
+.ui-processingcircle-container {
+  border-width: 0.2em;
+  border-style: solid;
+  width: 1.6em;
+  height: 1.6em;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+}
+.ui-processingcircle-container .ui-processingcircle {
+  position: relative;
+  -webkit-border-radius: 0.2em;
+  -moz-border-radius: 0.2em;
+  border-radius: 0.2em;
+  left: 0.7000000000000001em;
+  top: -0.19999999999999996em;
+  width: 0.2em;
+  height: 1em;
+  -webkit-transform-origin: 50% 100%;
+  -moz-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ui-processingcircle-container .ui-processingcircle .ui-processingcircle-hand {
+  width: 99%;
+  height: 99%;
+}
+.ui-processingcircle-spin {
+  -webkit-transform: rotate(360deg);
+  -webkit-animation-name: processingcircle-spin-webkit;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-transform: rotate(360deg);
+  -moz-animation-name: processingcircle-spin-moz;
+  -moz-animation-duration: 1s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+}
+@-webkit-keyframes processingcircle-spin-webkit {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes processingcircle-spin-moz {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+/*
+ * Defines one can include in one's own .less file for a common look-and-feel
+ */
+/* From page 60 */
+.todons-colorpalette-disabled .colorpalette-table .colorpalette-choice-active {
+  border-color: #999999 !important;
+}
+.ui-colorpalette {
+  display: table;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.ui-colorpalette .colorpalette-preview-container {
+  padding-top: 48px;
+  padding-bottom: 39px;
+  display: table;
+  margin: auto;
+}
+.ui-colorpalette .colorpalette-preview-container .colorpalette-preview {
+  display: table;
+  margin: auto;
+  width: 296px;
+  height: 101px;
+  border: #c0c0c0 4px solid;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-bottom-row {
+  display: table-row;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-normal-row {
+  display: table-row;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-choice-container-left {
+  display: table-cell;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-choice-container-rest {
+  display: table-cell;
+  padding-left: 38px;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-normal-row .colorpalette-choice-container-left {
+  padding-bottom: 16px;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-choice {
+  width: 46px;
+  height: 46px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #c0c0c0;
+}
+.ui-colorpalette .colorpalette-table .colorpalette-choice-active {
+  border-color: #d9931a;
+}
+/* dayselector CSS */
+.ui-dayselector {
+    display: inline-block;
+}
+
+.ui-dayselector label {
+    height: 56px;
+    width: 64px;
+}
+
+.ui-dayselector-label-6 {
+    color: blue;
+}
+
+.ui-dayselector-label-0 {
+    color: red;
+}
+
+.todons-dayselector-disabled .ui-dayselector-label-6 {
+    color: #121212;
+}
+
+.todons-dayselector-disabled .ui-dayselector-label-0 {
+    color: #363636;
+}

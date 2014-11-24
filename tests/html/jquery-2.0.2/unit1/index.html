@@ -1,0 +1,33 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>JQuery test</title></head>
+<body>
+<script src="../jquery-2.0.2.js"></script>
+<script>
+	var markup = jQuery(
+		"<div><div><p><span><b class=\"a\">b</b></span></p></div></div>"
+	),
+	path = "";
+
+	markup
+		.find( "*" ).addBack().on( "click", function() {
+			path += this.nodeName.toLowerCase() + " ";
+		})
+		.filter( "b" ).on( "click", function( e ) {
+			// Removing span should not stop propagation to original parents
+			if ( e.target === this ) {
+				jQuery(this).parent().remove();
+			}
+		});
+
+	markup.find( "b" ).trigger( "click" );
+
+	console.log(path);
+
+	markup.remove();
+
+</script>
+</body>
+</html>

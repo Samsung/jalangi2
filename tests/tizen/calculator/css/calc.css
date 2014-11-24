@@ -1,0 +1,2009 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the  
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+@font-face {
+    font-family: OpenSans-Light;
+    src: url("../fonts/OpenSans-Light.ttf");
+}
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url("../fonts/OpenSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: OpenSans-Semibold;
+    src: url("../fonts/OpenSans-Semibold.ttf");
+}
+
+body {
+    position: absolute;
+    margin: 0px;
+    top: 0%;
+    left: 0%;
+}
+
+/* hack for landscape mode in simulator */
+@media (orientation: landscape) {
+  body {
+    margin: 0px;
+    overflow: visible;
+    -webkit-user-select: none;
+    background-color: "white";
+    box-shadow: 5px 5px 20px black;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+  /* 320 x 480 */
+    -webkit-transform: translate(-50%, -50%) scale(0.375, 0.4444);
+  }
+}
+/* 730 x 410 */
+@media (orientation: landscape) and (min-height: 410px) and (min-width: 730px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(0.57, 0.57);}
+}
+/* 800 x 480 */
+@media (orientation: landscape) and (min-height: 480px) and (min-width: 800px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(0.625, 0.6666);}
+}
+/* 989 x 600 */
+@media (orientation: landscape) and (min-width: 600px) and (min-height: 989px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(0.77266, 0.8333); }
+}
+/* 1024 x 600 */
+@media (orientation: landscape) and (min-height: 600px) and (min-width: 1024px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(0.8, 0.8333);}
+}
+/* 1230 x 720 */
+@media (orientation: landscape) and (min-height: 720px) and (min-width: 1230px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(0.9609, 1.0);}
+}
+/* 1280 x 720 */
+@media (orientation: landscape) and (min-height: 720px) and (min-width: 1280px) {
+  body { -webkit-transform: translate(-50%, -50%) scale(1.0, 1.0);}
+}
+
+
+/* hack for landscape mode in emulator */
+/* 320 x 480 */
+@media (orientation: portrait) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.4444, 0.375) translate(50%, -50%);}
+}
+/* 410 x 730 */
+@media (orientation: portrait) and (min-width: 410px) and (min-height: 730px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.57, 0.57) translate(50%, -50%);}
+}
+/* 480 x 800 */
+@media (orientation: portrait) and (min-width: 480px) and (min-height: 800px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.6666, 0.625) translate(50%, -50%);}
+}
+/* 989 x 600 */
+@media (orientation: portrait) and (min-width: 600px) and (min-height: 989px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.77266, 0.8333) translate(50%, -50%); }
+}
+/* 600 x 1024 */
+@media (orientation: portrait) and (min-width: 600px) and (min-height: 1024px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.8, 0.8333) translate(50%, -50%);}
+}
+/* 720 x 1230 */
+@media (orientation: portrait) and (min-width: 720px) and (min-height: 1230px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.9609, 1.0) translate(50%, -50%);}
+}
+/* 720 x 1280 */
+@media (orientation: portrait) and (min-width: 720px) and (min-height: 1280px) {
+  body { -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(1.0, 1.0) translate(50%, -50%);}
+}
+
+sup, sub {
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    font-size: 50%;
+    bottom: 2ex;
+}
+
+sub {
+    font-size: 50%;
+    top: 0.8ex;
+}
+
+/* Button classes */
+
+.buttonblackshort {
+    width: 104px;
+    height: 64px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    border-style: none;
+    background-image: url("../images/bt_blackSmall_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonblackshort:active {
+    background-image: url("../images/bt_blackSmall_land_press.png");
+}
+
+.buttontogglebackgroundA, .buttontogglebackgroundB {
+    width: 80px;
+    height: 36px;
+    font-family: "OpenSans-Light";
+    font-size: 24px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttontogglebackgroundA {
+    color: #727272;
+}
+
+.buttontogglebackgroundB {
+    color: #d9e2d0;
+}
+
+.switchleftactive {
+    width: 160px;
+    height: 36px;
+    background-image: url("../images/switch_land_left_act.png");
+}
+
+.switchrightactive {
+    width: 160px;
+    height: 36px;
+    background-image: url("../images/switch_land_right_act.png");
+}
+
+.switchleftactive:active, .switchrightactive:active{
+    background-image: url("../images/switch_land_press.png");
+}
+
+.buttonyellow {
+    width: 104px;
+    height: 64px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    border-style: none;
+    background-image: url("../images/bt_yellow_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonyellow:active {
+    background-image: url("../images/bt_yellow_land_press.png");
+}
+
+.buttonred {
+    width: 104px;
+    height: 72px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 46px;
+    border-style: none;
+    background-image: url("../images/bt_red_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+
+.buttonred:active {
+    background-image: url("../images/bt_red_land_press.png");
+}
+
+.buttonblack {
+    width: 104px;
+    height: 72px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    border-style: none;
+    background-image: url("../images/bt_black_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonblack:active {
+    background-image: url("../images/bt_black_land_press.png");
+}
+
+.buttonwhite {
+    width: 104px;
+    height: 72px;
+    color: #000000;
+    font-family: "OpenSans-Regular";
+    font-size: 46px;
+    border-style: none;
+    background-image: url("../images/bt_white_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonwhite:active {
+    background-image: url("../images/bt_white_land_press.png");
+}
+
+.buttonblue {
+    width: 104px;
+    height: 72px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 56px;
+    border-style: none;
+    background-image: url("../images/bt_blue_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonblue:active {
+    background-image: url("../images/bt_blue_land_press.png");
+}
+
+.buttonpurple {
+    width: 104px;
+    height: 72px;
+    border-style: none;
+    background-image: url("../images/bt_purple_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonpurple:active {
+    background-image: url("../images/bt_purple_land_press.png");
+}
+
+.buttonblueequal {
+    width: 104px;
+    height: 156px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 56pt;
+    border-style: none;
+    background-image: url("../images/bt_equals_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonblueequal:active {
+    background-image: url("../images/bt_equals_land_press.png");
+}
+
+.buttonclose {
+    width: 64px;
+    height: 64px;
+    border-style: none;
+    background-image: url("../images/bt_bin.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonclose:active {
+    background-image: url("../images/bt_bin_press.png");
+}
+
+.memoryentrypane {
+    position: relative;
+    float: left; 
+    width: 610px;
+    height: 104px;
+    top: 12px;
+    left:10px;
+}
+
+.buttonmemory {
+    position: absolute;
+    float: left; 
+    left: 10px;
+    width: 104px;
+    height: 93px;
+    color: #727272;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    border-style: none;
+    background-image: url("../images/bt_mem_list_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonmemory:active {
+    background-image: url("../images/bt_mem_list_land_press.png");
+}
+
+.memorypane {
+    position: absolute;
+    background-image: url("../images/bg_memory_slot_land.png");
+    width: 476px;
+    height: 92px;
+    left: 124px;
+}
+
+.memory {
+    position: relative;
+    float: left; 
+    width: 276px;
+    height: 45px;
+}
+
+.memorytext {
+    position: relative;
+    float: left; 
+    width: 268px;
+    height: 45px;
+    color: #d9e2d0;
+    font-family: "OpenSans-Regular";
+    font-size: 36px;
+    left: 8px;
+    top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.buttonmemoryclose {
+    position: absolute;
+    float: right;
+    width: 64px;
+    height: 64px;
+    left: 294px;
+    top: 14px;
+    border-style: none;
+    background-image: url("../images/clear_memory_disable.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonmemorycloseenabled {
+    position: absolute;
+    float: right;
+    width: 64px;
+    height: 64px;
+    left: 294px;
+    top: 14px;
+    border-style: none;
+    background-image: url("../images/clear_memory.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonmemorycloseenabled:active {
+    background-image: url("../images/clear_memory_press.png");
+}
+
+.memorydivisor {
+    position: relative;
+    float: left; 
+    width: 160px;
+    height: 2px;
+    background-image: url("../images/LineVertical184Green.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.memorydescription {
+    position: relative;
+    float: left; 
+    width: 276px;
+    height: 45px;
+}
+
+.memorydescriptiontext {
+    position: relative;
+    float: left; 
+    width: 265px;
+    height: 40px;
+    color: #d9e2d0;
+    font-family: "OpenSans-Light";
+    font-size: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    left:8px;
+    top:2px;
+}
+
+.memorydescriptioninput {
+    position: relative;
+    float: left; 
+    border: none;
+    color: #d9e2d0;
+    font-family: "OpenSans-Light";
+    font-size: 24px;
+    background-color: transparent;
+    display: none;
+}
+
+.buttonmemoryedit {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    left: 394px;
+    top: 14px;
+    border-style: none;
+    background-image: url("../images/pencil_disable.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonmemoryeditenabled{
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    left: 394px;
+    top: 14px;
+    border-style: none;
+    background-image: url("../images/pencil.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.buttonmemoryeditenabled:active{
+    background-image: url("../images/pencil_press.png");
+}
+
+/* Backgrounds */
+
+#background
+{
+    position: relative;
+    float: left; 
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+    background-image: url("../images/bg_land.png");
+    background-repeat: no-repeat;
+}
+
+#calculationpane {
+    position: relative;
+    float: left; 
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+}
+
+#calculationpane #LCD_Upper {
+    position: absolute;
+    float: left; 
+    width: 1248px;
+    height: 690px;
+    left: 16px;
+    top: 16px;
+    background-image: url("../images/bg_history_land.png");
+    background-repeat:no-repeat;
+    z-index: 2;
+    overflow: hidden;
+    }
+
+#calculationpane #LCD_Lower {
+    position: relative;
+    float: left; 
+    width: 1248px;
+    height: 212px;
+    left: 16px;
+    top: 16px;
+    background-image: url("../images/bg_display_land.png");
+    background-repeat: no-repeat;
+}
+
+#calculationpane #keyboard {
+    position: relative;
+    float: left;
+    width: 1248px;
+    height: 450px;
+    left: 16px;
+    top: 44px;
+    background-repeat: no-repeat;
+    background-image: url("../images/bg_keyboard_land.png");
+}
+
+#calculationpane #keyboard #keyboardleft{
+    position: relative;
+    float: left;
+    width: 512px;
+    height: 450px;
+    left: 0px;
+    top: 0px;
+}
+
+#calculationpane #keyboard #keyboardright{
+    position: relative;
+    float: right;
+    width: 732px;
+    height: 450px;
+    top: 0px;
+    left:0px;
+}
+
+#calculationpane #keyboard #keyboardsplitter{
+    position:relative;
+    width: 4px;
+    float: left;
+    height:440px;
+    top:4px;
+    left:0px;
+    background-repeat: no-repeat;
+    background-image: url("../images/line_keyboard_land.png");
+}
+
+#calculationpane #keyboard #keyboardleft #leftmostpane {
+    position: relative;
+    float: left; 
+    width: 360px;
+    height: 400px;
+    left: 20px;
+    top: 36px;
+}
+
+#calculationpane #keyboard #keyboardleft #centerleftpane {
+    position: relative;
+    float: left; 
+    width: 104px;
+    height: 430px;
+    left: 40px;
+    top: 10px;
+}
+
+#calculationpane #keyboard #keyboardright #centerrightpane {
+    position: relative;
+    float: left; 
+    width: 225px;
+    height: 330px;
+    top: 20px;
+    left: 16px;
+}
+
+#calculationpane #keyboard #keyboardright #rightpane {
+    position: relative;
+    float: left;
+    width: 335px;
+    height: 420px;
+    left: 40px;
+    top: 20px;
+}
+
+#calculationpane #keyboard #keyboardright #rightmostpane {
+    position: relative;
+    float: right;
+    width: 104px;
+    height: 420px;
+    top: 20px;
+    right:16px;
+}
+
+#calculationpane #keyboard #keyboardleft #leftmostpane #statetransition {
+    position: relative;
+    width: 360px;
+    height: 36px;
+    top:0px;
+    left:0px;
+}
+
+#calculationpane #keyboard #keyboardleft #leftmostpane #statetransition #degradswitch{
+    position: relative;
+    float: left;
+    width: 160px;
+    height: 36px;
+}
+
+#calculationpane #keyboard #keyboardleft #leftmostpane #statetransition #traghypswitch{
+    position: relative;
+    float: right;
+    width: 160px;
+    height: 36px;
+    left:6px;
+}
+
+#memorypage
+{
+    position: absolute;
+    float: left;
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+    background-image: url("../images/bg_land.png");
+    background-repeat: no-repeat;
+}
+
+#memorypage #memorypane {
+    position: relative;
+    float: left;
+    left:20px;
+    top: 28px;
+    width: 1248px;
+    height: 518px;
+    background-image: url("../images/bg_memory_list_land.png");
+    background-repeat: no-repeat;
+}
+
+#memorypage #memorypane #logo {
+    position: relative;
+    float: left;
+    width: 244px;
+    height: 33px;
+    background-image: url("../images/Logo.png");
+    background-repeat: no-repeat;
+}
+
+.dialogAbuttonPurple{
+    position:absolute;
+    width: 201px;
+    height: 64px;
+    border-style: none;
+    background-image: url("../images/bt_dialogA_purple.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    color:#EBEBE9;
+}
+
+.dialogAbuttonPurple:active{
+    background-image: url("../images/bt_dialogA_purple_press.png");
+}
+
+#memorypage #memoryclearall {
+    position: relative;
+    float: left;
+    left: 20px;
+    top: 14px;
+    width: 201px;
+    height: 64px;
+    }
+
+.dialogAbuttonBlack{
+    position:absolute;
+    width: 201px;
+    height: 64px;
+    border-style: none;
+    background-image: url("../images/bt_dialogA_black.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    color:#EBEBE9;
+}
+
+.dialogAbuttonBlack:active{
+    background-image: url("../images/bt_dialogA_black_press.png");
+}
+
+#memorypage #memoryClose {
+    position: relative;
+    float: right;
+    right: 24px;
+    top: 14px;
+    width: 201px;
+    height: 64px;
+    }
+
+#memorypage #memorypagelcd{
+    position: relative;
+    float: left;
+    width: 1248px;
+    height: 144px;
+    left: 20px;
+    top:16px;
+    background-image: url("../images/bg_display_memory_land.png");
+    background-repeat: no-repeat;
+}
+
+#memorypage #memorypagelcd #mpclosebutton #mplcdbuttonclose {
+    position: relative;
+    left: 28px;
+}
+
+#memorypage #memorypagelcd #mpmainentry {
+    position: absolute;
+    right: 16px;
+    left: 150px;
+    top:10px;
+    font-family: "OpenSans-Semibold";
+    font-size: 84px;
+    text-align: right;
+}
+
+#memorypage #memorypagelcd #mpopenhistorybutton{
+    position: absolute;
+    float: left;
+    width: 130px;
+    height: 56px;
+    left: 4px;
+    top: 82px;
+}
+
+/* Upper LCD display */
+
+.jspTrack {
+    background: #c4ccbc;
+    height: 670px;
+}
+
+.jspDrag {
+    background: #000000;
+    border-radius:10px;
+}
+
+.jspVerticalBar {
+    width: 10px;
+}
+
+#LCD_Upper #calculationhistory {
+    float: left;
+    left: 3px;
+    top: 8px;
+    overflow: visible;
+}
+
+#LCD_Upper #historyverticalline  {
+    position: relative;
+    float: right;
+    width: 2px;
+    height: 680px;
+    right: 37px;
+    top:4px;
+    background-image: url("../images/line_history_vert_land.png");
+    background-repeat: no-repeat;
+}
+
+.thickdivisor {
+    position: relative;
+    float: left; 
+    width: 1206px;
+    height: 4px;
+    left:1px;
+    background-image: url("../images/line_history_hor4px_land.png");
+    background-repeat: no-repeat;
+}
+
+.calculationpane {
+    position: relative;
+    float: left; 
+    width: 1210px;
+    max-height: 108px;
+    min-height: 68px;
+    overflow: hidden;
+}
+
+.calculation {
+    position: relative;
+    float: left; 
+    width: 1210px;
+}
+
+.calculationtext{
+    position: relative;
+    float: right;
+    color: #000000;
+    font-family: "OpenSans-Regular";
+    font-size: 36px;
+    right:16px;
+    top:5px;
+    text-align: right;
+}
+
+.shortverticaldivisor {
+    position: relative;
+    float: right;
+    width: 2px;
+    height: 72px;
+    top:-72px;
+    left: -1px;
+    background-image: url("../images/line_history_vert_land.png");
+    background-repeat: no-repeat;
+}
+
+.emptycalculationpane {
+    position: relative;
+    float: left; 
+    width: 30px;
+    height: 19px;
+}
+
+.thindivisor {
+    position: relative;
+    float: left; 
+    width: 1206px;
+    height: 2px;
+    left:1px;
+    background-image: url("../images/line_history_hor2px_land.png");
+    background-repeat: no-repeat;
+}
+
+.resultpane {
+    position: relative;
+    float: left; 
+    width: 1210px;
+    height: 82px;
+}
+
+.result {
+    position: relative;
+    float: left; 
+    width: 1210px;
+    height: 82px;
+}
+
+.resulttext{
+    position: relative;
+    float: right;
+    color: #000000;
+    font-family: "OpenSans-Semibold";
+    font-size: 56px;
+    right:16px;
+}
+
+.longverticaldivisor {
+    position: relative;
+    float: right;
+    width: 2px;
+    height: 86px;
+    top:-86px;
+    left: -1px;
+    background-image: url("../images/line_history_vert_land.png");
+    background-repeat: no-repeat;
+}
+
+.historyresulttomainentry {
+    position: relative;
+    float: left; 
+    top: 15px;
+    left: 8px;
+    width: 30px;
+    height: 38px;
+}
+
+.buttonhistoryresulttomainentry {
+    position: relative;
+    float: left; 
+    width: 14px;
+    height: 11px;
+    border-style: none;
+    background-image: url("../images/Button_Arrow_Green_Down.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.historyresulttomemory {
+    position: relative;
+    float: left; 
+    top: 15px;
+    left: 8px;
+    width: 29px;
+    height: 38px;
+}
+
+.buttonhistoryresulttomemory {
+    position: relative;
+    float: left; 
+    width: 14px;
+    height: 11px;
+    border-style: none;
+    background-image: url("../images/Button_Arrow_Green_Right.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+/* Lower LCD display */
+
+#LCD_Lower #upperpane {
+    position: relative;
+    float: left; 
+    width: 1248px;
+    height: 72px;
+}
+
+#LCD_Lower #upperpane #closebutton {
+    position: relative;
+    float: left; 
+    width: 112px;
+    height: 72px;
+    left: 0px;
+}
+
+#LCD_Lower #upperpane #closebutton #buttonclosecurrentformula {
+    position: relative;
+    float: left; 
+    left: 28px;
+}
+
+.currentformulashort {
+    position: relative;
+    float: right; 
+    width: 1134px;
+    height: 62px;
+    right: 16px;
+    top: 7px;
+    font-family: "OpenSans-Regular";
+    font-size: 44px;
+    text-align: right;
+    color:#000000;
+    overflow: hidden;
+}
+
+.currentformulalong {
+    position: relative;
+    float: left; 
+    width: 1134px;
+    height: 72px;
+    right: 16px;
+    top: 7px;
+    font-family: "OpenSans-Regular";
+    font-size: 44px;
+    text-align: right;
+    color:#000000;
+    overflow: hidden;
+}
+
+#LCD_Lower #upperpane #verticaldivider {
+    position: relative;
+    float: left; 
+    width: 1px;
+    height: 30px;
+    background-image: url("../images/LineVertical30Black.png");
+    background-repeat: no-repeat;
+}
+
+#LCD_Lower #horizontaldivider {
+    position: relative;
+    float: left; 
+    width: 1240px;
+    height: 2px;
+    left: 4px;
+    background-image: url("../images/line_display_land.png");
+    background-repeat: no-repeat;
+}
+
+#LCD_Lower #lowerpane {
+    position: relative;
+    float: left; 
+    width: 1248px;
+    height: 138px;
+}
+
+#LCD_Lower #lowerpane #closebutton {
+    position: relative;
+    float: left; 
+    width: 112px;
+    height: 76px;
+}
+
+#LCD_Lower #lowerpane #closebutton #buttonclosemainentry {
+    position: relative;
+    float: left;
+    left: 28px;
+}
+
+.mainentryshort {
+    position: relative;
+    float: right;
+    width: 1098px;
+    height: 114px;
+    right: 16px;
+    top: 9px;
+    font-family: "OpenSans-Semibold";
+    font-size: 84px;
+    text-align: right;
+    color: #000000;
+    overflow: hidden;
+}
+
+#LCD_Lower #lowerpane #verticaldivider {
+    position: relative;
+    float: left; 
+    width: 1px;
+    height: 60px;
+    background-image: url("../images/LineVertical60Black.png");
+    background-repeat: no-repeat;
+}
+
+#LCD_Lower #lowerpane #buttonmainentrymemoryadd {
+    position: relative;
+    left: 6px;
+    top: 20px;
+    border-style: none;
+    background-image: url("../images/Button_Arrow_Black.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+/* Buttons and their backgrounds */
+
+/* Exponential and logarithmic function buttons */
+
+#expandlog {
+    position: relative;
+    width: 360px;
+    height: 150px;
+    left: 0px;
+    top: 52px;
+}
+
+#buttonlog {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#buttonlog2 {
+    position: relative;
+    left: 20px;
+    top: 0px;
+}
+
+#buttonln {
+    position: relative;
+    left: 40px;
+    top: 0px;
+}
+
+#button10x {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+#button2x {
+    position: relative;
+    left: 20px;
+    top: 20px;
+}
+
+#buttonex {
+    position: relative;
+    left: 40px;
+    top: 20px;
+}
+
+/* Trigonometric function buttons */
+
+#trigonometric {
+    position: relative;
+    width: 360px;
+    height: 150px;
+    left:0px;
+    top:32px;
+}
+
+#buttonsin {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#buttoncos {
+    position: relative;
+    left: 20px;
+    top: 0px;
+}
+
+#buttontan {
+    position: relative;
+    left: 40px;
+    top: 0px;
+}
+
+#buttonarcsin {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+#buttonarccos {
+    position: relative;
+    left: 20px;
+    top: 20px;
+}
+
+#buttonarctan {
+    position: relative;
+    left: 40px;
+    top: 20px;
+}
+
+/* Hyperbolic function buttons */
+
+#hyperbolic {
+    position: relative;
+    width: 360px;
+    height: 150px;
+    left: 0px;
+    top: 32px;
+    display: none;
+}
+
+#buttonsinh {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#buttoncosh {
+    position: relative;
+    left: 20px;
+    top: 0px;
+}
+
+#buttontanh {
+    position: relative;
+    left: 40px;
+    top: 0px;
+}
+
+#buttonasinh {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+#buttonacosh {
+    position: relative;
+    left: 20px;
+    top: 20px;
+}
+
+#buttonatanh {
+    position: relative;
+    left: 40px;
+    top: 20px;
+}
+
+/* State transition toggle buttons */
+
+#statetransition {
+    position: relative;
+    width: 370px;
+    height: 210px;
+    left: 10px;
+    top: 10px;
+}
+
+#buttondeg {
+    position: relative;
+    width:80px;
+    height:36px;
+    text-align: center;
+}
+
+#buttonrad {
+    position: absolute;
+    left: 80px;
+    width:80px;
+    height:36px;
+    top: 0px;
+    text-align: center;
+}
+
+#buttontrig {
+    position: relative;
+    width:80px;
+    height:36px;
+    text-align: center;
+    }
+
+#buttonhyp {
+    position: absolute;
+    left: 80px;
+    width:80px;
+    height:36px;
+    top:0px;
+    text-align: center;
+}
+
+/* Power and root function buttons */
+
+#powerandroot {
+    position: relative;
+    width: 104px;
+    height: 148px;
+    left: 0px;
+    top: 10px;
+}
+
+#buttonsquare {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#buttonsquareroot {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+/* Nth power and nth root function buttons */
+
+#nthpowerandnthroot {
+    position: relative;
+    width: 104px;
+    height: 168px;;
+    left: 0px;
+    top: 10px;
+}
+
+#buttonnthpower {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+#buttonnthroot {
+    position: relative;
+    left: 0px;
+    top: 40px;
+}
+
+/* Center right pane buttons */
+#buttonclear {
+    position: relative;
+    left: 0px;
+    top: -6px;
+}
+
+#buttonmemorylist {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+}
+
+#buttondelete {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#buttonmemorize {
+    position: relative;
+    left: 14px;
+    top: 0px;
+    color: #000000;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+}
+
+#buttonleftparenthesis {
+    position: relative;
+    left: 0px;
+    top: 12px;
+}
+
+#buttonrightparenthesis {
+    position: relative;
+    left: 14px;
+    top: 12px;
+}
+
+#buttonfactorial {
+    position: relative;
+    left: 0px;
+    top: 24px;
+}
+
+#buttoninverse {
+    position: relative;
+    left: 14px;
+    top: 24px;
+}
+
+#buttonpi {
+    position: relative;
+    left: 0px;
+    top: 36px;
+}
+
+#buttonpercentage {
+    position: relative;
+    left: 14px;
+    top: 36px;
+}
+
+/* Right pane buttons */
+
+#button7 {
+    position: relative;
+    left: 0px;
+    top: 12px;
+}
+
+#button8 {
+    position: relative;
+    left: 8px;
+    top: 12px;
+}
+
+#button9 {
+    position: relative;
+    left: 16px;
+    top: 12px;
+}
+
+#buttondivide {
+    position: relative;
+    left: 8px;
+    top: 0px;
+}
+
+#button4 {
+    position: relative;
+    left: 0px;
+    top: 24px;
+}
+
+#button5 {
+    position: relative;
+    left: 8px;
+    top: 24px;
+}
+
+#button6 {
+    position: relative;
+    left: 16px;
+    top: 24px;
+}
+
+#buttonmultiply {
+    position: relative;
+    left: 16px;
+    top: 0px;
+}
+
+#button1 {
+    position: relative;
+    left: 0px;
+    top: 36px;
+}
+
+#button2 {
+    position: relative;
+    left: 8px;
+    top: 36px;
+}
+
+#button3 {
+    position: relative;
+    left: 16px;
+    top: 36px;
+}
+
+#buttonsubtract {
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+
+#button0 {
+    position: relative;
+    left: 0px;
+    top: 40px;
+}
+
+#button00 {
+    position: relative;
+    left: 12px;
+    top: 34px;
+}
+
+#buttondot {
+    position: relative;
+    left: 8px;
+    top: 48px;
+}
+
+#buttonadd {
+    position: relative;
+    left: 0px;
+    top: 32px;
+}
+
+/* Rightmost pane buttons */
+
+#buttonplusminus {
+    position: relative;
+    left: 16px;
+    top: 48px;
+}
+
+#buttonequal {
+    position: relative;
+    left: 0px;
+    top: 44px;
+}
+
+/* Hide the grammar div. */
+
+#grammar {
+    display: none;
+}
+
+
+/* open/close history button */
+.historybutton {
+    position:absolute;
+    width: 130px;
+    height: 56px;
+    border-style: none;
+    background-image: url("../images/bt_history_exp_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.historybutton:active{
+    background-image: url("../images/bt_history_exp_land_press.png");
+}
+
+.historybuttonclose {
+    position:absolute;
+    width: 130px;
+    height: 56px;
+    border-style: none;
+    background-image: url("../images/bt_history_contr_land.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.historybuttonclose:active{
+    background-image: url("../images/bt_history_contr_land_press.png");
+}
+
+#LCD_Upper #closehistorybutton{
+    position: absolute;
+    float: left;
+    width: 130px;
+    height: 56px;
+    left: 4px;
+    top: 629px;
+    z-index: 3;
+}
+
+#LCD_Lower #lowerpane #openhistorybutton{
+    position: absolute;
+    float: left;
+    width: 130px;
+    height: 56px;
+    left: 4px;
+    top: 76px;
+}
+
+@
+-webkit-keyframes historyAnimationOpen {
+0% {
+    height: 0px;
+    }
+100% {
+    height: 390px;
+    }
+}
+
+@-webkit-keyframes historyAnimationClose {
+    0% {
+        height: 390px;
+    }
+
+    100% {
+        height: 0px;
+    }
+}
+
+/* clear all memory slots confirmation dialog */
+#clearconfirmationdialog #clearconfirmationdialogbg
+{
+    position: absolute;
+    width: 688px;
+    height: 362px;
+    left: 296px;
+    top: 179px;
+    background-image: url("../images/bg_dialog.png");
+    background-repeat: no-repeat;
+}
+
+#clearconfirmationdialog #dialogheading{
+    position: relative;
+    width: 660px;
+    height: 56px;
+    left: 16px;
+    top: 20px;
+    color: #EBEBE9;
+    font-family: "OpenSans-Semibold";
+    font-size: 36px;
+}
+
+#clearconfirmationdialog #dialogcontent {
+    position: relative;
+    float: left;
+    width: 680px;
+    height: 270px;
+    left:5px;
+    top:30px;
+    background-repeat: no-repeat;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    color:#EBEBE9;
+}
+
+#clearconfirmationdialog #dialogcontent #dialogcontenttext{
+    position: relative;
+    width:660px;
+    height: 150px;
+    left: 16px;
+    top: 50px;
+    color: #EBEBE9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+}
+
+.dialogBpurplebutton{
+    position:absolute;
+    width: 264px;
+    height: 64px;
+    border-style: none;
+    background-image: url("../images/bt_dialogB_purple.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    color:#EBEBE9;
+}
+
+.dialogBblackbutton{
+    position:absolute;
+    width: 264px;
+    height: 64px;
+    border-style: none;
+    background-image: url("../images/bt_dialogB_blacks.png");
+    background-color: transparent;
+    background-repeat: no-repeat;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    color:#EBEBE9;
+}
+
+.dialogBpurplebutton:active{
+    background-image: url("../images/bt_dialogB_purple_press.png");
+}
+
+.dialogBblackbutton:active{
+    background-image: url("../images/bt_dialogB_black_press.png");
+}
+
+#clearconfirmationdialog #dialogcontent #dialogokbutton{
+    position: relative;
+    float: left;
+    width: 264px;
+    height: 64px;
+    left: 20px;
+}
+
+#clearconfirmationdialog #dialogcontent #dialogcancelbutton{
+    position: relative;
+    float: right;
+    width: 264px;
+    height: 64px;
+    right: 20px;
+}
+
+/* memory note editor page */
+
+#memorynoteeditor{
+    position: absolute;
+    float: left;
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+    background-image: url("../images/bg_land.png");
+    background-repeat: no-repeat;
+}
+
+#memorynoteeditor #mnememorypane{
+    position: relative;
+    top:20px;
+    left:316px;
+    height:94px;
+    width:648px;
+    background-image: url("../images/bg_memory_note.png");
+    background-repeat: no-repeat;
+}
+
+#memorynoteeditor #mnememorypane #mnebutton{
+    position: relative;
+    top:18px;
+    left:12px;
+    color:#EBEBE9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+}
+
+#memorynoteeditor #mnememorypane #mnetext{
+    position:absolute;
+    color:#ffffff;
+    left:122px;
+    width:533px;
+    height:45px;
+    top:8px;
+}
+
+#memorynoteeditor #mnememorypane #mnedescription{
+    position:absolute;
+    color:#000000;
+    left:122px;
+    top:45px;
+    width:533px;
+    height:45px;
+}
+
+#memorynoteeditor #mnememorypane #mnedescriptioninput{
+    position:absolute;
+    color:#000000;
+    left:118px;
+    top:49px;
+    width:480px;
+    height:36px;
+    background-color: transparent;
+    font-size: 20px;
+    border: hidden;
+}
+
+#memorynoteeditor #mnememorypane #mnedescriptiondelete{
+    position:absolute;
+    left:603px;
+    top:48px;
+    width:40px;
+    height:40px;
+    background-image: url("../images/clear_text.png");
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+
+#memorynoteeditor #mnememorypane #mnedescriptiondelete:active{
+    background-image: url("../images/clear_text_press.png");
+}
+
+#memorynoteeditor #mnesave{
+    position: absolute;
+    left:316px;
+    top:144px;
+    width:201px;
+    height:64px;
+}
+
+#memorynoteeditor #mnecancel{
+    position: relative;
+    float:right;
+    right:316px;
+    top: 144px;
+    width:201px;
+    height:64px;
+}
+
+.buttonlefticon{
+    position: relative;
+    height: 26px;
+    width: 26px;
+    float:left;
+    left: 10px;
+    top:10px;
+}
+
+.buttonrighticon{
+    position: relative;
+    height: 26px;
+    width: 26px;
+    top:0px;
+    right: 20px;
+    float:right;
+    top: 10px;
+}
+
+.buttonrighttext{
+    position:relative;
+    float:right;
+    right:5px;
+}
+
+.buttonlefttext{
+    position:relative;
+    width: 50px;
+    float:left;
+    left:5px;
+    top:-2px;
+}
+
+#mnebuttondownarrow{
+    position: relative;
+    height: 26px;
+    width: 26px;
+    float:left;
+    top:30px;
+    left:10px;
+}
+
+#wrapper {
+        position:absolute;
+        top:5px; left:0px;
+        width:1232px;
+        height: 680px;
+        overflow: visible;
+}
+
+#scroller {
+        position:absolute;
+        width:100%;
+        padding:0;
+}
+
+.dialogbackground
+{
+    position: absolute;
+    float: left;
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+    background-image: url("../images/bg_land.png");
+    background-repeat: no-repeat;
+    opacity: 0.5;
+}
+
+/**
+ *
+ * Vertical Scrollbar
+ *
+ */
+.customScrollbarV {
+    position:absolute;
+    z-index:110;
+    width:8px;bottom:7px;top:2px;right:1px
+}
+
+.customScrollbarV > div {
+    position:absolute;
+    z-index:100;
+    width:100%;
+
+    background:black;
+    box-sizing:border-box;
+    border-radius:4px;
+}
+
+/* license page */
+
+#licensebtnl {
+    position: absolute;
+    top: 640px;
+    left: 580px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    -webkit-border-radius: 40px;
+    border: solid 3px #dddddd;
+    opacity: 0.3;
+    color: #dddddd;
+    font: 35px Arial, Helvetica, sans-serif;
+}
+
+#licensebtnl:active {
+    opacity: 1.0;
+}
+
+#licensepage {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    left: 0px;
+    top: 0px;
+    background: -webkit-gradient(linear, left top, right top, from(#3f4140), to(#1d2021));
+    z-index: 99;
+}
+
+#licensetext {
+    width: 98.5%;
+    height: 88%;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #c4ccbc));
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    box-shadow: inset 1px 1px 2px 1px black;
+    margin-bottom: 2px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    cursor: move;
+}
+
+#licensescroll {
+    position: relative;
+    font: 25px/100% Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.licensebtn {
+    position: absolute;
+    color: #d7d7d7;
+    border: solid 1px #333;
+    text-align: center;
+    text-decoration: none;
+    font: 50px/100% Arial, Helvetica, sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    height: 64px;
+    width: 100px;
+    line-height: 60px;
+    cursor: pointer;
+    box-shadow: 2px 2px 14px #000;
+}
+
+.licensebtn:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+}
+
+.licensebtn:active {
+    color: #666;
+    background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+}
+
+#licensebtnq {
+    left: 440px;
+    width: 400px;
+}
+
+/* help dialog */
+
+.helpdialog {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    font-family: Sans;
+    visibility: hidden;
+}
+
+.helpdialog .column1 {
+    position: relative;
+    float: left;
+    width: 50%;
+}
+
+.helpdialog .column2 {
+    position: relative;
+    float: right;
+    width: 50%;
+}
+
+.helpdialog.shown {
+    visibility: visible;
+    -webkit-transition: background-color 0.5s;
+    background-color: rgba(0,0,0,.33);
+    z-index: 99;
+}
+
+.helpdialog .inner {
+    position: absolute;
+    top: 10%;
+    left : 8%;
+    height: 65%;
+    width: 80%;
+    border: 20px solid #131516;
+    background-color: #2a2b2a;
+    padding: 10px;
+    opacity: 0;
+}
+
+.helpdialog.shown .inner {
+    -webkit-transition: opacity 0.5s;
+    opacity: 1;
+}
+
+.helpdialog .inner .contents {
+    font-family: Arial;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: default;
+}
+
+.helpdialog .inner .contents bl {
+    color: #000000;
+    font-family: "OpenSans-Light";
+    font-size: 26pt;
+    line-height: 72px;
+}
+
+.helpdialog .inner .contents wh {
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    line-height: 72px;
+}
+
+.helpdialog .inner .contents wh2 {
+    color: #ebebe9;
+    font-family: "OpenSans-Light";
+    font-size: 36px;
+    line-height: 64px;
+}
+
+.helpdialog .inner .contents .exampleclose {
+    width: 64px;
+    height: 64px;
+    border: 2px solid white;
+    background-image: url("../images/clear_memory_disable.png");
+    background-color: black;
+    background-repeat: no-repeat;
+}
+
+.helpdialog .inner .contents .exampleedit {
+    width: 64px;
+    height: 64px;
+    border: 2px solid white;
+    background-image: url("../images/pencil_disable.png");
+    background-color: black;
+    background-repeat: no-repeat;
+}
+
+.helpdialog .inner .close {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -7%;
+    left: 96%;
+    font-family: Sans;
+    font-weight: 900;
+    font-size: 90px;
+    text-align: center;
+    border: solid 10px #131516;
+    background-color: #131516;
+    -webkit-border-radius: 60px;
+    line-height: 45px;
+    cursor: pointer;
+    color: #dddddd;
+}
+
+.helpdialog .inner .close:active {
+    color: #ffffff;
+}
+
+.helplaunch {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    -webkit-border-radius: 40px;
+    border: solid 3px #dddddd;
+    color: #dddddd;
+    opacity: 0.3;
+    font: 35px Arial, Helvetica, sans-serif;
+}
+
+#home_help {
+    top: 640px;
+    left: 700px;
+}
+
+#home_help:active {
+    opacity: 1;
+}

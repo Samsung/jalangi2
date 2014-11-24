@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ *
+-->
+<html>
+  <head>
+      <meta id="viewport_meta" name="viewport" content="" />
+    <script type="text/javascript">
+        var viewport_meta = document.getElementById('viewport_meta');
+        var w = (screen.orientation.indexOf("portrait") == 0)?screen.availWidth:screen.availHeight;
+        viewport_meta.setAttribute('content','width='+w+', user-scalable=no');
+    </script>
+    <title>Go</title>
+    <meta name="author" content="Xinchao He">
+	<link rel="stylesheet" href="css/go.css"/>
+        <link rel="stylesheet" type="text/css" href="css/license.css"></link>
+        <script src="js/license.js"></script>
+	<script type="text/javascript" src="lib/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/sound.js"></script>
+	<script type="text/javascript" src="js/go.js"></script>
+  </head>
+  <body onselectstart="return false" ondragstart="return false" style="overflow:hidden;">
+    <div id="licensepage" style="display: none">
+        <div id="licensetext"><div id="licensescroll"></div></div>
+        <div id="licensebtnq" class="licensebtn">Back</div>
+    </div>
+	<div id="theworld" class="world">
+	  <div class="left_pit"></div>
+	  <div class="right_pit"></div>
+	  <div class="left_arrow" align="center">
+		<span id="playerone"></span><br>
+		<span style="font-size:22pt;"><span name="score"></span>:<span id="left_score">0000</span></span>
+		<img class="player_arrow_img" src="images/GO_PlayerArrow_010612_a.png" />
+	  </div>
+	  <div class="right_arrow" align="center">
+		<span id="playertwo"></span><br>
+		<span style="font-size:22pt;"><span name="score"></span>:<span id="right_score">0000</span></span>
+		<img class="player_arrow_img" src="images/GO_PlayerArrow_010612_a.png" />
+	  </div>
+	  <img class="left_time_arrow" src="images/GO_TimerArrow_022212_a.png" />
+	  <img class="right_time_arrow" src="images/GO_TimerArrow_022212_a.png" />
+	  <div class="left_timer">
+		<img src="images/GO_Timer_010612_a.png" />
+		<span>20:00</span>
+	  </div>
+	  <div class="right_timer">
+		<img src="images/GO_Timer_010612_a.png" />
+		<span>20:00</span>
+	  </div>
+	  <a class="left_skip skip_arrow">
+	  </a>
+	  <a class="right_skip skip_arrow">
+	  </a>  
+	  <a onClick="javascript:Go.toggleSetting();" class="setting_icon"><img src="images/GO_SettingsIcon_010612_a.png" /></a>
+	  <a onClick="javascript:Go.undue('black');" class="undue_icon_left"><img src="images/GO_ReplayArrow_012012_b.png" /></a>
+	  <a onClick="javascript:Go.undue('white');" class="undue_icon_right"><img src="images/GO_ReplayArrow_012012_b.png" /></a>
+	  <a onClick="javascript:Go.start();" class="play_button display_none">
+		<div class="play_button_img">
+		  <span class="play_button_text text_shadow"></span>
+		</div>
+	  </a>
+	  <div class="setting_panel text_shadow display_none">
+		<a onClick="javascript:Go.toggleHelp();" class="setting_help">?</a>
+		<a onClick="javascript:Go.toggleSetting();" class="setting_exit">X</a>
+                <div id="licensebtnl" style="top: 490px; left: 405px;"> i </div>
+		<div class="setting_arrow" align="center">
+		  <span></span>
+		  <img class="setting_arrow_img" src="images/GO_SettingsArrow_010612_a.png" />
+		</div>
+		<div class="setting_sound">
+		  <span></span>
+		  <a onClick="javascript:Go.toggleSound();"><img class="setting_sound_check" src="images/GO_Checkbox_010612_a.png" /></a>
+		</div>
+		<div class="setting_timer">
+		  <span></span>
+		  <a onClick="javascript:Go.toggleTimer();"><img class="setting_timer_check" src="images/GO_Checkbox_010612_a.png" /></a>
+		</div>
+		<div class="setting_restart">
+		  <span></span>
+		  <a onClick="javascript:Go.toggleRestart();"><img class="setting_restart_check" src="images/GO_Checkbox_010612_a.png" /></a>
+		</div>
+		<div class="setting_quit">
+		  <span class="setting_quit_text"></span>
+		  <a onClick="javascript:Go.toggleQuit();"><img class="setting_quit_check" src="images/GO_Checkbox_010612_a.png" /></a>
+		</div>
+		<a onClick="javascript:Go.toggleSetting();" class="setting_resume setting_resume_inactive" align="center">
+		</a>
+	  </div>
+	  <div class="help_panel display_none">
+		<a onClick="javascript:Go.toggleHelp();" class="help_exit text_shadow">X</a>
+		<div class="help_title text_shadow" ></div>
+		<div class="help_text" >
+		  &nbsp;&nbsp;&nbsp;&nbsp;Take turns placing a stone on a vacant intersections (points) of the grid on a Go board. Black moves first.
+		  Once placed, a stone may not be moved, and can be removed only if captured. If a player believes he has no useful moves, he may skip his move (pass).<br>
+		  &nbsp;&nbsp;&nbsp;&nbsp;Vertically and horizontally adjacent stones of the same color form a chain (also called a string, or group) that shares liberties (adjacent, empty spaces) in common. These chains cannot
+		  be divided, and in effect becomes a single larger stone. Chains may be expanded by placing additional stones on adjacent points, and can be connected by
+		  placing a stone on a points adjacent to two or more chains of the same color.<br>
+		  &nbsp;&nbsp;&nbsp;&nbsp;A chain of stones must have at least one liberty to remain
+		  on the board. When a chain is surrounded by opposing stones so that it has no liberties, it is captured and removed from the board.<br>
+		  &nbsp;&nbsp;&nbsp;&nbsp;The game ends when both players have passed
+		  (clicked Skip) consecutively. The player who scores more points (the number of empty points, or intersections, surrounded by their pieces, plus the number of stones they've captured) wins.<br>
+		  &nbsp;&nbsp;&nbsp;&nbsp;For more information on how to play Go, see the Wikipedia article on the game: <span><a style="opacity: 0.6; color: #0000FF" href="http://en.wikipedia.org/wiki/Go_(game)">http://en.wikipedia.org/wiki/Go_(game)</a></span>.
+		</div>
+	  </div>
+	  <div class="win_panel text_shadow display_none">
+		<a onClick="javascript:Go.disable('.win_panel');" class="win_exit">X</a>
+		<div class="win_arrow" align="center">
+		  <span style="font-size:55pt;"><span name="player"></span><span id="win_player"></span></span><br>
+		  <span style="font-size:70pt;" id="win_result"></span>
+		  <img class="win_arrow_img" src="images/GO_WinArrow_012012_a.png" />
+		</div>
+		<a onClick="javascript:Go.start();" class="replay">
+		</a>
+	  </div>
+	  <div class="board"></div>
+	</div>
+	<audio id="dida" preload="auto">
+	  <source src="sounds/ClockTicking_Loop.wav" />
+	</audio>
+
+  <script type="application/javascript">
+	  console.log("Hello World");
+  </script>
+  </body>
+</html>

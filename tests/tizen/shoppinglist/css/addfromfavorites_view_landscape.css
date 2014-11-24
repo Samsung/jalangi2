@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#addfromfavorites-view {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 0px;
+    left: 0px;
+    display:none;
+    z-Index:1001;
+}
+
+#addfromfavorites-view .container {
+    width: 1268px; /* (1280-12) */
+    height: 708px; /* (720-12) */
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+#addfromfavorites-view .title-bar label {
+    font-size: 52px;
+    margin-top: 14px;
+}
+
+#addfromfavorites-view #favorites-middle-pane {
+    position: relative;
+    height: 474px;
+    width: 1268px;
+    background-color: #737373;
+}
+
+#addfromfavorites-view #listoffavorites-pane {
+    position: relative;
+    float: right;
+    height: 474px;
+    width: 848px; /* 1268 - 410 - 10 */
+    background-color: #E6E7E8;
+}
+
+#addfromfavorites-view #list-store-input-pane {
+    position: relative;
+    float: left;
+    height: 474px;
+    width: 420px;
+    margin-left: 0px;
+    background-color: #737373;
+}
+
+#addfromfavorites-view .listinputpane {
+    float: left;
+    width: 400px;
+    height: 165px;
+    margin-left: 10px;
+    margin-top: 40px;
+}
+
+.listinputpane input[type="text"] {
+    width: 400px;
+}
+
+#addfromfavorites-view #favorites_store_input {
+    width: 220px; /* (400-85-95) To handle padding */
+    padding-right: 95px;
+    padding-left: 85px;
+}
+#addfromfavorites-view #favorites_list_input {
+    width: 209px; /* (400-95-96) To handle padding */
+    padding-right: 95px;
+    padding-left: 96px;
+}
+
+#addfromfavorites-view #listoffavorites-pane .favoriteitem {
+    width: 410px;
+}
+
+/*************************************************/
+#favorites_searchpane,
+#favorites_titlepane {
+    position: relative;
+    float: left;
+    width: 1156px;
+    height: 112px;
+}
+
+#favorites_searchpane form {
+    position: relative;
+    float: left;
+    width: 1044px;
+}
+
+#favorites_searchpane form input[type="text"] {
+    width: 939px;  /*1044 -20 -85 */ 
+}
+

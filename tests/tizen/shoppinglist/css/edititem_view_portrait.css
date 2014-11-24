@@ -1,0 +1,163 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#edititem-view {
+    width: 720px;
+    height: 1280px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-Index:1000;
+}
+
+#edititem-view .container {
+    width: 708px;
+    height: 1268px;
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+#edititem_wrapper{
+    position: relative;
+    float:left;
+    width:100%;
+    height: 1034px;
+    background-color: #E6E7E8;
+}
+
+#edititem_scroller {
+        position:absolute;
+        width:100%;
+        padding:0;
+}
+
+#edititem-view .container .bottom-bar {
+    position:absolute;
+    top: 1152px;
+    left:0px;
+    height: 122px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #4D4D4D;
+}
+
+#edititem-view .container .edititem_form {
+    width: 100%;
+    background-color: #E6E7E8;
+    overflow: hidden;
+}
+
+/*************************************************/
+#edititem-view #text_fields_pane {
+    float: left;
+    height:  772px;
+    width:  708px;
+}
+
+#edititem-view .edititem_form #item_name,
+#edititem-view .edititem_form #item_list,
+#edititem-view .edititem_form #item_type,
+#edititem-view .edititem_form #item_store {
+    float: left;
+    width: 698px;
+    height: 165px; /* 193px - 28; */
+    margin-left: 10px;
+    margin-top: 28px;
+}
+
+#edititem-view form input[type="text"] {
+    width: 688px;
+}
+
+#edititem-view form #item_store_input {
+    width: 508px; /* (688-85-95) To handle padding */
+    padding-right: 95px;
+    padding-left: 85px;
+}
+
+#edititem-view form #item_list_input {
+    width: 497px; /* (688-95-96) To handle padding */
+    padding-right: 95px;
+    padding-left: 96px;
+}
+
+/*****************************************************/
+#edititem-view #photo_pane {
+    float: left;
+    height: 346px; /* (474-28) */
+    width: 698px;
+    margin-left: 10px;
+    margin-top: 28px;
+}
+
+#edititem-view #photo_content {
+    float: left;
+    height: 223px;
+    width: 688px;
+    margin-top: 13px;
+    background-color: #CCCCCC;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+#edititem-view #photo_content #edititem_view_item_photo {
+    position:absolute;
+    height: 303px;
+    width: 668px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#edititem-view #photo_content #edititem_view_add_photo {
+    position: relative;
+    float: left;
+    top: 100px;
+    left: 200px;
+    width: 310px;
+}
+
+.videoMask {
+    position: relative;
+    left: 10px;
+    top: 10px;
+    width: 320px;
+    max-width: 388px;
+    height: 223px; /* 291px; */
+    cursor: pointer;
+    /* display: hidden; inline; */
+    /* visibility: hidden; */
+}
+
+.videoMask video {
+    position: absolute;
+    clip: rect(0px 320px 291px 0px);
+}
+
+video {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+.itemPhoto {
+    position: relative;
+    left: 140px;
+    top: 10px;
+
+    width: 320px;
+    max-width: 388px;
+    height: 291px;
+        
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #226699;
+}

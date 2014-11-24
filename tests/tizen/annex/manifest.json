@@ -1,0 +1,17 @@
+{
+  "name": "__MSG_name__",
+  "description": "__MSG_description__",
+  "default_locale": "en",
+  "version": "1.0.2",
+  "icons": { "16":"annex-icon-16.png", "48": "annex-icon-48.png", "128": "annex-icon.png" },
+  "app": {
+    "launch": {
+        "local_path": "index.html",
+        "container": "panel",
+	"width":1024,
+	"height":600
+    }
+  },
+  "homepage_url" : "https://01.org/webapps/content/annex", 
+  "update_url" : "https://01.org/webapps/content/annex/update.xml" 
+}

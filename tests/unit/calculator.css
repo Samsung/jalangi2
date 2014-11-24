@@ -1,0 +1,43 @@
+.calculator
+{
+    width:300px;
+    height:300px;
+    background-color:#eeeeee;
+    border:2px solid #CCCCCC;
+    margin:auto;
+    padding-left:5px;
+    padding-bottom:5px;
+}
+.calculator td
+{
+    height:16.66%;
+}
+.calc_td_result
+{
+    text-align:center;
+}
+.calc_result
+{
+    width:90%;
+    text-align:right;
+}
+.calc_td_calculs
+{
+    text-align:center;
+}
+.calc_calculs
+{
+    width:90%;
+    text-align:left;
+}
+.calc_td_btn
+{
+    width:25%;
+    height:100%;
+}
+.calc_btn
+{
+    width:90%;
+    height:90%;
+    font-size:20px;
+}

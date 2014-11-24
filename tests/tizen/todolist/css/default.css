@@ -1,0 +1,190 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/* Fonts */
+@font-face {
+  font-family: 'Lato Light';
+  src: url('fonts/Lato-Lig.ttf');
+}
+@font-face {
+  font-family: 'Lato Regular';
+  src: url('fonts/Lato-Reg.ttf');
+}
+@font-face {
+  font-family: 'Lato Black';
+  src: url('fonts/Lato-Bla.ttf');
+}
+/* Variables */
+/* Mixins */
+.rounded-corners-subtle {
+  border-radius: 0.3em;
+}
+
+
+
+/********** day view **********/
+
+#day-view .wrap, #week-view .wrap {
+  position: relative;
+  width: 8px;
+  height: 250px;
+  overflow: hidden;
+}
+#day-view .wrap .previous,
+#week-view .wrap .previous,
+#day-view .wrap .next,
+#week-view .wrap .next {
+  position: absolute;
+  top: 50%;
+}
+#day-view .left.wrap, #week-view .left.wrap {
+  float: left;
+}
+#day-view .right.wrap, #week-view .right.wrap {
+  float: right;
+}
+
+#day-view .day-wrap {
+  position: relative;
+  padding: 0 14px;
+}
+#day-view .day-wrap .day {
+  width: 100%;
+  margin: 0px;
+}
+#day-view .day-wrap .day .container {
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#c9c7c7), to(#ffffff));
+}
+#day-view .day-wrap .day .container > .morning, #day-view .day-wrap .day .container > .afternoon, #day-view .day-wrap .day .container > .evening {
+  padding: 2px 0;
+  position: relative;
+  background: none;
+}
+#day-view .day-wrap .day .container > .morning .header, #day-view .day-wrap .day .container > .afternoon .header, #day-view .day-wrap .day .container > .evening .header {
+  position: relative;
+  overflow: hidden;
+  float: left;
+  height: 108px;
+  width: 32px;
+  text-align: center;
+  background: #c9c7c7;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d9d7d7), to(#b9b7b7));
+  border-radius: 0;
+}
+#day-view .day-wrap .day .container > .morning .header .text, #day-view .day-wrap .day .container > .afternoon .header .text, #day-view .day-wrap .day .container > .evening .header .text {
+  font-family: 'Lato Light';
+  font-size: 22px;
+  color: #969696;
+  text-shadow: none;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  display: block;
+  position: absolute;
+  top: 43px;
+  left: -30px;
+  width: 90px;
+}
+#day-view .day-wrap .day .container > .morning .header .a, #day-view .day-wrap .day .container > .afternoon .header .a, #day-view .day-wrap .day .container > .evening .header .a {
+  position: relative;
+  float: right;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+}
+#day-view .day-wrap .day .container > .morning .items, #day-view .day-wrap .day .container > .afternoon .items, #day-view .day-wrap .day .container > .evening .items {
+  padding: 0;
+  background: none;
+  overflow-y: auto;
+  height: 108px;
+}
+#day-view .day-wrap .day .container > .morning .items .todo-item, #day-view .day-wrap .day .container > .afternoon .items .todo-item, #day-view .day-wrap .day .container > .evening .items .todo-item {
+  float: left;
+  margin: 0 16px 0 0;
+  padding: 4px 8px;
+  border: 1px dashed #c9c7c7;
+}
+#day-view .day-wrap .day .container > .morning .items .todo-item.prio-1, #day-view .day-wrap .day .container > .afternoon .items .todo-item.prio-1, #day-view .day-wrap .day .container > .evening .items .todo-item.prio-1 {
+  font-size: 40px;
+}
+#day-view .day-wrap .day .container > .morning .items .todo-item.prio-2, #day-view .day-wrap .day .container > .afternoon .items .todo-item.prio-2, #day-view .day-wrap .day .container > .evening .items .todo-item.prio-2 {
+  font-size: 36px;
+}
+#day-view .day-wrap .day .container > .morning .items .todo-item.prio-3, #day-view .day-wrap .day .container > .afternoon .items .todo-item.prio-3, #day-view .day-wrap .day .container > .evening .items .todo-item.prio-3 {
+  font-size: 32px;
+}
+#day-view .day-wrap .day .container > .morning .items .todo-item.prio-4, #day-view .day-wrap .day .container > .afternoon .items .todo-item.prio-4, #day-view .day-wrap .day .container > .evening .items .todo-item.prio-4 {
+  font-size: 28px;
+}
+#day-view .day-wrap .day .container > .morning, #day-view .day-wrap .day .container > .afternoon {
+  border-bottom: 1px solid #b6b5b5;
+}
+#day-view .day-wrap .day .reflection {
+  height: 44px;
+  background-image: -webkit-linear-gradient(top, rgba(131, 131, 131, 0.52) 0%, rgba(131, 131, 131, 0) 100%);
+  border-radius: 3px;
+}
+
+
+
+
+
+/********** Notes view **********/
+#notes-view .container {
+  padding: 4px;
+  background-color: #cccccc;
+  border-radius: 3px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#c1c1c1));
+}
+#notes-view .container .header {
+  height: 32px;
+  border-radius: 3px 3px 0 0;
+  background-color: #858585;
+  padding: 4px;
+}
+#notes-view .container .header .notes-header {
+  font-family: 'Lato Light';
+  font-size: 25px;
+  display: block;
+  padding: 4px;
+  float: left;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+#notes-view .container .header .icon {
+  float: right;
+  padding: 4px;
+}
+#notes-view .container textarea {
+  height: 100%;
+  width: 99%;
+  font-family: 'Lato Light';
+  font-size: 22px;
+  color: #000000;
+  background-color: #e0e0e0;
+  padding: 4px;
+  margin: 0px;
+  resize: none;
+  overflow: auto;
+  border: none;
+  line-height: 32px;
+}
+#notes-view .container textarea:focus, #notes-view .container textarea:active {
+  box-shadow: none;
+}
+#notes-view .reflection {
+  height: 44px;
+  background-image: -webkit-linear-gradient(top, rgba(131, 131, 131, 0.52) 0%, rgba(131, 131, 131, 0) 100%);
+  border-radius: 3px;
+}
+
+
+/* JQM overrides */
+

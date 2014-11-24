@@ -1,0 +1,176 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#listselection-dialog,
+#storeselection-dialog {
+    position: absolute;
+    top: 0px;
+    width: 708px;
+    display: none;
+    z-Index: 1010;
+    background-color: #E6E7E8;
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+#listselection-dialog.portrait,
+#storeselection-dialog.portrait {
+    left: 0px;
+}
+
+#listselection-dialog.landscape,
+#storeselection-dialog.landscape {
+    left: 280px;
+}
+
+/* TODO: make common style for
+title-bar
+title-bar title text
+close button
+*/
+#listselection-dialog .title-bar,
+#storeselection-dialog .title-bar {
+    height: 112px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #2E2E2E;
+}
+
+/********************************************/
+#listselection-dialog .title-bar label,
+#storeselection-dialog .title-bar label {
+    font-family: 'OpenSans-Regular';
+    font-size: 52px;
+    color: #939598;
+    text-shadow: none;
+    margin-left: 25px;
+    margin-top: 14px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+#listselection-dialog button#listselection_close_button,
+#storeselection-dialog button#storeselection_close_button {
+    background-color: #2E2E2E;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+    height: 85px;
+    width: 85px;
+    background-image: url("../images/btn_exit_01.png");
+}
+#listselection-dialog button#listselection_close_button:active,
+#storeselection-dialog button#storeselection_close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+
+/* DO NOT CHANGE */
+#listselection-dialog #listoflists-popup-pane,
+#storeselection-dialog #listofstores-popup-pane {
+    position: relative;
+    float: left;
+    width: 708px;
+    height: 596px;
+}
+
+/* DO NOT CHANGE */
+#listselection-dialog #listoflists-popup,
+#storeselection-dialog #listofstores-popup {
+    position: absolute;
+    width: 708px;
+}
+
+#listselection-dialog #listoflists-popup .listitem,
+#storeselection-dialog #listofstores-popup .listitem {
+    position: relative;
+    float: left;
+    width: 708px;
+    height: 116px;
+    border-bottom: none;
+}
+#listselection-dialog #listoflists-popup .listitem:active,
+#storeselection-dialog #listofstores-popup .listitem:active {
+    background-color: #CCCCCC;
+}
+#listselection-dialog #listoflists-popup .listitem a,
+#storeselection-dialog #listofstores-popup .listitem a {
+     width: 100%;
+    height: 114px;
+     display: block;
+}
+
+/* TODO - make it common */
+#listselection-dialog .color_box {
+    position: relative;
+    float: left;
+    /* display: inline; */
+    width: 48px;
+    height: 48px;
+    border: 2px;
+    border-style: solid;
+    border-color: #414042;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-top: 30px;
+    margin-left: 52px;
+}
+
+.listitem_divider {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 2px;
+    background-color: #CCCCCC;
+}
+
+#listselection-dialog .listitem label,
+#storeselection-dialog .listitem label {
+    position: relative;
+    float: left;
+    font-family: 'OpenSans-Regular';
+    font-size: 42px;
+    color: #414042;
+    text-shadow: none;
+    margin-left: 47px;
+    margin-top: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 557px;
+    /* display: inline-block; */
+}
+
+#listselection-dialog .listitem label {
+    width: 557px;
+}
+
+#storeselection-dialog .listitem label {
+    width: 643px;
+}
+
+/*****************************/
+#shadow {
+    width: 100%;
+    height: 100%;
+}
+.opaqueLayer {
+    display:none;
+    position:absolute;
+    top:0px;
+    left:0px;
+    opacity:0.6;
+    filter:alpha(opacity=60);
+    background-color: #000000;
+    z-Index:1009;
+}

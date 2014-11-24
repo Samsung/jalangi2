@@ -1,0 +1,737 @@
+<!DOCTYPE HTML>
+<!--
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ *
+-->
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width target-densitydpi=device-dpi initial-scale=1 maximum-scale=1 user-scalable=0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Scientific Calculator</title>
+        <link rel="stylesheet" id="stylesheet" type="text/css" href="css/calc_portrait.css"/>
+    </head>
+    <body>
+        <div id="background">
+            <div id="calculationpane">
+                <div id="LCD_Upper" style="display: none">
+                <div id="wrapper"><div id="scroller">
+                    <div class="scroll-pane" id="calculationhistory"></div>
+                </div></div>
+                    <div id="historyverticalline"></div>
+                    <button class="historybuttonclose" id="closehistorybutton" onclick="Calculator.closeHistory()"></button>
+                </div>
+                <div id="LCD_Lower">
+                    <div id="upperpane">
+                        <div id="closebutton">
+                            <button class="buttonclose" id="buttonclosecurrentformula" onclick="Calculator.setCurrentFormula('')"></button>
+                        </div>
+                        <div id="currentformula"></div>
+                    </div>
+                    <div id="horizontaldivider"></div>
+                    <div id="lowerpane">
+                        <div id="closebutton">
+                            <button class="buttonclose" id="buttonclosemainentry" onclick="Calculator.setMainEntry('')"></button>
+                        </div>
+                        <div id="mainentry"></div>
+                        <button class="historybutton" id="openhistorybutton" onclick="Calculator.openHistory()"></button>
+                    </div>
+                </div>
+                <div id="keyboard">
+                    <div id="keyboardleft">
+                        <div id="leftmostpane">
+                            <div id="statetransition">
+                                <div id="degradswitch" class="switchleftactive">
+                                     <div class="buttontogglebackgroundB" id="buttondeg" onclick="Calculator.transitionToDegrees();">DEG</div>
+                                     <div class="buttontogglebackgroundA" id="buttonrad" onclick="Calculator.transitionToRadians();">RAD</div>
+                                </div>
+                                 <div id="traghypswitch" class="switchleftactive">
+                                     <div class="buttontogglebackgroundB" id="buttontrig" onclick="Calculator.transitionToTrigonometricFunctions()">TRIG</div>
+                                     <div class="buttontogglebackgroundA" id="buttonhyp" onclick="Calculator.transitionToHyperbolicFunctions()">HYP</div>
+                                </div>
+                            </div>
+                            <div id="trigonometric">
+                                <button class="buttonblackshort" id="buttonsin">sin</button>
+                                <button class="buttonblackshort" id="buttoncos">cos</button>
+                                <button class="buttonblackshort" id="buttontan">tan</button>
+                                <button class="buttonblackshort" id="buttonarcsin">sin<sup>-1</sup></button>
+                                <button class="buttonblackshort" id="buttonarccos">cos<sup>-1</sup></button>
+                                <button class="buttonblackshort" id="buttonarctan">tan<sup>-1</sup></button>
+                            </div>
+                            <div id="hyperbolic">
+                                <button class="buttonblackshort" id="buttonsinh">sinh</button>
+                                <button class="buttonblackshort" id="buttoncosh">cosh</button>
+                                <button class="buttonblackshort" id="buttontanh">tanh</button>
+                                <button class="buttonblackshort" id="buttonasinh">sinh<sup>-1</sup></button>
+                                <button class="buttonblackshort" id="buttonacosh">cosh<sup>-1</sup></button>
+                                <button class="buttonblackshort" id="buttonatanh">tanh<sup>-1</sup></button>
+                            </div>
+                            <div id="expandlog">
+                                <button class="buttonblackshort" id="buttonlog">log</button>
+                                <button class="buttonblackshort" id="buttonlog2">log<sub>2</sub></button>
+                                <button class="buttonblackshort" id="buttonln">ln</button>
+                                <button class="buttonblackshort" id="button10x" data-operator="10<sup>^</sup>">10<sup>x</sup></button>
+                                <button class="buttonblackshort" id="button2x" data-operator="2<sup>^</sup>">2<sup>x</sup></button>
+                                <button class="buttonblackshort" id="buttonex" data-operator="e<sup>^</sup>">e<sup>x</sup></button>
+                            </div>
+                        </div>
+                        <div div id="centerleftpane">
+                            <div id="powerandroot">
+                                <button class="buttonyellow" id="buttonsquare" data-operator="<sup>2</sup>">x<sup>2</sup></button>
+                                <button class="buttonyellow" id="buttonsquareroot">&#8730;</button>
+                            </div>
+                            <div id="nthpowerandnthroot">
+                                <button class="buttonyellow" id="buttonnthpower" data-operator="<sup>^</sup>">y<sup>x</sup></button>
+                                <button class="buttonyellow" id="buttonnthroot" data-operator="<sup>n</sup>&#8730;"><sup>x</sup>&#8730;y</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="keyboardsplitter"></div>
+                    <div id="keyboardright">
+                        <div id="centerrightpane">
+                            <button class="buttonpurple" id="buttonmemorylist" onclick="Calculator.onButtonMemoryListClick()">
+                                <div class="buttonlefttext">M</div>
+                                <img class="buttonrighticon" src="images/ico_mem_list.png"></img>
+                            </button>
+                            <button class="buttonpurple" id="buttonmemorize" onclick="Calculator.onButtonMainEntryToMemoryClick()">
+                                    <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                                    <div class="buttonrighttext" id="buttonmemorizetext"></div>
+                            </button>
+                            <button class="buttonblack" id="buttonleftparenthesis">(</button>
+                            <button class="buttonblack" id="buttonrightparenthesis">)</button>
+                            <button class="buttonblack" id="buttonfactorial" data-operator="!">x!</button>
+                            <button class="buttonblack" id="buttoninverse" data-operator="<sup>-1</sup>">x<sup>-1</sup></button>
+                            <button class="buttonblack" id="buttonpi">&pi;</button>
+                            <button class="buttonblack" id="buttonpercentage">%</button>
+                        </div>
+                        <div id="rightpane">
+                            <button class="buttonred" id="buttonclear">C</button>
+                            <button class="buttonblue" id="buttondivide">&#247;</button>
+                            <button class="buttonblue" id="buttonmultiply">&#215;</button>
+                            <button class="buttonwhite" id="button7">7</button>
+                            <button class="buttonwhite" id="button8">8</button>
+                            <button class="buttonwhite" id="button9">9</button>
+                            <button class="buttonwhite" id="button4">4</button>
+                            <button class="buttonwhite" id="button5">5</button>
+                            <button class="buttonwhite" id="button6">6</button>
+                            <button class="buttonwhite" id="button1">1</button>
+                            <button class="buttonwhite" id="button2">2</button>
+                            <button class="buttonwhite" id="button3">3</button>
+                            <button class="buttonwhite" id="button0">0</button>
+                            <button class="buttonblue" id="buttondot">.</button>
+                            <button class="buttonblue" id="buttonplusminus">+/&#8722;</button>
+                        </div>
+                        <div id="rightmostpane">
+                            <button class="buttonred" id="buttondelete"><img class="buttondeleteicon" src="images/ico_back.png" alt="backspace" height="26" width="40"/></button>
+                            <button class="buttonblue" id="buttonsubtract" data-operator="-">&#8722;</button>
+                            <button class="buttonblue" id="buttonadd">+</button>
+                            <button class="buttonblueequal" id="buttonequal">=</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="licensebtnl"> i </div>
+                <div id="home_help" class="helplaunch"> ? </div>
+            </div>
+         </div>
+
+         <div id=memorypage style="display: none;">
+                <div id="memorypagelcd">
+                    <div id="mpclosebutton">
+                        <button class="buttonclose" id="mplcdbuttonclose" onclick="Calculator.setMainEntry('')"></button>
+                    </div>
+                    <div id="mpmainentry"></div>
+                    <button class="historybutton" id="mpopenhistorybutton" onclick="Calculator.openHistory()"></button>
+                </div>
+
+                <div id="memorypane">
+                <div class="memoryentrypane" id="M1pane" data-entryname="M1">
+                    <button class="buttonmemory" id="buttonM1" onclick="Calculator.onButtonMemoryClick('M1')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M1</div>
+                    </button>
+                    <div class="memorypane" id="M1pane">
+                        <div class="memory" id="M1">
+                            <div id="M1text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M1description"></div>
+                            <input class="memorydescriptioninput" id="M1descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M1')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM1edit" onclick="Calculator.onButtonMemoryEditClick('M1')"></button>
+                        <button class="buttonmemoryclose" id="buttonM1close" onclick="Calculator.onButtonMemoryCloseClick('M1')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M2pane" data-entryname="M2">
+                    <button class="buttonmemory" id="buttonM2" onclick="Calculator.onButtonMemoryClick('M2')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M2</div>
+                    </button>
+                    <div class="memorypane" id="M2pane">
+                        <div class="memory" id="M2">
+                            <div id="M2text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M2description"></div>
+                            <input class="memorydescriptioninput" id="M2descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M2')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM2edit" onclick="Calculator.onButtonMemoryEditClick('M2')"></button>
+                        <button class="buttonmemoryclose" id="buttonM2close" onclick="Calculator.onButtonMemoryCloseClick('M2')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M3pane" data-entryname="M3">
+                    <button class="buttonmemory" id="buttonM3" onclick="Calculator.onButtonMemoryClick('M3')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M3</div>
+                    </button>
+                    <div class="memorypane" id="M3pane">
+                        <div class="memory" id="M3">
+                            <div id="M3text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M3description"></div>
+                            <input class="memorydescriptioninput" id="M3descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M3')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM3edit" onclick="Calculator.onButtonMemoryEditClick('M3')"></button>
+                        <button class="buttonmemoryclose" id="buttonM3close" onclick="Calculator.onButtonMemoryCloseClick('M3')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M4pane" data-entryname="M4">
+                    <button class="buttonmemory" id="buttonM4" onclick="Calculator.onButtonMemoryClick('M4')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M4</div></button>
+                    <div class="memorypane" id="M4pane">
+                        <div class="memory" id="M4">
+                            <div id="M4text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M4description"></div>
+                            <input class="memorydescriptioninput" id="M4descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M4')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM4edit" onclick="Calculator.onButtonMemoryEditClick('M4')"></button>
+                        <button class="buttonmemoryclose" id="buttonM4close" onclick="Calculator.onButtonMemoryCloseClick('M4')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M5pane" data-entryname="M5">
+                    <button class="buttonmemory" id="buttonM5" onclick="Calculator.onButtonMemoryClick('M5')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M5</div></button>
+                    <div class="memorypane" id="M5pane">
+                        <div class="memory" id="M5">
+                            <div id="M5text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M5description"></div>
+                            <input class="memorydescriptioninput" id="M5descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M5')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM5edit" onclick="Calculator.onButtonMemoryEditClick('M5')"></button>
+                        <button class="buttonmemoryclose" id="buttonM5close" onclick="Calculator.onButtonMemoryCloseClick('M5')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M6pane" data-entryname="M6">
+                    <button class="buttonmemory" id="buttonM6" onclick="Calculator.onButtonMemoryClick('M6')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M6</div>
+                    </button>
+                    <div class="memorypane" id="M6pane">
+                        <div class="memory" id="M6">
+                            <div id="M6text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M6description"></div>
+                            <input class="memorydescriptioninput" id="M6descriptioninput" type=text name=username size=21 onfocusout="Calculator.saveMemoryDescription('M6')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM6edit" onclick="Calculator.onButtonMemoryEditClick('M6')"></button>
+                        <button class="buttonmemoryclose" id="buttonM6close" onclick="Calculator.onButtonMemoryCloseClick('M6')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M7pane" data-entryname="M7">
+                    <button class="buttonmemory" id="buttonM7" onclick="Calculator.onButtonMemoryClick('M7')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M7</div>
+                    </button>
+                    <div class="memorypane" id="M7pane">
+                        <div class="memory" id="M7">
+                            <div id="M7text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M7description"></div>
+                            <input class="memorydescriptioninput" id="M7descriptioninput" type=text name=username size=21 onfocusout="Calculator.onMemoryDescriptionInputFocusOut('M7')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM7edit" onclick="Calculator.onButtonMemoryEditClick('M7')"></button>
+                        <button class="buttonmemoryclose" id="buttonM7close" onclick="Calculator.onButtonMemoryCloseClick('M7')"></button>
+                    </div>
+                </div>
+                <div class="memoryentrypane" id="M8pane" data-entryname="M8">
+                    <button class="buttonmemory" id="buttonM8" onclick="Calculator.onButtonMemoryClick('M8')">
+                            <img class="buttonlefticon" src="images/ico_arrow_black.png"></img>
+                            <div class="buttonrighttext" id="buttonmemorizetext">M8</div>
+                    </button>
+                    <div class="memorypane" id="M8pane">
+                        <div class="memory" id="M8">
+                            <div id="M8text" class="memorytext"></div>
+                        </div>
+                        <div class="memorydescription">
+                            <div class="memorydescriptiontext" id="M8description"></div>
+                            <input class="memorydescriptioninput" id="M8descriptioninput" type=text name=username size=21 onfocusout="Calculator.saveMemoryDescription('M8')"/>
+                        </div>
+                        <button class="buttonmemoryedit" id="buttonM8edit" onclick="Calculator.onButtonMemoryEditClick('M8')"></button>
+                        <button class="buttonmemoryclose" id="buttonM8close" onclick="Calculator.onButtonMemoryCloseClick('M8')"></button>
+                    </div>
+                </div>
+                    <button class="dialogAbuttonPurple" id="memoryclearall" onclick="Calculator.onButtonMemoryClearAll()">Clear All</button>
+                    <button class="dialogAbuttonBlack" id="memoryClose" onclick="Calculator.onButtonMemoryClose()">Close</button>
+                    </div>
+         </div>
+
+        <div id="clearconfirmationdialog" style="visibility: hidden;">
+            <div class="dialogbackground"></div>
+            <div id="clearconfirmationdialogbg">
+                    <div id="dialogheading">Clear All Memory slots</div>
+                    <div id="dialogcontent">
+                        <div id="dialogcontenttext">All memory slots will be cleared.</div>
+                        <button class="dialogBpurplebutton" id="dialogokbutton" onclick="Calculator.clearAllMemorySlots()">OK</button>
+                         <button class="dialogBblackbutton" id="dialogcancelbutton" onclick="Calculator.cancelClearAllDialog()">Cancel</button>
+                    </div>
+            </div>
+        </div>
+
+        <div id="memorynoteeditor" style="display: none">
+            <div id="mnememorypane" class="memoryentrypane">
+                <img id="mnebuttondownarrow" class="buttonlefticon" src="images/ico_arrow_white.png"></img>
+                <div id="mnebutton"></div>
+                <div id="mnetext" class="memorytext"></div>
+                <div id="mnedescription"></div>
+                <input id="mnedescriptioninput" type=text name=username size=21/>
+                <div id="mnedescriptiondelete"></div>
+            </div>
+            <button class="dialogAbuttonPurple" id="mnesave">Save</button>
+            <button class="dialogAbuttonBlack"id="mnecancel">Cancel</button>
+        </div>
+        <div id="grammar-wrapper">
+            <textarea class="code" id="grammar" disabled>
+            start
+              = additive
+
+            additive
+              = left:(multiplicative [%]?) right:( [+-] multiplicative [%]?)*
+                {
+                    var ret = (left[1] == "%") ? left[0] / 100 : left[0];
+                    var i;
+                    var prec = 0;
+
+                    if(isNaN(ret) || !isFinite(ret) )
+                        return ret
+
+                    var tmp = ret;
+                    while (tmp % 1 != 0){
+                            tmp = tmp * 10;
+                            prec++;
+                        }
+                    for (i = 0; i < right.length; ++i) {
+                        var num = (right[i][2] == "%") ? ret * right[i][1] / 100 : right[i][1];
+
+                        tmp = num;
+                        var prec1 = 0;
+
+                        while (tmp % 1 != 0){
+                            tmp = tmp * 10;
+                            prec1++;
+                        }
+                        prec = prec > prec1 ? prec: prec1;
+
+                        if (right[i][0] == "+") {
+                            ret = ret + num;
+                        } else if (right[i][0] == "-") {
+                            ret = ret - num;
+                        }
+
+                    }
+                    return (prec > 0 && right.length > 0) ? parseFloat(ret.toFixed(prec)) : ret;
+                }
+
+            multiplicative
+              = left:signedexpression right:( [&#215;&#247;] signedexpression [%]? / trigonometric [%]? / hyperbolic [%]? / numberlog [%]? / squareroot [%]?)*
+                {
+                    var ret = left;
+                    var i;
+                    var prec = 0;
+
+	                     if(isNaN(ret) || !isFinite(ret))
+	                        return ret
+
+                    var tmp = ret;
+                    while (tmp % 1 != 0){
+                            tmp = tmp * 10;
+                            prec++;
+                        }
+
+                    for (i = 0; i < right.length; ++i) {
+                        var num = (right[i][2] == "%") ? right[i][1] / 100 : right[i][1];
+
+                        tmp = num;
+                        var prec1 = 0;
+                        while (tmp % 1 != 0){
+                            tmp = tmp * 10;
+                            prec1++;
+                        }
+
+                        if (right[i][0] == "&#215;") {
+                            ret = ret * num;
+                            prec += prec1;
+                        } else if (right[i][0] == "&#247;") {
+                            ret = ret / num;
+                            prec -= prec1;
+                        }else{
+                            ret = ret * right[i][0];
+                        }
+                    }
+                    return (prec > 0 && right.length > 0) ? parseFloat(ret.toFixed(prec)) : ret;
+                }
+            signedexpression
+              = sign:[-]? expression:expression
+                {
+                    var ret = expression;
+
+                    if (sign) {
+                        ret = -ret;
+                    }
+
+                    return ret;
+                }
+
+            expression
+              = expandlog
+              / powerandroot
+              / trigonometric
+              / hyperbolic
+              / factorial
+              / numberpi
+              / inverse
+              / primary
+
+            expandlog
+              = log10
+              / log2
+              / ln
+              / tentox
+              / twotox
+              / etox
+
+            numberlog
+              = log10
+              / log2
+              / ln
+
+            log10
+              = "log" operand:signedexpression
+                {
+                    return Math.log(operand) / Math.LN10;
+                }
+
+            log2
+              = "log<sub>2</sub>" operand:signedexpression
+                {
+                    return Math.log(operand) / Math.LN2;
+                }
+
+            ln
+              = "ln" operand:signedexpression
+                {
+                    return Math.log(operand);
+                }
+
+            tentox
+              = "10<sup>x</sup>" operand:signedexpression
+                {
+                    return Math.pow(10, operand);
+                }
+
+            twotox
+              = "2<sup>x</sup>" operand:signedexpression
+                {
+                    return Math.pow(2, operand);
+                }
+
+            etox
+              = "e<sup>x</sup>" operand:signedexpression
+                {
+                    return Math.pow(Math.E, operand);
+                }
+
+            powerandroot
+              = squareroot
+              / nthroot
+              / square
+              / nthpower
+
+            squareroot
+              = "&#8730;" radicand:signedexpression
+                {
+                    return Math.sqrt(radicand);
+                }
+
+            nthroot
+              = index:primary "<sup>n</sup>&#8730;" radicand:signedexpression
+                {
+                    var ret = Number.NaN;
+
+                    if (parseInt(index) === index && index > 0) { /* The nth root is only defined for positive integer indices. */
+                        if (index % 2 && radicand < 0) { /* For odd indices, consider the sign of the radicand. */
+                            ret = -Math.pow(-radicand, 1 / index);
+                        } else {
+                            ret = Math.pow(radicand, 1 / index);
+                        }
+                    }
+
+                    return ret;
+                }
+
+            square
+              = operand:primary "<sup>2</sup>"
+                {
+                    return Math.pow(operand, 2);
+                }
+
+            nthpower
+              = operand:primary "<sup>^</sup>" exponent:signedexpression
+                {
+                    return Math.pow(operand, exponent);
+                }
+
+            trigonometric
+              = sin
+              / cos
+              / tan
+              / arcsin
+              / arccos
+              / arctan
+
+            sin
+              = "sin" operand:signedexpression
+                {
+                    res = Math.sin(operand / Calculator.angleDivisor);
+                    return Math.round(res * Calculator.trigPrecision) / Calculator.trigPrecision;
+                }
+            cos
+              = "cos" operand:signedexpression
+                {
+                    res = Math.cos(operand / Calculator.angleDivisor);
+                    return Math.round(res * Calculator.trigPrecision) / Calculator.trigPrecision;
+                }
+            tan
+              = "tan" operand:signedexpression
+                {
+                    res = Math.tan(operand / Calculator.angleDivisor);
+                    return Math.round(res * Calculator.trigPrecision) / Calculator.trigPrecision;
+                }
+            arcsin
+              = "sin<sup>-1</sup>" operand:signedexpression
+                {
+                    return Math.asin(operand) * Calculator.angleDivisor;
+                }
+            arccos
+              = "cos<sup>-1</sup>" operand:signedexpression
+                {
+                    return Math.acos(operand) * Calculator.angleDivisor;
+                }
+            arctan
+              = "tan<sup>-1</sup>" operand:signedexpression
+                {
+                    return Math.atan(operand) * Calculator.angleDivisor;
+                }
+
+            hyperbolic
+              = sinh
+              / cosh
+              / tanh
+              / asinh
+              / acosh
+              / atanh
+
+            sinh
+              = "sinh" operand:signedexpression
+                {
+                    var e = Math.E;
+
+                    return (Math.pow(e, operand) - Math.pow(e, -operand)) / 2;
+                }
+
+            cosh
+              = "cosh" operand:signedexpression
+                {
+                    var e = Math.E;
+
+                    return (Math.pow(e, operand) + Math.pow(e, -operand)) / 2;
+                }
+
+            tanh
+              = "tanh" operand:signedexpression
+                {
+                    var e = Math.E;
+
+                    return (Math.pow(e, operand) - Math.pow(e, -operand)) / (Math.pow(e, operand) + Math.pow(e, -operand));
+                }
+
+            asinh
+              = "sinh<sup>-1</sup>" operand:signedexpression
+                {
+                    return Math.log(operand + Math.sqrt(1 + Math.pow(operand, 2)));
+                }
+
+            acosh
+              = "cosh<sup>-1</sup>" operand:signedexpression
+                {
+                    return 2 * Math.log(Math.sqrt((operand + 1) / 2) + Math.sqrt((operand - 1) /2 ));
+                }
+
+            atanh
+              = "tanh<sup>-1</sup>" operand:signedexpression
+                {
+                    return (Math.log(1 + operand) - Math.log(1 - operand)) / 2;
+                }
+
+            factorial
+              = operand:primary "!"
+                {
+                    var ret = Number.NaN;
+
+                    if (parseInt(operand) === operand && operand >= 0) { /* Factorial is only defined for positive integers and zero. */
+                        ret = 1;
+
+                        for (var i = 2; i <= operand; i++) {
+                            ret *= i
+                        }
+                    }
+
+                    return ret;
+                }
+            inverse
+              = operand:primary "<sup>-1</sup>"
+                {
+                    return 1 / operand;
+                }
+
+            primary
+              = pi
+              / number
+              / "(" additive:additive ")"
+                {
+                    return additive;
+                }
+
+            numberpi
+              = operand:primary "&pi;"
+              {
+                return operand*Math.PI;
+              }
+
+            pi
+              = "&pi;"
+                {
+                    return Math.PI;
+                }
+
+            number
+              = wholepart:[0-9]+fractionalpart:([.][0-9]+)?
+                {
+                    var ret;
+
+                    if (fractionalpart) {
+                        ret = parseFloat(wholepart.join("") + "." + fractionalpart[1].join(""));
+                    } else {
+                        ret = parseInt(wholepart.join(""));
+                    }
+
+                    return ret;
+                }
+            </textarea>
+        </div>
+        <div id="help_dialog" class="helpdialog">
+            <div class="inner">
+                <div id="help_close" class="close"> x </div>
+                <div id="help_contents" class="contents">
+                    <div class="column1">
+                    <ul><li>
+                    <b>General usage</b><br>
+                    Tap buttons in the order you would write them on paper 
+                    to perform a calculation, then tap = to get the result.
+                    </li><br clear="all"><li>
+                    <b>History</b><br>
+                    <img src="images/bt_history_exp_port.png" align="left"/> 
+                    Tap to see a scrollable history of recent results.<br clear="all">
+                    <img src="images/bt_history_contr_port.png" align="left"/>
+                    Tap to restore the calculator.
+                    </li><br clear="all"><li>
+                    <b>Memory insert</b><br> 
+                    <div class="buttonpurple" style="float: left;">
+                        <center>
+                        <img src="images/ico_arrow_black.png"/><bl>M1</bl>
+                        </center>
+                    </div>
+                    Tap to store the current result in the indicated memory slot.
+                    </li></ul>
+                    <br clear="all">
+                    </div>
+                    <div class="column2">
+                    <ul><li>
+                    <b>Memory</b><br>
+                    <div class="buttonpurple" style="float: left;">
+                        <center>
+                        <wh>M</wh><img src="images/ico_mem_list.png"/>
+                        </center>
+                    </div>
+                    Tap the M button to display the current memory contents.
+                    <br clear="all">
+                    <div class="buttonpurple" style="float: left;">
+                        <center>
+                        <img src="images/ico_arrow_white.png"/><wh>M5</wh>
+                        </center>
+                    </div>
+                    Tap to insert the contents of that slot into your calculation.
+                    <br clear="all">
+                    <div class="exampleclose" style="float: left;"></div>
+                    Tap to clear the slot.
+                    <br clear="all">
+                    <div class="exampleedit" style="float: left;"></div>
+                    Tap to modify a slot’s contents. 
+                    <br clear="all">
+                    <div class="dialogAbuttonPurple" style="position: relative; float: left;">
+                        <center>
+                        <wh2>Clear All</wh2>
+                        </center>
+                    </div>
+                    Tap to erase every slot.
+                    <br clear="all">
+                    <div class="dialogAbuttonBlack" style="position: relative; float: left;">
+                        <center>
+                        <wh2>Close</wh2>
+                        </center>
+                    </div>
+                    Tap to restore the calculator.
+                    <br clear="all">
+                    </li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="licensepage" style="display: none">
+            <div id="licensetext"><div id="licensescroll"></div></div>
+            <div id="licensebtnq" class="licensebtn">Back</div>
+        </div>
+    </body>
+
+    <!-- external library js files -->
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/localizer.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="js/peg-0.6.2.min.js"></script>
+
+    <!-- internal js file -->
+    <script src="js/license.js"></script>
+    <script src="js/help.js"></script>
+    <script src="js/calc.js"></script>
+</html>
+

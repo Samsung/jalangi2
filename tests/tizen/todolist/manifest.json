@@ -1,0 +1,21 @@
+{
+  "name": "__MSG_appName__",
+  "description":  "__MSG_appDescription__",
+  "version": "0.0.1",
+  "default_locale": "en",
+  "app": {
+    "launch": {
+      "local_path": "index.html",
+      "container":"panel",
+      "width":1280,
+      "height":720
+    }
+  },
+  "icons": {
+    "128": "icon_128.png",
+    "48": "icon_48.png",
+    "16": "icon_16.png"
+  },
+  "homepage_url" : "https://01.org/webapps/content/todo-list", 
+  "update_url" : "https://01.org/webapps/content/todo-list/update.xml"
+}

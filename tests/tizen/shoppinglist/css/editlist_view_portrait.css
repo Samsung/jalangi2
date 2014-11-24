@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#edit-list-view {
+    width: 720px;
+    height: 1280px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-Index:1000;
+}
+
+#edit-list-view .container {
+    width: 708px; /* (720-12) */
+    height: 1268px; /* (1280-12) */
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+#edit-list-view .container .edit_list_form {
+    height: 1034px;  
+    width: 100%;
+    background-color: #E6E7E8;
+}
+
+#edit-list-view form input[name="list_name"] {
+    height: 110px;
+    width: 688px;
+    margin-left: 10px;
+    margin-top: 0px; /* 13px; */
+}
+
+#edit-list-view .list_name {
+    float: left;
+    width: 100%;
+    height: 193px;
+}
+
+#edit-list-view .list_color {
+    float: left;
+    width: 100%;
+    height: 841px; /* (remaining height) */
+    margin-top: 10px;
+}
+
+#edit-list-view #list_name_label_id {
+    margin-left: 20px;
+    margin-top: 20px;
+    height: 70px;
+}
+
+#edit-list-view #list_color_label_id {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+#edit-list-view .colorbutton {
+    margin-left: 25px;
+    margin-top: 30px;
+}

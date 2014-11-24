@@ -1,0 +1,706 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+body {
+   margin: 0px;
+    overflow: visible;
+    -webkit-user-select: none;
+    background-color: "white";
+    box-shadow: 5px 5px 20px black;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 720px;
+    height: 1280px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+/* 320 x 480 */
+    -webkit-transform: translate(-50%, -50%) scale(0.4444, 0.375);
+}
+
+/* 410 x 730 (for browser) */
+@media (min-height: 730px) and (min-width: 410px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.57, 0.57);}
+}
+/* 480 x 800 */
+@media (min-height: 800px) and (min-width: 480px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.6666, 0.625);}
+}
+/* 600 x 989 */
+@media (min-width: 600px) and (min-height: 989px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.8333, 0.77266); }
+}
+/* 600 x 1024 */
+@media (min-height: 1024px) and (min-width: 600px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.8333, 0.8);}
+}
+/* 720 x 1230 */
+@media (min-height: 1230px) and (min-width: 720px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1.0, 0.9609);}
+}
+/* 720 x 1280 */
+@media (min-height: 1280px) and (min-width: 720px) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1.0, 1.0);}
+}
+
+div#background {
+    margin: 0px;
+    width: 720px;
+    height: 1280px;
+    background-color: #888888;
+}
+
+div#leftpane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 256px;
+}
+
+div#viewswitcherpane, div#searchpane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 128px;
+    background-color: black;
+}
+
+div#searchpane {
+    position: relative;
+    float: left;
+}
+
+div#innersearchpane {
+    position: relative;
+    float: left;
+    top: 7px;
+    width: 600px;
+    height: 110px;
+    background-color: #CCCCCC;
+}
+
+div#searchpane form {
+    position: relative;
+    float: left;
+    width: 515px;
+}
+
+div#searchpane .searchname {
+    position: relative;
+    float: left;
+}
+
+div#innersearchpane form input[name="searchname"] {
+    position: relative;
+    float: left;
+    width: 515px;
+    height: 108px;
+    font-family: 'OpenSans-SemiboldItalic';
+    font-size: 40px;
+    color: #999999;
+    border-style: none;
+    background-color: transparent;
+}
+
+button.shoppinglistbutton {
+    position: relative;
+    float: left;
+    width: 126px;
+    height: 128px;
+    background-position: center; 
+    border-style: none;
+    background-color: black;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+button.shoppinglistbutton:active {
+    background-color: gray;
+}
+
+button.mylistsbutton {
+    width: 198px;
+    background-image: url("../images/tab_lists_01.png");
+}
+
+button.mylistsbuttonselected, button.mylistsbutton:active {
+    width: 198px;
+    background-color: gray;
+    background-image: url("../images/tab_lists_02.png");
+}
+
+button.mystoresbutton {
+    width: 198px;
+    background-image: url("../images/tab_shops_01.png");
+}
+
+button.mystoresbuttonselected, button.mystoresbutton:active {
+    width: 198px;
+    background-color: gray;
+    background-image: url("../images/tab_shops_02.png");
+}
+
+button.myfavoritesbutton {
+    width: 198px;
+    background-image: url("../images/tab_faves_01.png");
+}
+
+button.myfavoritesbuttonselected, button.myfavoritesbutton:active {
+    width: 198px;
+    background-color: gray;
+    background-image: url("../images/tab_faves_02.png");
+}
+
+button#searchcurrentlistbutton {
+    width: 126px;
+    background-image: url("../images/tab_search_01.png");
+}
+
+button#searchcurrentlistbutton:active {
+    background-image: url("../images/tab_search_02.png");
+}
+
+button#searchbackbutton {
+    width: 112px;
+    background-image: url("../images/btn_back_01.png");
+}
+
+button#searchbackbutton:active {
+    background-image: url("../images/btn_back_02.png");
+}
+
+button#searchremovebutton {
+    position: relative;
+    float: right;
+    top: 12px;
+    width: 85px;
+    height: 85px;
+    background-position: center; 
+    border-style: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-image: url("../images/btn_remove_01.png");
+    cursor: pointer;
+}
+
+button#searchremovebutton:active {
+    background-image: url("../images/btn_remove_02.png");
+}
+
+div#listoflistspane {
+    display: none;
+}
+
+div#activelistpane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 128px;
+}
+
+div#activelist {
+    position: relative;
+    float: left;
+    height: 128px;
+}
+
+div.activelistnarrow {
+    position: relative;
+    float: left;
+    height: 128px;
+    width: 594px;
+}
+
+div.activelistwide {
+    position: relative;
+    float: left;
+    height: 128px;
+    width: 720px;
+}
+
+div.activelistinfopane {
+    position: relative;
+    float: left;
+    width: 500px;
+    height: 128px;
+}
+
+div.activelistitemcount {
+    position: relative;
+    float: left;
+    width: 470px;
+    height: 35px;
+    top: 12px;
+    left: 30px;
+    text-align: left;
+    color: #000000;
+    font-family: OpenSans-Italic;
+    font-size: 20pt;
+}
+
+div.activelistname {
+    position: relative;
+    float: left;
+    width: 500px;
+    height: 58px;
+    text-align: right;
+    color: #4D4D4D;
+    font-family: OpenSans-Italic;
+    font-size: 36pt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+div.activelistbutton {
+    position: relative;
+    float: left;
+    top: 22px;
+    width: 85px;
+    height: 85px;
+    background-position: center; 
+    border-style: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-image: url("../images/icon_select_01.png");
+}
+
+button.activelistbutton:active {
+    background-image: url("../images/icon_select_01.png");
+}
+
+button#activelistaddnewlistbutton {
+    background-image: url("../images/btn_addNewList_01.png");
+}
+
+button#activelistaddnewlistbutton:active {
+    background-image: url("../images/btn_addNewList_02.png");
+}
+
+div#listoflists {
+    display: none;
+}
+
+div#addnewlistpane {
+    display: none;
+}
+
+button#addnewlistbutton {
+    display: none;
+}
+
+button#addnewlistbutton:active {
+    display: none;
+}
+
+div#addnewlisttext {
+    display: none;
+}
+
+div#rightpane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 895px;
+}
+
+div#currentlistpane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 896px;
+    background-color: #EFEEEF;
+}
+
+div#currentlist {
+    position: relative;
+    float: left;
+    width: 720px;
+}
+
+div#currentlistempty{
+    position: absolute;
+    top: 350px;
+    width:100%;
+    font-family: 'OpenSans-SemiboldItalic';
+    font-size: 60px;
+    color: #999999;
+    text-align: center;
+}
+div.listitem, div.currentlistheading {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 125px;
+    background-color: #EFEEEF;
+    border-bottom: dashed gray;
+}
+
+div.currentlistheading {
+    position: relative;
+    float: left;
+}
+
+div.boughtstate
+{
+    position: relative;
+    float: left;
+    left: 20px;
+    width: 80px;
+    height: 118px;
+    background-position: left;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+div.itembought {
+    background-image: url("../images/btn_check_02.png");
+}
+
+div.itemnotbought {
+    background-image: url("../images/btn_check_01.png");
+}
+
+div.mylistsitemtextpane, div.mystoresitemtextpane, div.myfavoritesitemtextpane, div.allmyfavoritesitemtextpane, div.currentlistheadingtextpane {
+    position: relative;
+    float: left;
+    height: 118px;
+}
+
+div.mylistsitemtextpane {
+    left: 20px;
+    width: 404px;
+}
+
+div.mystoresitemtextpane {
+    left: 20px;
+    width: 389px;
+}
+
+div.myfavoritesitemtextpane {
+    left: 60px;
+    width: 489px;
+}
+
+div.allmyfavoritesitemtextpane {
+    left: 60px;
+    width: 472px;
+}
+
+div.currentlistheadingtextpane {
+    left: 15px;
+    top: 55px;
+    width: 746px;
+    color: #231F20;
+    font-family: OpenSans-SemiboldItalic;
+    font-size: 28pt;
+}
+
+div.mystoresitemlistindicator, div.myfavoritesitemlistindicator {
+    position: relative;
+    float: left;
+    width: 15px;
+    height: 96px;
+    top: 11px;
+    border: 1px solid #000000;
+}
+
+div.mystoresitemlistindicator {
+    margin-left: 10px;
+}
+
+div.myfavoritesitemlistindicator {
+    left: 32px;
+}
+
+div.itemname {
+    position: relative;
+    float: left;
+    width: 385px;
+    color: #231F20;
+    font-family: OpenSans-Italic;
+    font-size: 25pt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+div.itemstore {
+    position: relative;
+    float: left;
+    width: 100%;
+    color: #414042;
+    font-family: OpenSans-Italic;
+    font-size: 18pt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;    
+}
+
+div.itemtype {
+    position: relative;
+    float: left;
+    width: 100%;
+    color: #58595B;
+    font-family: OpenSans-Italic;
+    font-size: 18pt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+div#rightpane div.listitem img {
+    position: relative;
+    float: left;
+    top: 15px;
+    left: 20px;
+    width: 90px;
+    height: 90px;
+    border: 1px solid #414042;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+div.favoritestate {
+    position: relative;
+    float: left;
+    top: 14px;
+    left: 53px;
+    width: 85px;
+    height: 85px;
+    background-position: left;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+div.itemisfavorite {
+    background-image: url("../images/btn_faves_03.png");
+}
+
+div.itemisnotfavorite {
+    background-image: url("../images/btn_faves_01.png");
+}
+
+div#optionspane {
+    position: relative;
+    float: left;
+    width: 720px;
+    height: 128px;
+    background-color: black;
+}
+
+button#sortcurrentlistbutton {
+    background-image: url("../images/btn_sort_01.png");
+}
+
+button#sortcurrentlistbutton:active {
+    background-image: url("../images/btn_sort_02.png");
+}
+
+div#addnewitemtext {
+    position: relative;
+    float: left;
+    top: 30px;
+    width: 468px;
+    height: 98px;
+    text-align: right;
+    color: #939598;
+    font-family: OpenSans-Regular;
+    font-size: 36pt;
+}
+
+button#addnewitembutton {
+    background-image: url("../images/btn_addNewList_01.png");
+}
+
+button#addnewitembutton:active {
+    background-image: url("../images/btn_addNewList_02.png");
+}
+
+
+.hidden {
+    display: none;
+}
+
+/* license page */
+
+#licensebtnl {
+    position: absolute;
+    top: 40px;
+    left: 345px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    -webkit-border-radius: 40px;
+    border: solid 3px #dddddd;
+    opacity: 0.3;
+    color: #dddddd;
+    font: 35px Arial, Helvetica, sans-serif;
+}
+
+#licensebtnl:active {
+    opacity: 1.0;
+}
+
+#licensepage {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 720px;
+    height: 1280px;
+    background: -webkit-gradient(linear, left top, right top, from(#3f4140), to(#1d2021));
+    z-index: 99;
+}
+
+#licensetext {
+    width: 98.5%;
+    height: 88%;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #c4ccbc));
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    box-shadow: inset 1px 1px 2px 1px black;
+    margin-bottom: 2px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+#licensescroll {
+    position: relative;
+    font: 25px/100% Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.licensebtn {
+    position: absolute;
+    color: #d7d7d7;
+    border: solid 1px #333;
+    text-align: center;
+    text-decoration: none;
+    font: 60px/100% Arial, Helvetica, sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    height: 114px;
+    width: 114px;
+    line-height: 110px;
+    cursor: pointer;
+    box-shadow: 2px 2px 14px #000;
+}
+
+.licensebtn:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+}
+
+.licensebtn:active {
+    color: #666;
+    background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+}
+
+#licensebtnq {
+    left: 160px;
+    width: 400px;
+}
+
+/* help dialog */
+
+.helpdialog {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 720px;
+    height: 1280px;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    font-family: Sans;
+    visibility: hidden;
+}
+
+.helpdialog.shown {
+    visibility: visible;
+    -webkit-transition: background-color 0.5s;
+    background-color: rgba(0,0,0,.33);
+    z-index: 99;
+}
+
+.helpdialog .inner {
+    position: absolute;
+    top: 3%;
+    left : 5.9%;
+    height: 90%;
+    width: 80%;
+    border: 20px solid #131516;
+    background-color: #2a2b2a;
+    padding: 10px;
+    opacity: 0;
+}
+
+.helpdialog.shown .inner {
+    -webkit-transition: opacity 0.5s;
+    opacity: 1;
+}
+
+.helpdialog .inner .contents {
+    font-family: Arial;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: default;
+}
+
+.helpdialog .inner .close {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -5%;
+    left: 93%;
+    font-family: Sans;
+    font-weight: 900;
+    font-size: 90px;
+    text-align: center;
+    border: solid 10px #131516;
+    background-color: #131516;
+    -webkit-border-radius: 60px;
+    line-height: 45px;
+    cursor: pointer;
+    color: #dddddd;
+}
+
+.helpdialog .inner .close:active {
+    color: #ffffff;
+}
+
+.helplaunch {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    -webkit-border-radius: 40px;
+    border: solid 3px #dddddd;
+    color: #dddddd;
+    opacity: 0.3;
+    font: 35px Arial, Helvetica, sans-serif;
+}
+
+#home_help {
+    top: 40px;
+    left: 200px;
+}
+
+#home_help:active {
+    opacity: 1;
+}
+

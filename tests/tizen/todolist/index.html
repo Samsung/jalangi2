@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ *
+-->
+<html>
+<head>
+    <title>TODO List</title>
+<meta name="viewport" content="width=device-width target-densitydpi=device-dpi initial-scale=1 maximum-scale=1 user-scalable=0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css"
+    href="css/jquery.mobile-1.0.min.css" />
+<link rel="stylesheet" type="text/css" href="css/web-ui-fw-theme.css" />
+<link rel="stylesheet" type="text/css"
+    href="css/web-ui-fw-widget.css" />
+<link rel="stylesheet" type="text/css"
+    href="css/todo-jquery-mobile.css" />
+<link rel="stylesheet" type="text/css"
+    href="css/contextmenu.css" />
+<!-- <link rel="stylesheet" type="text/css"
+    href="css/movetodate.css" />
+ -->
+<link id="stylesheet" rel="stylesheet" type="text/css" href="css/default_portrait.css" />
+</head>
+
+<body>
+    <div id="shadow" class="opaqueLayer" class="hidden"> </div>
+    
+    <div id="context-menu" class="contextmenu" class="hidden">
+
+        <ul>
+            <li>
+                <a href="#" id="menudone">
+                    <span class="text done"></span>
+                    <span class="icon"> <img alt="" src="images/btnDone_02.png" /> </span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="menuchangeday">
+                    <span class="text change_day"></span> 
+                    <span class="icon"> <img alt="" src="images/btnCalendar_02.png" /> </span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="menuedit">
+                    <span class="text edit"></span> 
+                    <span class="icon"> <img alt="" src="images/btnEdit_02.png" /> </span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="menudelete">
+                    <span class="text delete"></span> 
+                    <span class="icon"> <img alt="" src="images/btnDelete_02.png" /> </span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <div id="move-to-date" class="movetodate" class="hidden">
+        <div data-role="content">
+            <div class="container">
+                <div class="header">
+                    <label for="movetodate_header"></label>
+                    <a class="close" href="#"> <img src="images/close-button-active.png" /> </a>
+                </div>
+
+                <form name="move-to-date" action="#" class="movetodate_form">
+                <div class="dateselector">
+                    <table class = "dateselectortable">
+                        <td>
+                            <div id = "day" style="width: 150px">
+                                <table>
+                                    <tr>
+                                        <td align = "center">
+                                               <a class="day_icon_add" href="#"> 
+                                                   <img alt="" src="images/btnPlus_01.png" />
+                                               </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <label for="movetodate_day"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center"> 
+                                            <label for="movetodate_dayvalue"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                               <a class="day_icon_minus" href="#"> 
+                                                   <img alt="" src="images/btnMinus_01.png" />
+                                               </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                         </td>
+                        <td>
+                            <img alt="" src="images/picker_divider.png" />
+                        </td>
+                        <td>                        
+                            <div id="month" style="width: 165px">
+                                <table>
+                                    <tr>
+                                        <td align = "center">
+                                            <a class="month_icon_add" href="#"> 
+                                                <img alt="" src="images/btnPlus_01.png" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <label for="movetodate_month"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <label for="movetodate_monthvalue"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <a class="month_icon_minus" href="#"> 
+                                                <img alt="" src="images/btnMinus_01.png" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td>
+                            <img alt="" src="images/picker_divider.png" />
+                        </td>
+                        <td>                    
+                            <div id="year" style="width: 175px">
+                                <table>
+                                    <tr>
+                                        <td align = "center">
+                                            <a class="year_icon_add" href="#"> 
+                                                <img alt="" src="images/btnPlus_01.png" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <label for="movetodate_year"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <label for="movetodate_yearvalue"></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align = "center">
+                                            <a class="year_icon_minus" href="#"> 
+                                                <img alt="" src="images/btnMinus_01.png" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>                        
+                    </table>                        
+                </div>
+                </form>
+
+                <div class="footer">
+                    <div class="buttons">
+                        <fieldset class="save">
+                            <a href="#"> <span class="text"></span> <span class="icon">
+                                    <img alt="" src="images/save-button.png" /> </span> </a>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+     
+     <div id="edit-item" data-role="popupwindow" data-scroll="y" class="hidden">
+        <div data-role="content">
+            <div class="wrap">
+
+                <div class="header">
+                    <label for="text"></label>
+                    <span class="closeb">
+                        <a class="close" href="#"></a>
+                    </span>
+                </div>
+
+                <form name="edit-item" action="#" class="edit-item-form">
+                    <fieldset class="text">
+                        <!-- <label for="text"></label> -->
+                        <input name="text" />
+                    </fieldset>
+
+                    <fieldset class="period">
+                        <label for="period"></label>
+                        <ul>
+                            <li><a href="#" id="0" class="selected"> <span
+                                    class="icon"> <img alt="" src="images/radio-sel.png" />
+                                </span> <span class="text morning"></span> </a></li>
+                            <li><a href="#" id="1"> <span class="icon"> <img
+                                        alt="" src="images/radio-unsel.png" /> </span> <span
+                                    class="text afternoon"></span> </a></li>
+                            <li><a href="#" id="2"> <span class="icon"> <img
+                                        alt="" src="images/radio-unsel.png" /> </span> <span
+                                    class="text evening"></span> </a></li>
+                        </ul>
+                    </fieldset>
+
+                    <fieldset class="priority">
+                        <label for="priority"></label>
+                        <div id="priority">
+                            <div class="prioritybutton">
+                                <a href="#" id="1" class="selected"> <img alt=""
+                                    src="images/priority-sel-normal.png" /> </a>
+                            </div>
+                            <div class="prioritybutton">
+                                <a href="#" id="2"> <img alt=""
+                                    src="images/priority-unsel-low.png" /> </a>
+                            </div>
+                            <div class="prioritybutton">
+                                <a href="#" id="3"> <img alt=""
+                                    src="images/priority-unsel-medium.png" /> </a>
+                            </div>
+                            <div class="prioritybutton">
+                                <a href="#" id="4"> <img alt=""
+                                    src="images/priority-unsel-high.png" /> </a>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="color">
+                        <label for="color"></label>
+                        <div id="color">
+                            <div class="colorbutton">
+                                <a href="#" id="black" class="selected"> <img alt=""
+                                    src="images/color-sel-black.png" /> </a>
+                            </div>
+                            <div class="colorbutton">
+                                <a href="#" id="red"> <img alt=""
+                                    src="images/color-unsel-pink.png" /> </a>
+                            </div>
+                            <div class="colorbutton">
+                                <a href="#" id="orange"> <img alt=""
+                                    src="images/color-unsel-orange.png" /> </a>
+                            </div>
+                            <div class="colorbutton">
+                                <a href="#" id="blue"> <img alt=""
+                                    src="images/color-unsel-blue.png" /> </a>
+                            </div>
+                            <div class="colorbutton">
+                                <a href="#" id="green"> <img alt=""
+                                    src="images/color-unsel-green.png" /> </a>
+                            </div>
+                            <div class="colorbutton">
+                                <a href="#" id="grey"> <img alt=""
+                                    src="images/color-unsel-grey.png" /> </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <div class="footer">
+                    <div class="editui_buttons">
+                        <fieldset id="delete_button" class="delete hidden">
+                            <a href="#"> <span class="text"></span> <span class="icon">
+                                    <img alt="" src="images/delete-button.png" /> </span> </a>
+                        </fieldset>
+                        <fieldset class="save">
+                            <a href="#"> <span class="text"></span> <span class="icon">
+                                    <img alt="" src="images/save-button.png" /> </span> </a>
+                        </fieldset>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="week-view" data-role="page" data-theme="a" class="hidden">
+        <div data-role="header">
+            <div class="greeting">
+                <div class="month"></div>
+                <div class="year"></div>
+                <div class="welcome"></div>
+            </div>
+            <div class="logo"></div>
+            <div class="buttons">
+                <ul>
+                    <li><a class="day-view-button" href="#day-view" data-transition="fade">
+                        <img src="images/icon-day-unsel.png" alt="" /> </a>
+                    </li>
+                    <li><img src="images/icon-week-sel.png" alt="" />
+                    </li>
+                    <li><a href="#settings-view" data-transition="fade"><img
+                            src="images/icon-settings-unsel.png" alt="" /> </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+            <div id="weekouter" >
+                <div class="days">
+                    <div class="scrollarea"></div>
+                </div>
+            </div>
+        <!-- content -->
+    </div>
+    <!-- /week-view page -->
+
+
+    <div id="day-view" data-role="page" data-theme="a" class="hidden">
+        <div data-role="header">
+            <div class="greeting">
+                <div class="month"></div>
+                <div class="year"></div>
+                <div class="welcome"></div>
+            </div>
+            <div class="logo"></div>
+            <div class="buttons">
+                <ul>
+                    <li><img src="images/icon-day-sel.png" alt="" /> </li>
+                    <li><a class="week-view-button"  href="#week-view" data-transition="fade">
+                        <img src="images/icon-week-unsel.png" alt="" /> </a>
+                    </li>
+                    <li><a href="#settings-view" data-transition="fade">
+                        <img src="images/icon-settings-unsel.png" alt="" /> </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="dayouter" data-role="content">
+            <div class="day">
+                <div class="container">
+                    <div class="header">
+                        <span class="day-of-month"></span> <span class="day-of-week"></span>
+                        <span class="add"> <a href="#" data-rel="popupwindow">
+                                 </a> </span>
+                    </div>
+                    <div class="dayview-content">  <!-- data-scroll="y" -->
+                         <div class="morning">
+                            <div id= "morningShadeTop" style="display: none"></div>
+                            <div id= "morningShadeBottom" style="display: none"></div>
+                            <div class="header">
+                                <span class="text"></span>
+                            </div>
+                            <div id= "items-morning-wrapper" >
+                                <div id= "items-morning-scroller"> 
+                                    <div class="items morning"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="afternoon">
+                            <div id= "afternoonShadeTop" style="display: none"></div>
+                            <div id= "afternoonShadeBottom" style="display: none"></div>
+                            <div class="header">
+                                <span class="text"></span>
+                            </div>
+                            <div id= "items-afternoon-wrapper">
+                                <div id= "items-afternoon-scroller"> 
+                                    <div id= "itemsafternoon" class="items afternoon"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="evening">
+                            <div id= "eveningShadeTop" style="display: none"></div>
+                            <div id= "eveningShadeBottom" style="display: none"></div>
+                            <div class="header">
+                                <span class="text"></span>
+                            </div>
+                            <div id= "items-evening-wrapper">
+                                <div id= "items-evening-scroller"> 
+                                    <div class="items evening"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div><!-- content -->
+    </div><!-- /day-view page -->
+
+
+    <!-- Setting View -->
+    <div id="settings-view" data-role="page" data-theme="a" class="hidden">
+        <div data-role="header">
+            <div class="greeting">
+                <div class="month"></div>
+                <div class="year"></div>
+                <div class="welcome"></div>
+            </div>
+            <div class="logo"></div>
+            <div class="buttons">
+                <ul>
+                    <li><a href="#day-view" class="day-view-button" data-transition="fade">
+                        <img src="images/icon-day-unsel.png" alt="" /> </a>
+                    </li>
+                    <li><a href="#week-view" class="week-view-button" data-transition="fade">
+                        <img src="images/icon-week-unsel.png" alt="" /> </a>
+                    </li>
+                    <li><img src="images/icon-settings-sel.png" alt="" />
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div data-role="content"  data-scroll="y">
+            <div class="container">
+                <div class="header">
+                    <span class="text settings_header"></span>
+                    <a class="close" href="#"> <img src="images/close-button-active.png" /> </a>
+                </div>
+
+                <form name="settings-item" action="#" class="settings_form">
+                    <div id="licensebtnl"> i </div>
+                    <fieldset class="settings_visible_days">
+                        <label for="settings_visible_days"></label>
+
+                        <div id="settings_visible_days">
+
+                            <div class="visible_days_item">
+                                <a href="#" id="0" class="selected"> <span class="text mon"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="1" class="selected"> <span class="text tues"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="2" class="selected"> <span class="text weds"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="3" class="selected"> <span class="text thu"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="4" class="selected"> <span class="text fri"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="5" class="selected"> <span class="text sat"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                            <div class="visible_days_item">
+                                <a href="#" id="6" class="selected"> <span class="text sun"></span>
+                                    <span class="icon"> <img alt=""
+                                        src="images/checkbox-sel.png" /> </span> </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                                    
+                    <fieldset class="settings_default_view">
+                        <label for="settings_default_view"></label>
+                        <div id="settings_default_view">
+                            <div class="default_view_item">
+                                <a href="#" id="0" class="selected"> <span class="icon">
+                                        <img alt="" src="images/radio-sel.png" /> </span> <span
+                                    class="text setting_week"></span> </a>
+                            </div>
+                            <div class="default_view_item">
+                                <a href="#" id="1"> <span class="icon">
+                                        <img alt="" src="images/radio-unsel.png" /> </span> <span
+                                    class="text setting_day"></span> </a>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="settings_sort_item_by">
+                        <label for="settings_sort_item_by"></label>
+                        <div id="settings_sort_item_by">
+                            <div class="sort_item_by_item">
+                                <a href="#" id="0" class="selected"> <span class="icon">
+                                        <img alt="" src="images/radio-sel.png" /> </span> <span
+                                    class="text setting_time"></span> </a>
+                            </div>
+                            <div class="sort_item_by_item">
+                                <a href="#" id="1"> <span class="icon">
+                                        <img alt="" src="images/radio-unsel.png" /> </span> <span
+                                    class="text setting_priority"></span> </a>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+        </div> <!-- content -->
+
+    </div>
+    <!-- Settings-view page -->
+    <div id="licensepage" style="display: none">
+        <div id="licensetext"><div id="licensescroll"></div></div>
+        <div id="licensebtnq" class="licensebtn">Back</div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader_popup" class="loading_screen hidden">
+    </div>
+
+</body>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery.mobile-1.0.min.js"></script>
+<script type="text/javascript" src="js/web-ui-fw-libs.js"></script>
+<script type="text/javascript" src="js/web-ui-fw.js"></script>
+<script type="text/javascript" src="js/date.js"></script>
+
+<script type="text/javascript" src="js/license.js"></script>
+<script type="text/javascript" src="js/helper.js"></script>
+<script type="text/javascript" src="js/contextmenu.js"></script>
+<script type="text/javascript" src="js/movetodate.js"></script>
+<script type="text/javascript" src="js/todo-backend.js"></script>
+<script type="text/javascript" src="js/settings-backend.js"></script>
+<script type="text/javascript" src="js/todo.js"></script>
+<script type="text/javascript" src="js/iscroll-lite.js"></script>
+<script type="text/javascript" src="js/en_default.js"></script>
+</html>

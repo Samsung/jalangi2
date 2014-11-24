@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#licensebtnl {
+    position: absolute;
+    top: 564px;
+    left: 977px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    -webkit-border-radius: 20px;
+    border: solid 1px #dddddd;
+    opacity: 0.3;
+    color: #dddddd;
+}
+
+#licensebtnl:hover {
+    opacity: 1.0;
+}
+
+#licensepage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: -webkit-gradient(linear, left top, right top, from(#378fa3), to(#022c38));
+    z-index: 99;
+}
+
+#licensetext {
+    width: 99%;
+    height: 88%;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #1b5d6b));
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    box-shadow: inset 1px 1px 2px 1px black;
+    margin-bottom: 2px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    cursor: move;
+}
+
+#licensescroll {
+    position: relative;
+    font: 25px/100% Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.licensebtn {
+    position: absolute;
+    color: #d7d7d7;
+    border: solid 1px #333;
+    text-align: center;
+    text-decoration: none;
+    font: 30px/100% Arial, Helvetica, sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    height: 52px;
+    width: 52px;
+    line-height: 48px;
+    cursor: pointer;
+    box-shadow: 2px 2px 14px #000;
+}
+
+.licensebtn:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+}
+
+.licensebtn:active {
+    color: #666;
+    background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+}
+
+#licensebtnq {
+    left: 412px;
+    width: 200px;
+}

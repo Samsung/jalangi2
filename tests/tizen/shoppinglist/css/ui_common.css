@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/* Fonts */
+
+@font-face {
+    font-family: OpenSans-Italic;
+    src: url("../fonts/OpenSans-Italic.ttf");
+}
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url("../fonts/OpenSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: OpenSans-SemiboldItalic;
+    src: url("../fonts/OpenSans-SemiboldItalic.ttf");
+}
+
+/* Color classes */
+
+.default_color {
+    background-color: #CCCCCC;
+}
+
+.pink_1 {
+    background-color: #E66DBB;
+}
+.pink_2 {
+    background-color: #E6A3CE;
+}
+.pink_3 {
+    background-color: #F7D2EA;
+}
+
+.blue_1 {
+    background-color: #05C4E6;
+}
+.blue_2 {
+    background-color: #75D5E6;
+}
+.blue_3 {
+    background-color: #B5EAF3;
+}
+
+.purple_1 {
+    background-color: #698BE6;
+}
+.purple_2 {
+    background-color: #9FB2E6;
+}
+.purple_3 {
+    background-color: #CCD6F3;
+}
+
+.green_1 {
+    background-color: #A9E679;
+}
+.green_2 {
+    background-color: #C7E6AF;
+}
+.green_3 {
+    background-color: #E3F3D6;
+}
+
+.yellow_1 {
+    background-color: #FFDE71;
+}
+.yellow_2 {
+    background-color: #FFECAD;
+}
+.yellow_3 {
+    background-color: #FFF5D3;
+}
+
+.brown_1 {
+    background-color: #F2A66F;
+}
+.brown_2 {
+    background-color: #FAD0B1;
+}
+.brown_3 {
+    background-color: #FFE7D6;
+}
+
+.green {
+    background-color: #9FE0C6;
+}
+
+.black {
+    background-color: black;
+}
+
+.gray {
+    background-color: #DCDCDC;
+}
+
+

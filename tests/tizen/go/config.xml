@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://github.com/01org/webapps-go" version="1.0" viewmodes="fullscreen">
+    <icon src="Go_Icon_128.png"/>
+    <content src="index.html"/>
+<name>Go</name>
+<tizen:application id="SM31mV8fq9" required_version="1.0"/>
+<tizen:setting screen-orientation="landscape" contextmenu="enable"/>
+</widget>

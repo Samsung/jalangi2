@@ -1,0 +1,27 @@
+{
+    "alphabet": {
+        "message": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "description": "Single concatination of all alphabet characters, no spaces"
+    },
+    "name": {"message": "Annex"},
+    "description": {"message": "A Reversi/Othello game"},
+	"license": {"message": "License"},
+	"readme": {"message": "Readme"},
+	"player": {"message": "player"},
+	"startover": {"message": "Start over"},
+	"rules": {"message": "Rules"},
+	"computer": {"message": "comp."},
+	"exit": {"message": "Exit"},
+	"1PlayerGame": {"message": "1 Player Game"},
+	"2PlayerGame": {"message": "2 Player Game"},
+	"howtoPlay": {"message": "How to Play"},
+	"turn": {"message": "'s Turn"},
+	"pieces": {"message": "pieces"},
+	"winDraw": {"message": "Draw!"},
+	"winComputer": {"message": "Computer Wins!"},
+	"win": {"message": "Wins"},
+	"newOneGame": {"message": "New 1P Game"},
+	"newTwoGame": {"message": "New 2P Game"},
+	"help": {"message": "Play a piece on the board so that one or more of your opponent’s pieces are between two of your pieces. All of the opponent’s pieces between your own turn over and become your color.<br>The player with the most pieces on the board at the end of the game wins!"},
+	"goBack": {"message": "Go Back"}
+}

@@ -1,0 +1,177 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#edititem-view {
+    width: 1280px;
+    height: 720px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-Index:1000;
+}
+
+#edititem-view .container {
+    width: 1268px; /* (1280-12) */
+    height: 708px; /* (720-12) */
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+#edititem_wrapper{
+    background-color: #E6E7E8;
+}
+
+#edititem-view .container .bottom-bar {
+    position:absolute;
+    top: 592px;
+    left:0px;
+    height: 122px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #4D4D4D;
+}
+
+#edititem-view .container .edititem_form {
+    height: 474px;
+    width: 100%;
+    background-color: #E6E7E8;
+}
+
+/*************************************************/
+#edititem-view #text_fields_pane {
+    float: left;
+    height:  474px;
+    width:  850px ; /* (total 1268 -418 = 850) */
+}
+
+#edititem-view .edititem_form #item_name {
+    float: left;
+    width: 400px;
+    height: 165px; /* 193px - 28; */
+    margin-left: 10px;
+    margin-top: 28px;
+}
+
+#edititem-view .edititem_form #item_list {
+    float: left;
+    width: 400px;
+    height: 165px;
+    margin-left: 20px;
+    margin-top: 28px;
+}
+#edititem-view .edititem_form #item_type {
+    float: left;
+    width: 400px;
+    height: 165px;
+    margin-left: 10px;
+    margin-top: 48px;
+}
+#edititem-view .edititem_form #item_store {
+    float: left;
+    width: 400px;
+    height: 165px;
+    margin-left: 20px;
+    margin-top: 48px;
+}
+/****************************************************/
+
+#edititem-view form input[type="text"] {
+    width: 400px;
+}
+
+#edititem-view form #item_store_input {
+    width: 220px; /* (400-85-95) To handle padding */
+    padding-right: 95px;
+    padding-left: 85px;
+}
+
+#edititem-view form #item_list_input {
+    width: 209px; /* (400-95-96) To handle padding */
+    padding-right: 95px;
+    padding-left: 96px;
+}
+
+/*****************************************************/
+#edititem-view #photo_pane {
+    float: left;
+    height: 446px; /* (474-28) */
+    width: 418px;
+    margin-top: 28px;
+}
+
+#edititem-view #photo_content {
+    /* position: relative; */
+    float: left;
+    height: 323px;
+    width: 408px;
+    margin-top: 13px;
+    background-color: #CCCCCC;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+#edititem-view #photo_content #edititem_view_item_photo {
+    position: absolute;
+    height: 303px;
+    width: 388px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#edititem-view #photo_content #edititem_view_add_photo {
+    position: relative;
+    float: left;
+    top: 100px;
+    left: 50px;
+    width: 310px;
+}
+
+/* TODO - move to common css */
+.videoMask {
+    position: relative;
+    left: 10px;
+    top: 10px;
+    width: 320px;
+    max-width: 388px;
+    /* height: 240px; */
+    height: 291px;
+    cursor: pointer;
+    /* display: hidden; inline; */
+    /* visibility: hidden; */
+}
+
+.videoMask video {
+    position: absolute;
+    clip: rect(0px 320px 291px 0px);
+}
+
+video {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    
+    border-style: solid;
+    border-width: 6px;
+    border-color: #6D6D6D;
+}
+
+.itemPhoto {
+    position: relative;
+    left: 10px;
+    top: 10px;
+
+    width: 320px;
+    max-width: 388px;
+    height: 291px;
+    
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #226699;
+}
+

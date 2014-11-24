@@ -1,0 +1,269 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#addfromfavorites-view .container .title-bar {
+    height: 112px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #2E2E2E;
+}
+
+#addfromfavorites-view .container .bottom-bar {
+    position: relative;
+    float: left;
+    height: 122px;
+    width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: #4D4D4D;
+}
+
+#addfromfavorites-view #listoffavorites {
+    position: absolute;
+    width: 100%;
+    background-color: #E6E7E8;
+}
+
+.listinputpane label {
+    font-family: 'OpenSans-Regular';
+    font-size: 35px;
+    color: #FFFFFF;
+    text-shadow: none;
+    margin-left: 10px;
+}
+
+.listinputpane input[type="text"] {
+    height: 110px;
+    margin-top: 13px;
+    font-family: 'OpenSans-Italic';
+    font-size: 40px;
+    color: #414042;
+    background-color: #CCCCCC;
+    border: 0px solid #000000;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.listinputpane input[type="button"] {
+    background-color: #CCCCCC;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat; 
+    height: 85px;
+    width: 85px;
+}
+
+#addfromfavorites-view #favorites_list_button,
+#addfromfavorites-view #favorites_stores_button {
+    position: relative;
+    float: right;
+    right: 10px;
+    bottom: 97px; /* (85+12) */
+}
+
+#addfromfavorites-view #favorites_item_store img {
+    position: relative;
+    float: left;
+    bottom: 97px; /* (85+12) */
+}
+
+#addfromfavorites-view #favorites_item_list img {
+    position: relative;
+    float: left;
+    bottom: 81px; /*(52+ 29) */
+    left: 22px;
+}
+
+#addfromfavorites-view #favorites_list_button,
+#addfromfavorites-view #favorites_stores_button {
+    background-image: url("../images/icon_select_01.png");
+}
+#addfromfavorites-view #favorites_list_button:active,
+#addfromfavorites-view #favorites_stores_button:active {
+    background-image: url("../images/icon_select_02.png");
+}
+
+#addfromfavorites-view .title-bar label {
+    font-family: 'OpenSans-Regular';
+    font-size: 52px;
+    color: #939598;
+    text-shadow: none;
+    margin-left: 25px;
+    margin-top: 14px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+#addfromfavorites-view button {
+    background-color: #2E2E2E;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 85px;
+}
+#addfromfavorites-view button#addfromfavorites_view_close_button,
+#addfromfavorites-view button#addfromfavorites_view_search_button {
+    position: relative;
+    float: right;
+    margin-right: 14px;
+    margin-top: 14px;
+}
+#addfromfavorites-view button#addfromfavorites_view_close_button {
+    background-image: url("../images/btn_exit_01.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_close_button:active {
+    background-image: url("../images/btn_exit_02.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_search_button {
+    background-image: url("../images/btn_search.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_search_button:active {
+    background-color: #FFFFFF;
+}
+
+#addfromfavorites-view #addfromfavorites_view_save_text_button {
+    position: relative;
+    float: right;
+    height: 85px;
+    margin-right: 14px;
+    margin-top: 18px;
+}
+
+#addfromfavorites-view #addfromfavorites_view_addoneitem_text_button,
+#addfromfavorites-view #addfromfavorites_view_deselect_text_button {
+    position: relative;
+    float: left;
+    height: 85px;
+    margin-left: 14px;
+    margin-top: 18px;
+}
+#addfromfavorites-view #addfromfavorites_view_deselect_text_button {
+    margin-left: 100px;
+}
+
+.text_button .text {
+    font-family: 'OpenSans-Regular';
+    font-size: 36px;
+    display: inline-block;
+    color: #D9D9D9;
+    text-shadow: none;
+    vertical-align: middle;
+}
+
+#addfromfavorites-view .text_button button {
+    background-color: #4D4D4D;
+    border-style: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85px;
+    width: 85px;
+    vertical-align: middle;
+}
+
+#addfromfavorites-view button#addfromfavorites_view_save_button {
+    background-image: url("../images/btn_save_01.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_save_button:active {
+    background-image: url("../images/btn_save_02.png");
+}
+
+#addfromfavorites-view button#addfromfavorites_view_addoneitem_button {
+    background-image: url("../images/btn_addOneItem_01.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_addoneitem_button:active {
+    background-image: url("../images/btn_addOneItem_02.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_deselect_button {
+    background-image: url("../images/btn_uncheckAll_01.png");
+}
+#addfromfavorites-view button#addfromfavorites_view_deselect_button:active {
+    background-image: url("../images/btn_uncheckAll_02.png");
+}
+
+#addfromfavorites-view #addfromfavorites_view_addoneitem_text_button .text,
+#addfromfavorites-view #addfromfavorites_view_deselect_text_button .text {
+    color: #939598;
+}
+
+
+#addfromfavorites-view #listoffavorites-pane .favoriteitem {
+    position: relative;
+    float: left;
+    height: 110px;
+    margin-left: 10px;
+    margin-top: 7px;
+    background-color: #CCCCCC;
+}
+#addfromfavorites-view #listoffavorites-pane .selected {
+    background-color: #737373;
+}
+#addfromfavorites-view .favoriteitem label {
+    font-family: 'OpenSans-Italic';
+    font-size: 40px;
+    color: #414042;
+    text-shadow: none;
+    margin-left: 20px;
+    margin-top: 27px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;    
+}
+#addfromfavorites-view .selected label {
+    color: #ffffff;
+}
+
+
+#favorites_searchpane #favorites_searchbackbutton {
+    position: relative;
+    float: left;
+    width: 112px;
+    height: 112px;
+    background-image: url("../images/btn_back_01.png");
+}
+
+#favorites_searchpane #favorites_searchbackbutton:active {
+    background-image: url("../images/btn_back_02.png");
+}
+
+#favorites_searchpane #favorites_searchclearbutton {
+    position: relative;
+    float: right;
+    width: 85px;
+    height: 85px;
+    right: 10px;
+    bottom: 97px; /* (85+12) */
+    background-color: #CCCCCC;
+    background-image: url("../images/btn_remove_01.png");
+}
+
+#favorites_searchpane #favorites_searchclearbutton:active {
+    background-image: url("../images/btn_remove_02.png");
+}
+
+#favorites_searchpane form input[type="text"] {
+    position: relative;
+    float: left;
+    height: 106px;
+    font-family: 'OpenSans-SemiboldItalic';
+    font-size: 40px;
+    color: #414042;
+    background-color: #CCCCCC;
+    border: 2px solid #000000;
+    background-image: url('../images/input_shadow.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+    
+    padding-left: 20px;
+    padding-right: 85px;
+}
+

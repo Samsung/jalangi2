@@ -1,0 +1,1 @@
+var xhrSupported = new XMLHttpRequest();

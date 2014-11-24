@@ -1,0 +1,14 @@
+{
+    "app_name": {
+        "message": "Shopping List"
+    },
+    "app_description": {
+        "message": ""
+    },
+    "name_of_list": {
+    	"message": "Name of List:"
+    }
+    
+    
+}
+

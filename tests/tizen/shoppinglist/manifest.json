@@ -1,0 +1,17 @@
+{
+   "name": "__MSG_appName__",
+   "description":  "__MSG_appDescription__",
+   "version": "1",
+   "default_locale": "en",
+   "app": {
+     "launch": {
+       "local_path": "index.html"
+     }
+   },
+  "icons": { 
+  	"128": "icon_128.png"
+  },
+  "permissions": ["unlimitedStorage"],
+  "homepage_url" : "https://01.org/webapps/content/shoppinglist", 
+  "update_url" : "https://01.org/webapps/content/shoppinglist/update.xml"
+}

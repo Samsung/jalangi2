@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<!--
+Copyright 2012 Intel Corporation.
+
+This program is licensed under the terms and conditions of the
+Apache License, version 2.0.  The full text of the Apache License is at
+http://www.apache.org/licenses/LICENSE-2.0
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width target-densitydpi=device-dpi initial-scale=1 maximum-scale=1 user-scalable=0" />
+        <title>Shopping List</title>
+        <link rel="stylesheet" type="text/css" href="css/ui_common.css" />
+        <link rel="stylesheet" type="text/css" id="sl_style" href="css/sl_portrait.css" />
+        <link rel="stylesheet" type="text/css" href="css/addstore_dialog.css" />
+        <link rel="stylesheet" type="text/css" href="css/info_dialog.css" />
+        <link rel="stylesheet" type="text/css" href="css/options_dialog.css" />
+        <link rel="stylesheet" type="text/css" href="css/listselection_dialog.css" />
+        <link rel="stylesheet" type="text/css" href="css/editlist_view_common.css" />
+        <link rel="stylesheet" type="text/css" id="editlist_view_style" href="css/editlist_view_portrait.css" />
+        <link rel="stylesheet" type="text/css" href="css/edititem_view_common.css" />
+        <link rel="stylesheet" type="text/css" id="edititem_view_style" href="css/edititem_view_portrait.css" />
+        <link rel="stylesheet" type="text/css" href="css/addfromfavorites_view_common.css" />
+        <link rel="stylesheet" type="text/css" id="favorites_view_style" href="css/addfromfavorites_view_portrait.css" />
+        <link rel="stylesheet" type="text/css" href="css/photofullscreen_view_common.css" />
+        <link rel="stylesheet" type="text/css" id="photofullscreen_view_style" href="css/photofullscreen_view_portrait.css" />
+    </head>
+
+    <body onload="ShoppingListApp.initOnLoad()" OnKeyPress="return ShoppingListApp.handleKeyPress(event)">
+        <div id="background">
+        
+            <div id="leftpane">
+                <div id="viewswitcherpane">
+                    <button id="mylistsbutton" class="shoppinglistbutton" onclick="ShoppingListApp.onMyListsButtonClicked()"></button>
+                    <button id="mystoresbutton" class="shoppinglistbutton" onclick="ShoppingListApp.onMyStoresButtonClicked()"></button>
+                    <button id="myfavoritesbutton" class="shoppinglistbutton" onclick="ShoppingListApp.onMyFavoritesButtonClicked()"></button>
+                    <button id="searchcurrentlistbutton" class="shoppinglistbutton" onclick="ShoppingListApp.onSearchButtonClick()"></button>
+                </div>
+                <div id="searchpane" style="display:none">
+                    <button id="searchbackbutton" class="shoppinglistbutton" onclick="ShoppingListApp.onSearchBackButtonClick()"></button>
+                    <div id="innersearchpane">
+                        <button id="searchremovebutton" class="clearsearchbutton" onclick="ShoppingListApp.onClearSearchButtonClick()"></button>
+                        <form name="searchform">
+                            <div class="searchname">
+                                <input type="text" name="searchname" id="searchinput" size="15" onkeyup="ShoppingListApp.setSearchPattern(searchform.searchname.value)" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="listoflistspane">
+                    <div id="listoflists"></div>
+                </div>
+                <div id="activelistpane">
+                    <div id="activelist"></div>
+                </div>
+                <div id="addnewlistpane">
+                    <button id="addnewlistbutton" class="shoppinglistbutton"></button>
+                    <div id="addnewlisttext"></div>
+                </div>
+            </div>
+            <div id="rightpane">
+                <div id="currentlistpane">
+                    <div id="currentlist"></div>
+                    <div id="currentlistempty" style="display: none"></div>
+                </div>
+                <div id="optionspane">
+                    <button id="sortcurrentlistbutton" class="shoppinglistbutton" onclick="showSortbyDialog(ShoppingListApp.sortbyOption, ShoppingListApp.handleSortOption)"></button>
+                    <div id="addnewitemtext"></div>
+                    <button id="addnewitembutton" class="shoppinglistbutton" onclick="editItemScreen.show(VIEW_MODE.NEW)"></button>
+                    <div id="licensebtnl"> i </div>
+                    <div id="home_help" class="helplaunch"> ? </div>
+                </div>
+            </div>
+
+            <div id="shadow" class="opaqueLayer" style="display:none"> </div>
+
+            <div id="addstore-dialog" style="display:none">
+                <div class="title-bar">
+                    <label for="addstore" id="addstore_dialog_title_id"></label>
+                    <button id="addstore_dialog_close_button"></button>
+                </div>
+                <form name="addstore-form" action="#">
+                    <div class="store_name">
+                        <label id="storename_label"></label> <input type="text"
+                            name="store_name" id="storename_input" size="15" onblur="this.value=adjustSpaces(this.value);" />
+                    </div>
+                </form>
+                <div class="bottom-bar">
+                    <a href="#" id="addstore_save_text_button" class="text_button">
+                        <span id="addstore_save_text" class="text"></span> <span class="icon">
+                            <button id="addstore_save_button"></button> </span> </a>
+                </div>
+            </div>
+
+            <div id="infodialog" style="display:none">
+                <div id="title_pane">
+                    <label for="info" id="infodialog_title"></label> 
+                </div>
+                <div id="message_pane"> 
+                    <label for="message" id="infodialog_message"></label>
+                </div>
+                <div id="buttons_pane">
+                    <!-- same button for Yes and Ok -->
+                    <a href="#" id="infodialog_yes_text_button" class="text_button">
+                        <span class="text" id="yes_button_text"></span>
+                        <span class="icon"> <button id="infodialog_yes_button"></button> </span>
+                    </a>                
+                    <a href="#" id="infodialog_no_text_button" class="text_button" style="display:none">
+                        <span class="text" id="no_button_text"></span>
+                        <span class="icon"> <button id="infodialog_no_button"></button> </span>
+                    </a>
+                </div>
+            </div>
+
+            <div id="optionsdialog" style="display:none">
+                <div id="title_pane">
+                    <label for="options" id="options_title"></label>
+                    <button id="options_close_button"></button>
+                </div>
+                <div id="options_pane">
+                    <div class="listitem" id="option_1">
+                        <img src="images/Export1_35.png" id="option1_img"/>
+                        <label id="optiontext_1"></label> </div>
+                    <img src='' class='listitem_divider' />
+                    
+                    <div class="listitem" id="option_2">
+                        <img src="images/Export1_36.png" id="option2_img"/>
+                        <label id="optiontext_2"></label> </div>
+                    <img src='' class='listitem_divider' />
+                    
+                    <div class="listitem" id="option_3"> 
+                        <label id="optiontext_3"></label> </div>
+                    <img src='' class='listitem_divider' />
+                    
+                    <div class="listitem" id="option_4">
+                        <label id="optiontext_4"></label> </div>
+                    <img src='' class='listitem_divider' />
+                    
+                    <div class="listitem" id="option_5">
+                        <label id="optiontext_5"></label> </div>
+                </div>
+            </div>
+
+            <div id="sortbydialog" style="display:none">
+                <div id="title_pane">
+                    <label for="sortby" id="sortby_title"></label>
+                    <button id="sortby_close_button"></button>
+                </div>
+
+                <div id="sortoptions_pane">
+                    <div class="listitem" id="sortby_alphabet">
+                        <button id="sortoption_button_1"></button>
+                        <label id="sortby_alphabet_label"></label> 
+                    </div>
+                    <img src='' class='listitem_divider' />
+
+                    <div class="listitem" id="sortby_store">
+                        <button id="sortoption_button_2"></button>
+                        <label id="sortby_store_label"></label> 
+                    </div>
+                    <img src='' class='listitem_divider' />
+
+                    <div class="listitem" id="sortby_type">
+                        <button id="sortoption_button_3"></button>
+                        <label id="sortby_type_label"></label>
+                    </div>
+                    <img src='' class='listitem_divider' />
+
+                    <div class="listitem" id="sortby_bought_status">
+                        <button id="sortoption_button_4"></button>
+                        <label id="sortby_bought_status_label"></label> 
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="listselection-dialog" style="display:none">
+                    <div class="title-bar">
+                        <label for="selectlist" id="listselection_title"></label>
+                        <button id="listselection_close_button"></button>
+                    </div>
+                    
+                    <div id="listoflists-popup-pane">
+                        <div id="listoflists-popup"></div>
+                    </div>
+            </div>
+
+            <div id="storeselection-dialog" style="display:none">
+                    <div class="title-bar">
+                        <label for="selectstore" id="storeselection_title"></label>
+                        <button id="storeselection_close_button"></button>
+                    </div>
+                    <div id="listofstores-popup-pane">
+                        <div id="listofstores-popup"> </div>
+                    </div>
+            </div>
+            
+            <div id="addfromfavorites-view" style="display:none">
+                <div class="container">
+                    <div class="title-bar">
+                        <button id="addfromfavorites_view_close_button"></button>
+                    
+                        <div id="favorites_titlepane">
+                            <label id="addfromfavorites_view_title_id"></label>
+                            <button id="addfromfavorites_view_search_button"></button>
+                        </div>
+                        
+                        <div id="favorites_searchpane" style="display:none">
+                            <button id="favorites_searchbackbutton"></button>
+                            <form name="favorites_searchform">
+                                <input type="text" name="favorites_searchname" id="favorites_searchinput"/>
+                            </form>
+                            <button id="favorites_searchclearbutton"></button>
+                        </div>
+                    </div>
+                    
+                    <div id="favorites-middle-pane">
+                        <div id="listoffavorites-pane">
+                            <div id="listoffavorites"></div>
+                        </div>
+                        <div id="list-store-input-pane">
+                            <div id="favorites_item_list" class="listinputpane">
+                                <label id="favorites_item_list_label"></label>
+                                <input type="text" id="favorites_list_input" readonly="readonly"/>
+                                <img id="favorites_listcolor" src="" class="color_box" />
+                                <input type="button" id="favorites_list_button"/>
+                            </div>
+                            <div id="favorites_item_store" class="listinputpane">
+                                <label id="favorites_item_store_label"></label>
+                                <input type="text" id="favorites_store_input" readonly="readonly"/>
+                                <img src="images/icon_shop.png"/>
+                                <input type="button" id="favorites_stores_button"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bottom-bar">
+                        <a href="#" id="addfromfavorites_view_addoneitem_text_button" class="text_button">
+                            <span class="icon"> <button id="addfromfavorites_view_addoneitem_button"></button> </span>
+                            <span class="text" id="add_one_item"></span>
+                        </a>
+                        <!-- 
+                        <a href="#" id="addfromfavorites_view_deselect_text_button" class="text_button">
+                            <span class="icon"> <button id="addfromfavorites_view_deselect_button"></button> </span>
+                            <span class="text"> Deselect All </span>
+                        </a>
+                         -->
+                        <a href="#" id="addfromfavorites_view_save_text_button" class="text_button">
+                            <span class="text" id="addfromfavorites_save_text"></span>
+                            <span class="icon"> <button id="addfromfavorites_view_save_button"></button> </span>
+                        </a>                    
+                    </div>
+                </div>
+            </div>
+
+            <div id="edititem-view" style="display:none">
+                <div class="container">
+                    <div class="title-bar">
+                        <label for="edititem" id="edititem_view_title"></label>
+                        <button id="edititem_view_close_button"></button>
+                        <button id="edititem_view_addto_favorites_button"></button>
+                    </div>
+
+                    <div id="edititem_wrapper"><div id="edititem_scroller">
+                    <form name="edititem-form" action="#" class="edititem_form">
+                        <div id="text_fields_pane">
+                            <div id="item_name">
+                                <label id="item_name_label"></label> 
+                                <input type="text" name="item_name" id="item_name_input" size="15" onblur="this.value=adjustSpaces(this.value);" />
+                            </div>
+                            <div id="item_list">
+                                <label id="item_list_label"></label>
+                                <input type="text" name="item_list" id="item_list_input" readonly="readonly"/>
+                                <img id="edititem_listcolor" src="" class="color_box" />
+                                
+                                <input type="button" name="edititem_list_button" id="edititem_list_button"
+                                class="form_button"/>
+
+                            </div>
+                            <div id="item_type">
+                                <label id="item_type_label"></label>
+                                <input type="text" name="item_type" id="item_type_input" onblur="this.value=adjustSpaces(this.value);"/>
+                            </div>
+                            <div id="item_store">
+                                <label id="item_store_label"></label>
+                                <input type="text" name="item_store" id="item_store_input"
+                                placeholder="Set Store" readonly="readonly"/>
+                                <img src="images/icon_shop.png"/>
+                                <input type="button" name="edititem_stores_button" id="edititem_stores_button"
+                                class="form_button"/>
+                            </div>
+                        </div>
+
+                        <div id="photo_pane">
+                            <label id="photo_label"></label>
+                            <div id="photo_content">
+                                <a href="#" id="edititem_view_add_photo" class="text_button">
+                                    <img src="images/icon_photo.png"/>
+                                    <label id="add_photo_label"></label>
+                                </a>
+                                <img id="edititem_view_item_photo" style="display:none" src=""/>
+                                
+                                <canvas id="itemPhoto" class="itemPhoto" style="display:none"></canvas>
+                                
+                                <div id="videoMask" class="videoMask" style="display:none">
+                                    <video id="itemVideo" autoplay class="mirror"></video>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                    </div></div>
+
+                    <div class="bottom-bar">
+                        <a href="#" id="edititem_view_addfrom_favorites_button" class="text_button">
+                            <span class="icon"> <button id="edititem_view_fav_button"></button> </span>
+                            <span class="text" id="edititem_add_from_my_favorites_text"></span>
+                        </a>
+                        <a href="#" id="edititem_view_delete_text_button" class="text_button">
+                            <span class="icon"> <button id="edititem_view_delete_button"></button> </span>
+                            <span class="text" id="edititem_delete_text"></span>
+                        </a>
+                        <a href="#" id="edititem_view_save_text_button" class="text_button">
+                            <span class="text" id="edititem_save_text"></span>
+                            <span class="icon"> <button id="edititem_view_save_button"></button> </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="photofullscreen-view" style="display:none">
+                <div class="container">
+                    <button id="photofullscreen_view_close_button"></button>
+                    <img id="photofullscreen_view_item_photo" style="display:none" src=""/>
+                    
+                    <canvas id="photofullscreen_view_itemCanvas" style="display:none" ></canvas>
+                    <video id="photofullscreen_view_itemVideo" autoplay class="mirror" style="display:none"></video>
+                                
+                    <div class="bottom-bar">
+                        <a href="#" id="photofullscreen_view_delete_text_button" class="text_button">
+                            <span class="icon"> <button id="photofullscreen_view_delete_button"></button> </span>
+                            <span class="text" id="delete_photo"></span>
+                        </a>
+                        <a href="#" id="photofullscreen_view_change_text_button" class="text_button">
+                            <span class="icon"> <button id="photofullscreen_view_change_button"></button> </span>
+                            <span class="text" id="change_photo"> </span>
+                        </a>
+                        <a href="#" id="photofullscreen_view_save_text_button" class="text_button">
+                            <span class="text" id="save_photo"></span>
+                            <span class="icon"> <button id="photofullscreen_view_save_button"></button> </span>
+                        </a>                    
+                    </div>
+                </div>
+            </div>
+            
+            <div id="edit-list-view" style="display:none">
+                <div class="container">
+                    <div class="title-bar">
+                        <label for="create_newlist" id="title_id"></label>
+                        <button id="close_button"></button>
+                    </div>
+
+                    <form name="list-item" action="#" class="edit_list_form">
+                        <div class="list_name">
+                            <label for="list_name" id="list_name_label_id"> </label> <input
+                                type="text" name="list_name" id="list_name" size="15"
+                                onblur="this.value=adjustSpaces(this.value);" />
+                        </div>
+
+                        <div class="list_color">
+                            <fieldset>
+                                <label for="list_color" id="list_color_label_id"> </label>
+                                <div class="color">
+                                    <div class="colorbutton">
+                                        <img src="" id="pink_1" class="color_box pink_1"  
+                                        onclick="editListScreen.listTypeColorClick('pink_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="blue_1" class="color_box blue_1" 
+                                        onclick="editListScreen.listTypeColorClick('blue_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="purple_1" class="color_box purple_1" 
+                                        onclick="editListScreen.listTypeColorClick('purple_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="green_1" class="color_box green_1" 
+                                        onclick="editListScreen.listTypeColorClick('green_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="yellow_1" class="color_box yellow_1" 
+                                        onclick="editListScreen.listTypeColorClick('yellow_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="brown_1" class="color_box brown_1" 
+                                        onclick="editListScreen.listTypeColorClick('brown_1')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="pink_2" class="color_box pink_2" 
+                                        onclick="editListScreen.listTypeColorClick('pink_2')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="blue_2" class="color_box blue_2" 
+                                        onclick="editListScreen.listTypeColorClick('blue_2')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="purple_2" class="color_box purple_2" 
+                                        onclick="editListScreen.listTypeColorClick('purple_2')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="green_2" class="color_box green_2" 
+                                        onclick="editListScreen.listTypeColorClick('green_2')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="yellow_2" class="color_box yellow_2" 
+                                        onclick="editListScreen.listTypeColorClick('yellow_2')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="brown_2" class="color_box brown_2" 
+                                        onclick="editListScreen.listTypeColorClick('brown_2')"/>
+                                    </div>
+
+                                    <div class="colorbutton">
+                                        <img src="" id="pink_3" class="color_box pink_3" 
+                                        onclick="editListScreen.listTypeColorClick('pink_3')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="blue_3" class="color_box blue_3" 
+                                        onclick="editListScreen.listTypeColorClick('blue_3')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="purple_3" class="color_box purple_3" 
+                                        onclick="editListScreen.listTypeColorClick('purple_3')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="green_3" class="color_box green_3" 
+                                        onclick="editListScreen.listTypeColorClick('green_3')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="yellow_3" class="color_box yellow_3" 
+                                        onclick="editListScreen.listTypeColorClick('yellow_3')"/>
+                                    </div>
+                                    <div class="colorbutton">
+                                        <img src="" id="brown_3" class="color_box brown_3" 
+                                        onclick="editListScreen.listTypeColorClick('brown_3')"/>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+
+                    <div class="bottom-bar">
+                        <a href="#" id="save_text_button" class="text_button"> <span
+                            class="text" id="editlist_save_text"></span> <span class="icon">
+                                <button id="save_button"></button> </span> </a>
+                    </div>
+                </div>
+            </div>
+            <!-- edit-list-view -->
+
+        </div> <!-- background -->
+        <div id="help_dialog" class="helpdialog" style="display: none">
+            <div class="inner">
+                <div id="help_close" class="close"> x </div>
+                <div id="help_contents" class="contents">
+                    <div class="column1">
+                      The Shopping List helps you track items you want to buy, 
+                      and lets you sort them by store, list, or type.
+                      <br>
+                      <ul><li><b>Add a list</b><br>
+                        Tap<img src="images/tab_lists_01.png" align="middle"/>then
+                        <img src="images/btn_addNewList_01.png" align="middle"/>
+                        then name it & save
+                        <img src="images/btn_save_01.png" align="middle"/>
+                      </li><li><b>Add a store</b><br>
+                        Tap<img src="images/tab_shops_01.png" align="middle"/>then
+                        <img src="images/btn_addNewList_01.png" align="middle"/>
+                        then name it & save
+                        <img src="images/btn_save_01.png" align="middle"/>
+                      </li><li><b>Add a new item to a list</b><br>
+                        Tap <img src="images/btn_addNewList_01.png" align="middle"/>
+                        (bottom), then edit it & save
+                        <img src="images/btn_save_01.png" align="middle"/>
+                      </li><li><b>Add an item to your favorites</b><br>
+                        Tap the item's
+                        <img src="images/btn_faves_02.png" align="middle"/>
+                        button
+                      </li><li><b>Toggle an item's bought status</b><br>
+                        Tap the item to toggle the checkmark
+                        <img src="images/btn_yes_01.png" align="middle"/>
+                      </li></ul>
+                    </div>
+                    <div class="column2">
+                      <ul><li><b>Access the edit, move, and delete menu</b><br>
+                        Press and hold the item title, close the menu with
+                        <img src="images/btn_exit_01.png" align="middle"/>
+                      </li><li><b>Filter items by list or store</b><br>
+                        Tap<img src="images/tab_lists_01.png" align="middle"/>or
+                        <img src="images/tab_shops_01.png" align="middle"/>then
+                        <img src="images/icon_select_02.png" align="middle"/>
+                        then choose
+                      </li><li><b>View your favorites</b><br>
+                        Tap<img src="images/btn_faves_02.png" align="middle"/>
+                        in the menu bar
+                      </li><li><b>Search for items</b><br>
+                        Tap<img src="images/tab_search_01.png" align="middle"/>
+                        and enter a search string
+                      </li><li><b>Sort items by name, store, type, or status</b><br>
+                        Tap<img src="images/btn_sort_01.png" align="middle"/>
+                        (bottom), and select sort
+                      </li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="licensepage" style="display: none">
+            <div id="licensetext"><div id="licensescroll"></div></div>
+            <div id="licensebtnq" class="licensebtn">Back</div>
+        </div>
+    </body>
+
+
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/license.js"></script>
+    <script src="js/help.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="js/dbmanager.js"></script>
+    <script src="js/Localizer.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/InfoDialog.js"></script>
+    <script src="js/OptionsDialog.js"></script>
+    <script src="js/ListSelectionDialog.js"></script>
+    <script src="js/StoreSelectionDialog.js"></script>
+    <script src="js/SortbyDialog.js"></script>
+    <script src="js/AddStoreDialog.js"></script>
+    <script src="js/EditListScreen.js"></script>
+    <script src="js/EditItemScreen.js"></script>
+    <script src="js/AddFromFavoritesView.js"></script>
+    <script src="js/PhotoFullScreenView.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/en_default.js"></script>
+    <script src="js/tizenapplicationservice.js"></script>
+    <script src="js/FileSystem.js"></script>
+    
+</html>
+

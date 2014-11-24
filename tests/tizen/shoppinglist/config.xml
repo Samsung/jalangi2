@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://github.com/01org/webapps-shopping-list" version="1.0" viewmodes="fullscreen">
+    <icon src="icon_128.png"/>
+    <content src="index.html"/>
+    <name>shopping-list</name>
+    <feature name="http://tizen.org/api/tizen" required="true"/> 
+    <feature name="http://tizen.org/api/application.launch" required="true"/>
+    <feature name="http://tizen.org/api/filesystem" required="true"/>
+    <feature name="http://tizen.org/api/filesystem.read" required="true"/>
+    <feature name="http://tizen.org/api/filesystem.write" required="true"/>
+    <feature name="http://tizen.org/api/mediacontent" required="true"/>
+    <feature name="http://tizen.org/api/mediacontent.read" required="true"/>
+    <access origin="*"/>
+
+    <tizen:application id="ONxyXUx46K" required_version="1.0"/>
+</widget>

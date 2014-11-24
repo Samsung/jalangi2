@@ -1,0 +1,11 @@
+{
+    "memoryclearall_text": {"message": "Tyhjennä"},
+    "memoryClose_text": {"message": "Sulje"},
+    "dialogheading_text": {"message": "Tyhjennä kaikki muistipaikat"},
+    "dialogcontent_text": {"message": "Kaikki muistipaikat tyhjennetään."},
+    "dialogokbutton_text": {"message": "OK"},
+    "dialogcancelbutton_text": {"message": "Peruuta"},
+    "mnesave_text": {"message": "Tallenna"},
+    "mnecancel_text": {"message": "Peruuta"},
+    "malformedexpression_text": {"message": "Väärän muotoinen lauseke"}
+}

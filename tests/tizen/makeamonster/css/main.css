@@ -1,0 +1,1579 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the 
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/* -------------------------------- global ----------------------------- */
+
+body {
+    margin: 0px;
+    -webkit-user-select: none;
+    background-color: "white";
+    box-shadow: 5px 5px 20px black;
+    position: absolute;
+    width: 1024px;
+    height: 600px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+}
+
+#main_page {
+    background-position: left top;
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+    width: 1024px;
+    height: 600px
+}
+
+#main_bg {
+    background: url(../images/MaM_BG_a.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+@-webkit-keyframes bigcoil_anim {
+    0% {
+        background-image: url(../images/MaM_CoilBig_a.png);
+    }
+    10% {
+        background-image: url(../images/MaM_CoilBigGlow_a.png);
+    }
+    20% {
+        background-image: url(../images/MaM_CoilBigGlow_b.png);
+    }
+    30% {
+        background-image: url(../images/MaM_CoilBigGlow_c.png);
+    }
+    40% {
+        background-image: url(../images/MaM_CoilBigGlow_d.png);
+    }
+    50% {
+        background-image: url(../images/MaM_CoilBigGlow_e.png);
+    }
+    100% {
+        background-image: url(../images/MaM_CoilBigGlow_e.png);
+    }
+}
+
+#bigcoil {
+    position: absolute;
+    top: 0px;
+    left: 108px;
+    width: 379px;
+    height: 56px;
+    background-repeat: no-repeat;
+    -webkit-animation: bigcoil_anim 2s linear infinite;
+}
+
+@-webkit-keyframes smallcoil_anim {
+    0% {
+        background-image: url(../images/MaM_CoilSmall_a.png);
+    }
+    10% {
+        background-image: url(../images/MaM_CoilSmallGlow_a.png);
+    }
+    20% {
+        background-image: url(../images/MaM_CoilSmallGlow_b.png);
+    }
+    30% {
+        background-image: url(../images/MaM_CoilSmallGlow_c.png);
+    }
+    40% {
+        background-image: url(../images/MaM_CoilSmallGlow_d.png);
+    }
+}
+
+#smallcoil {
+    position: absolute;
+    top: 0px;
+    left: 400px;
+    width: 185px;
+    height: 115px;
+    background-repeat: no-repeat;
+    background-image: url(../images/MaM_CoilSmall_a.png);
+    -webkit-animation: smallcoil_anim 1.5s linear infinite;
+}
+
+#eyebeaker {
+    position: absolute;
+    top: 207px;
+    left: 228px;
+    width: 88px;
+    height: 141px;
+    background: url(../images/MaM_EyeBeaker_b.png) no-repeat;
+}
+
+#fingerbeaker {
+    position: absolute;
+    top: 270px;
+    left: 495px;
+    width: 45px;
+    height: 73px;
+    background: url(../images/MaM_FingerBeaker_a.png) no-repeat;
+}
+
+@-webkit-keyframes finger_anim {
+    0% {
+        -webkit-transform: translate(0px, 0px);
+    }
+    50% {
+        -webkit-transform: translate(0px, -5px);
+    }
+}
+
+.finger {
+    position: absolute;
+    width: 16px;
+    height: 17px;
+}
+
+#finger1 {
+    top: 18px;
+    left: 4px;
+    background: url(../images/finger1.png) no-repeat;
+    -webkit-animation: finger_anim 3s ease-in-out 0s infinite;
+}
+
+#finger2 {
+    top: 34px;
+    left: 10px;
+    background: url(../images/finger2.png) no-repeat;
+    -webkit-animation: finger_anim 3s ease-in-out 1s infinite;
+}
+
+#finger3 {
+    top: 50px;
+    left: 4px;
+    background: url(../images/finger3.png) no-repeat;
+    -webkit-animation: finger_anim 3s ease-in-out 2s infinite;
+}
+
+#brainbeaker {
+    position: absolute;
+    top: 195px;
+    left: 100px;
+    width: 110px;
+    height: 160px;
+    background: url(../images/brainbeaker.png) no-repeat;
+}
+
+@-webkit-keyframes brainbob_anim {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    50% {
+        -webkit-transform: rotate(-30deg);
+    }
+}
+
+#brain {
+    position: absolute;
+    top: 270px;
+    left: 130px;
+    width: 53px;
+    height: 48px;
+    background: url(../images/brain.png) no-repeat;
+    -webkit-animation: brainbob_anim 3s ease-in-out infinite;
+}
+
+#eyebeakerjuice {
+    position: absolute;
+    top: 28px;
+    left: 0px;
+    width: 88px;
+    height: 141px;
+    background: url(../images/MaM_EyeBeakerLiquid_a.png) no-repeat;
+}
+
+@-webkit-keyframes eyeball_anim {
+    0% {
+        -webkit-transform: rotate(10deg) translate(0px, 0px);
+    }
+    20% {
+        -webkit-transform: rotate(180deg) translate(0px, 2px);
+    }
+    40% {
+        -webkit-transform: rotate(-75deg) translate(0px, 0px);
+    }
+    60% {
+        -webkit-transform: rotate(-10deg) translate(0px, -2px);
+    }
+    80% {
+        -webkit-transform: rotate(215deg) translate(0px, 0px);
+    }
+}
+
+.eyeball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url(../images/MaM_EyeBeakerEye_a.png) no-repeat;
+}
+
+#eyeball1 {
+    top: 110px;
+    left: 15px;
+    -webkit-animation: eyeball_anim 5s ease-in-out 0s infinite;
+}
+
+#eyeball2 {
+    top: 110px;
+    left: 35px;
+    -webkit-animation: eyeball_anim 5s ease-in-out 0.5s infinite;
+}
+
+#eyeball3 {
+    top: 110px;
+    left: 55px;
+    -webkit-animation: eyeball_anim 5s ease-in-out 1s infinite;
+}
+
+#eyeball4 {
+    top: 93px;
+    left: 25px;
+    -webkit-animation: eyeball_anim 5s ease-in-out 1.5s infinite;
+}
+
+#eyeball5 {
+    top: 93px;
+    left: 45px;
+    -webkit-animation: eyeball_anim 5s ease-in-out 2s infinite;
+}
+
+#balloonbeaker {
+    position: absolute;
+    top: 115px;
+    left: 325px;
+    width: 85px;
+    height: 218px;
+    background: url(../images/MaM_BallonBeaker_a.png) no-repeat;
+}
+
+#emptybeaker {
+    position: absolute;
+    top: 263px;
+    left: 548px;
+    width: 50px;
+    height: 80px;
+    background: url(../images/MaM_Beaker_a.png) no-repeat;
+}
+
+#bunsenburner {
+    position: absolute;
+    top: 215px;
+    left: 377px;
+    width: 85px;
+    height: 130px;
+    background: url(../images/MaM_CandleBeaker_a.png) no-repeat;
+}
+
+@-webkit-keyframes candleflame_anim {
+    0% {
+        background-image: url(../images/candleflame1.png);
+    }
+    10% {
+        background-image: url(../images/candleflame2.png);
+    }
+    20% {
+        background-image: url(../images/candleflame1.png);
+    }
+    60% {
+        background-image: url(../images/candleflame2.png);
+    }
+    70% {
+        background-image: url(../images/candleflame1.png);
+    }
+    80% {
+        background-image: url(../images/candleflame2.png);
+    }
+}
+
+#candleflame {
+    position: absolute;
+    top: 75px;
+    left: 45px;
+    width: 14px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-image: url(../images/candleflame1.png);
+    -webkit-animation: candleflame_anim 1s linear infinite;
+}
+
+/* ------------------ part buttons ---------------------- */
+
+#mainbuttons {
+    opacity: 1;
+    -webkit-transition: opacity 0.2s ease-in-out;
+}
+
+#mainbuttons.hide {
+    opacity: 0;
+}
+
+.leftbutton {
+    position: absolute;
+    pointer-events: none;
+    left: 6px;
+    width: 99px;
+    height: 58px;
+    background: url(../images/MaM_ArrowBTN-Left_b.png) no-repeat;
+}
+
+.enable .leftbutton {
+    pointer-events: auto;
+    background: url(../images/MaM_ArrowBTN-Left_a.png) no-repeat;
+}
+
+.enable .leftbutton:active {
+    background: url(../images/MaM_ArrowBTN-Left_c.png) no-repeat;
+}
+
+#leftbutton1 {
+    top: 89px;
+}
+
+#leftbutton2 {
+    top: 270px;
+}
+
+#leftbutton3 {
+    top: 446px;
+}
+
+.rightbutton {
+    position: absolute;
+    pointer-events: none;
+    left: 676px;
+    width: 108px;
+    height: 58px;
+    background: url(../images/MaM_ArrowBTN-Right_b.png) no-repeat;
+}
+
+.enable .rightbutton {
+    pointer-events: auto;
+    background: url(../images/MaM_ArrowBTN-Right_a.png) no-repeat;
+}
+
+.enable .rightbutton:active {
+    background: url(../images/MaM_ArrowBTN-Right_c.png) no-repeat;
+}
+
+#rightbutton1 {
+    top: 89px;
+}
+
+#rightbutton2 {
+    top: 270px;
+}
+
+#rightbutton3 {
+    top: 446px;
+}
+
+#littleshare {
+    position: absolute;
+    top: 530px;
+    left: 18px;
+    height: 56px;
+    width: 60px;
+    background: url(../images/MaM_SettingsBTN_b.png) no-repeat;
+    padding-left: 12px;
+    padding-top: 5px;
+    display: none;
+}
+
+.enable #littleshare {
+    display: block;
+}
+
+#volume {
+    position: absolute;
+    top: 530px;
+    left: 726px;
+    height: 56px;
+    width: 60px;
+    background: url(../images/MaM_SettingsBTN_a.png) no-repeat;
+    padding-left: 14px;
+    padding-top: 8px;
+}
+
+#volume .icon {
+    pointer-events: none;
+}
+
+#volume.on .icon {
+    height: 34px;
+    width: 34px;
+    margin-top: 2px;
+    background: url(../images/MaM_VolumeBTN_a.png) no-repeat;
+}
+
+#volume.off .icon {
+    height: 37px;
+    width: 36px;
+    background: url(../images/MaM_MuteBTN_a.png) no-repeat;
+}
+
+.enable #littleshare {
+    display: block;
+}
+
+/* ------------------ menu buttons ---------------------- */
+
+.menubutton {
+    position: absolute;
+    left: 820px;
+    width: 171px;
+    height: 184px;
+    background-repeat: no-repeat;
+}
+
+.menubutton .text {
+    position: absolute;
+    left: 0px;
+    width: 171px;
+    text-shadow: 0px 1px 3px #fff;
+    font-family: PatuaOne;
+    font-size: 35px;
+    color: #0a3c7e;
+    text-align: center;
+}
+
+.menubutton .image {
+    position: absolute;
+    pointer-events: none;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+}
+
+.menubutton:active .image {
+    background-position: 0 12px;
+}
+
+#topbutton {
+    top: 100px;
+}
+
+#topbutton .text {
+    top: -50px;
+}
+
+.startmode #topbutton {
+    background-image: url(../images/MaM_InactiveBTN_b.png);
+}
+
+.startmode #topbutton:active {
+    background-image: url(../images/MaM_ActiveBTN_b.png);
+}
+
+.startmode #topbutton .text:after {
+    content: 'Play';
+}
+
+.playmode #topbutton {
+    background-image: url(../images/MaM_InactiveBTN_a.png);
+}
+
+.playmode #topbutton:active {
+    background-image: url(../images/MaM_ActiveBTN_a.png);
+}
+
+.playmode #topbutton .text:after {
+    content: 'Random';
+}
+
+.startmode #topbutton .image {
+    top: 38px;
+    left: 57px;
+    height: 119px;
+    width: 56px;
+    background-image: url(../images/MaM_PlayBTN_a.png);
+}
+
+.playmode #topbutton .image {
+    top: 54px;
+    left: 34px;
+    height: 87px;
+    width: 102px;
+    background-image: url(../images/MaM_RandomBTN_a.png);
+}
+
+#bottombutton {
+    top: 340px;
+}
+
+#bottombutton .text {
+    top: 185px;
+}
+
+.startmode #bottombutton {
+    background-image: url(../images/MaM_InactiveBTN_b.png);
+}
+
+.startmode #bottombutton:active {
+    background-image: url(../images/MaM_ActiveBTN_b.png);
+}
+
+.startmode #bottombutton .text:after {
+    content: 'Gallery';
+}
+
+.playmode #bottombutton {
+    background-image: url(../images/MaM_InactiveBTN_a.png);
+}
+
+.playmode #bottombutton:active {
+    background-image: url(../images/MaM_ActiveBTN_a.png);
+}
+
+.playmode #bottombutton .text:after {
+    content: 'Save';
+}
+
+.sharemode #bottombutton {
+    background-image: url(../images/MaM_InactiveBTN_b.png);
+}
+
+.sharemode #bottombutton:active {
+    background-image: url(../images/MaM_ActiveBTN_b.png);
+}
+
+.sharemode #bottombutton .text:after {
+    content: 'Share';
+}
+
+.startmode #bottombutton .image {
+    top: 39px;
+    left: 43px;
+    height: 118px;
+    width: 85px;
+    background-image: url(../images/MaM_GalleryBTN_a.png);
+}
+
+.playmode #bottombutton .image {
+    top: 36px;
+    left: 36px;
+    height: 105px;
+    width: 99px;
+    background-image: url(../images/MaM_SaveBTN_a.png);
+}
+
+.sharemode #bottombutton .image {
+    top: 42px;
+    left: 38px;
+    height: 102px;
+    width: 89px;
+    background-image: url(../images/MaM_ShareBTN_a.png);
+}
+
+/* ------------------ title and platform ---------------------- */
+
+#titleblurb {
+    position: absolute;
+    top: 20px;
+    left: 182px;
+    width: 430px;
+    height: 499px;
+    text-shadow: 0px -5px 1px #c9a565, -5px 0px 1px #c9a565, -5px -5px 1px #c9a565;
+    font-family: PatuaOne;
+    font-size: 96px;
+    color: #efc478;
+    background: url(../images/MaM_Title_a.png) no-repeat;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+#titleblurb.hideslow {
+    -webkit-transition: top 1s ease-in-out;
+    top: -500px;
+}
+
+#titleblurb.hidefast {
+    top: -500px;
+}
+
+#titlemake {
+    position: inherit;
+    top: 10px;
+    left: 110px;
+    -webkit-transform: rotate(-4deg);
+}
+
+#titlemake:after {
+    content: 'Make';
+}
+
+#titlea {
+    position: inherit;
+    top: 160px;
+    left: 165px;
+    -webkit-transform: rotate(-2deg);
+}
+
+#titlea:after {
+    content: '-a-';
+}
+
+#titlemonster {
+    position: inherit;
+    top: 370px;
+    left: 40px;
+}
+
+#titlemonster:after {
+    content: 'Monster';
+}
+
+@-webkit-keyframes psanim {
+    0% {
+        top: 450px;
+    }
+    50% {
+        top: 3px;
+    }
+    100% {
+        top: 450px;
+    }
+}
+
+#platform {
+    position: absolute;
+    top: 450px;
+    left: 117px;
+    height: 597px;
+    width: 551px;
+    background: url(../images/MaM_pedastal_a.png) no-repeat;
+}
+
+#platform.start {
+    -webkit-animation: psanim 1.8s ease-in-out 1;
+}
+
+/* ------------------- gallery ---------------------- */
+
+#gallery {
+    position: absolute;
+    top: 0px;
+    left: -158px;
+    height: 600px;
+    width: 158px;
+    opacity: 0;
+    z-index: 100;
+    -webkit-transition: all 0.2s ease-in-out;
+}
+
+#gallery.show {
+    opacity: 1;
+    left: 18px;
+}
+
+#gallerywindow {
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    height: 480px;
+    width: 212px;
+    overflow: hidden;
+}
+
+#gallerywindow #emptytext {
+    position: absolute;
+    top: 190px;
+    left: 0px;
+    height: 100px;
+    width: 150px;
+    font-family: PatuaOne;
+    font-size: 28px;
+    color: #efc478;
+    text-align: center;
+}
+
+#gallerybox {
+    position: inherit;
+    left: 0px;
+    height: 800px;
+    width: 212px;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+#galleryup {
+    position: absolute;
+    top: 15px;
+    left: 37px;
+    height: 45px;
+    width: 84px;
+    background: url(../images/MaM_GalleryBTN-Up_a.png) no-repeat;
+}
+
+#galleryup:active {
+    background: url(../images/MaM_GalleryBTN-Up_b.png) no-repeat;
+}
+
+#gallerydown {
+    position: absolute;
+    top: 540px;
+    left: 37px;
+    height: 45px;
+    width: 84px;
+    background: url(../images/MaM_GalleryBTN-Down_a.png) no-repeat;
+}
+
+#gallerydown:active {
+    background: url(../images/MaM_GalleryBTN-Down_b.png) no-repeat;
+}
+
+.galleryitem {
+    left: 0px;
+    height: 160px;
+    width: 200px;
+}
+
+.thumbnail {
+    position: absolute;
+    height: 120px;
+    width: 120px;
+    border: 10px solid #34517e;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 14px;
+}
+
+.galleryitem.selected .thumbnail {
+    border: 10px solid #092e63;
+}
+
+.trash {
+    position: absolute;
+    left: 153px;
+    height: 56px;
+    width: 60px;
+    background: url(../images/MaM_SettingsBTN_b.png) no-repeat;
+    padding-left: 12px;
+    padding-top: 5px;
+    margin-top: 50px;
+    display: none;
+}
+
+.galleryitem.selected .trash {
+    display: block;
+}
+
+#deletedialog {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-image: url(../images/MaM_Delete_a.png);
+    background-repeat: no-repeat;
+    background-position: 300px 200px;
+    display: none;
+}
+
+#deletedialog #text {
+    position: absolute;
+    top: 240px;
+    left: 350px;
+    height: 100px;
+    width: 200px;
+    font-family: PatuaOne;
+    font-size: 24px;
+    color: #efc478;
+    text-align: center;
+}
+
+#deletedialog .btntext {
+    position: absolute;
+    top: 355px;
+    height: 30px;
+    width: 40px;
+    font-family: PatuaOne;
+    font-size: 35px;
+    color: #efc478;
+    text-align: center;
+}
+
+#deletedialog #yes {
+    left: 340px;
+}
+
+#deletedialog #no {
+    left: 520px;
+}
+
+#snapshot {
+    position: absolute;
+    top: 0px;
+    left: 200px;
+    height: 600px;
+    width: 600px;
+}
+
+/* ------------------- monster maker ---------------------- */
+
+#monsterbox {
+    position: absolute;
+    top: 0px;
+    left: 18px;
+    height: 600px;
+    width: 757px;
+    overflow: hidden;
+    opacity: 0;
+    z-index: 0;
+}
+
+#monsterbox.fadein {
+    -webkit-transition: opacity 0.5s ease-in;
+    opacity: 1;
+}
+
+#monsterbox.instant {
+    opacity: 1;
+}
+
+.part {
+    position: absolute;
+    -webkit-transition: left 0.2s linear;
+    visibility: hidden;
+}
+
+.instant .part {
+    -webkit-transition: none 0.2s linear;
+}
+
+#randomeffect {
+    position: absolute;
+    top: 0px;
+    left: 25px;
+    height: 600px;
+    width: 757px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#randomeffect.start {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: opacity 1.3s linear;
+}
+
+#randomeffect.finish {
+    visibility: visible;
+    opacity: 0;
+    -webkit-transition: opacity 1s linear;
+}
+
+#randomeffect .bolt {
+    position: absolute;
+    height: 68px;
+    width: 33px;
+    background: url(../images/MaM_LightningBolt_a.png) no-repeat;
+}
+
+#randomeffect .bolt.upleft {
+    top: 60px;
+    left: 160px;
+    -webkit-transform: rotate(135deg);
+}
+
+#randomeffect .bolt.left {
+    top: 260px;
+    left: 130px;
+    -webkit-transform: rotate(90deg);
+}
+
+#randomeffect .bolt.downleft {
+    top: 460px;
+    left: 160px;
+    -webkit-transform: rotate(60deg);
+}
+
+#randomeffect .bolt.upright {
+    top: 60px;
+    left: 550px;
+    -webkit-transform: rotate(225deg) scaleX(-1);
+}
+
+#randomeffect .bolt.right {
+    top: 260px;
+    left: 580px;
+    -webkit-transform: rotate(270deg) scaleX(-1);
+}
+
+#randomeffect .bolt.downright {
+    top: 460px;
+    left: 550px;
+    -webkit-transform: rotate(300deg) scaleX(-1);
+}
+
+#randomeffect .background {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 600px;
+    width: 757px;
+    background: url(../images/MaM_RandomEffect_c.png) no-repeat;
+    -webkit-transform: scale(0.69, 1);
+}
+
+#randomeffect.start .background {
+    -webkit-animation: -webkit-transform 1s linear 1;
+    -webkit-transform: scale(1, 1);
+}
+
+#randomeffect.finish .background {
+    -webkit-animation: -webkit-transform 1s linear 1;
+    -webkit-transform: scale(1, 1);
+}
+
+/* ------------------- monster heads ---------------------- */
+
+#monster_head_dino {
+    top: 98px;
+    height: 118px;
+    width: 249px;
+    background: url(../images/MaM_DinoHead_a.png) no-repeat;
+}
+
+.part6 #monster_head_dino {
+    left: -511px;
+}
+
+.part7 #monster_head_dino {
+    left: -511px;
+    visibility: visible;
+}
+
+.part1 #monster_head_dino {
+    left: 246px;
+    visibility: visible;
+}
+
+.part2 #monster_head_dino {
+    left: 1003px;
+    visibility: visible;
+}
+
+.part3 #monster_head_dino {
+    left: 1003px;
+}
+
+#monster_head_fuzzy {
+    top: 65px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_FuzzyHead_a.png) no-repeat;
+}
+
+.part7 #monster_head_fuzzy {
+    left: -505px;
+}
+
+.part1 #monster_head_fuzzy {
+    left: -505px;
+    visibility: visible;
+}
+
+.part2 #monster_head_fuzzy {
+    left: 252px;
+    visibility: visible;
+}
+
+.part3 #monster_head_fuzzy {
+    left: 1009px;
+    visibility: visible;
+}
+
+.part4 #monster_head_fuzzy {
+    left: 1009px;
+}
+
+#monster_head_ghost {
+    top: 98px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_GhostHead_a.png) no-repeat;
+}
+
+.part1 #monster_head_ghost {
+    left: -494px;
+}
+
+.part2 #monster_head_ghost {
+    left: -494px;
+    visibility: visible;
+}
+
+.part3 #monster_head_ghost {
+    left: 263px;
+    visibility: visible;
+}
+
+.part4 #monster_head_ghost {
+    left: 1020px;
+    visibility: visible;
+}
+
+.part5 #monster_head_ghost {
+    left: 1020px;
+}
+
+#monster_head_nerd {
+    top: 73px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_NerdHead_a.png) no-repeat;
+}
+
+.part2 #monster_head_nerd {
+    left: -494px;
+}
+
+.part3 #monster_head_nerd {
+    left: -494px;
+    visibility: visible;
+}
+
+.part4 #monster_head_nerd {
+    left: 263px;
+    visibility: visible;
+}
+
+.part5 #monster_head_nerd {
+    left: 1020px;
+    visibility: visible;
+}
+
+.part6 #monster_head_nerd {
+    left: 1020px;
+}
+
+#monster_head_rhino {
+    top: 66px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_RhinoHead_a.png) no-repeat;
+}
+
+.part3 #monster_head_rhino {
+    left: -503px;
+}
+
+.part4 #monster_head_rhino {
+    left: -503px;
+    visibility: visible;
+}
+
+.part5 #monster_head_rhino {
+    left: 254px;
+    visibility: visible;
+}
+
+.part6 #monster_head_rhino {
+    left: 1011px;
+    visibility: visible;
+}
+
+.part7 #monster_head_rhino {
+    left: 1011px;
+}
+
+#monster_head_robot {
+    top: 60px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_RobotHead_a.png) no-repeat;
+}
+
+.part4 #monster_head_robot {
+    left: -553px;
+}
+
+.part5 #monster_head_robot {
+    left: -553px;
+    visibility: visible;
+}
+
+.part6 #monster_head_robot {
+    left: 204px;
+    visibility: visible;
+}
+
+.part7 #monster_head_robot {
+    left: 961px;
+    visibility: visible;
+}
+
+.part1 #monster_head_robot {
+    left: 961px;
+}
+
+#monster_head_squid {
+    top: 82px;
+    height: 156px;
+    width: 348px;
+    background: url(../images/MaM_SquidHead_a.png) no-repeat;
+}
+
+.part5 #monster_head_squid {
+    left: -494px;
+}
+
+.part6 #monster_head_squid {
+    left: -494px;
+    visibility: visible;
+}
+
+.part7 #monster_head_squid {
+    left: 263px;
+    visibility: visible;
+}
+
+.part1 #monster_head_squid {
+    left: 1020px;
+    visibility: visible;
+}
+
+.part2 #monster_head_squid {
+    left: 1020px;
+}
+
+/* ------------------- monster bodies ---------------------- */
+
+#monster_body_dino {
+    top: 216px;
+    height: 166px;
+    width: 311px;
+    background: url(../images/MaM_DinoTorso_a.png) no-repeat;
+}
+
+.part6 #monster_body_dino {
+    left: -523px;
+}
+
+.part7 #monster_body_dino {
+    left: -523px;
+    visibility: visible;
+}
+
+.part1 #monster_body_dino {
+    left: 234px;
+    visibility: visible;
+}
+
+.part2 #monster_body_dino {
+    left: 991px;
+    visibility: visible;
+}
+
+.part3 #monster_body_dino {
+    left: 991px;
+}
+
+#monster_body_fuzzy {
+    top: 216px;
+    height: 166px;
+    width: 376px;
+    background: url(../images/MaM_FuzzyTorso_a.png) no-repeat;
+}
+
+.part7 #monster_body_fuzzy {
+    left: -566px;
+}
+
+.part1 #monster_body_fuzzy {
+    left: -566px;
+    visibility: visible;
+}
+
+.part2 #monster_body_fuzzy {
+    left: 191px;
+    visibility: visible;
+}
+
+.part3 #monster_body_fuzzy {
+    left: 948px;
+    visibility: visible;
+}
+
+.part4 #monster_body_fuzzy {
+    left: 948px;
+}
+
+#monster_body_ghost {
+    top: 216px;
+    height: 166px;
+    width: 263px;
+    background: url(../images/MaM_GhostTorso_a.png) no-repeat;
+}
+
+.part1 #monster_body_ghost {
+    left: -509px;
+}
+
+.part2 #monster_body_ghost {
+    left: -509px;
+    visibility: visible;
+}
+
+.part3 #monster_body_ghost {
+    left: 248px;
+    visibility: visible;
+}
+
+.part4 #monster_body_ghost {
+    left: 1005px;
+    visibility: visible;
+}
+
+.part5 #monster_body_ghost {
+    left: 1005px;
+}
+
+#monster_body_nerd {
+    top: 216px;
+    height: 189px;
+    width: 409px;
+    background: url(../images/MaM_NerdTorso_a.png) no-repeat;
+    height: 189px;
+}
+
+.part2 #monster_body_nerd {
+    left: -579px;
+}
+
+.part3 #monster_body_nerd {
+    left: -579px;
+    visibility: visible;
+}
+
+.part4 #monster_body_nerd {
+    left: 178px;
+    visibility: visible;
+}
+
+.part5 #monster_body_nerd {
+    left: 935px;
+    visibility: visible;
+}
+
+.part6 #monster_body_nerd {
+    left: 935px;
+}
+
+#monster_body_rhino {
+    top: 216px;
+    height: 166px;
+    width: 332px;
+    background: url(../images/MaM_RhinoTorso_a.png) no-repeat;
+}
+
+.part3 #monster_body_rhino {
+    left: -524px;
+}
+
+.part4 #monster_body_rhino {
+    left: -524px;
+    visibility: visible;
+}
+
+.part5 #monster_body_rhino {
+    left: 213px;
+    visibility: visible;
+}
+
+.part6 #monster_body_rhino {
+    left: 990px;
+    visibility: visible;
+}
+
+.part7 #monster_body_rhino {
+    left: 990px;
+}
+
+#monster_body_robot {
+    top: 216px;
+    height: 166px;
+    width: 448px;
+    background: url(../images/MaM_RobotTorso_a.png) no-repeat;
+}
+
+.part4 #monster_body_robot {
+    left: -582px;
+}
+
+.part5 #monster_body_robot {
+    left: -582px;
+    visibility: visible;
+}
+
+.part6 #monster_body_robot {
+    left: 155px;
+    visibility: visible;
+}
+
+.part7 #monster_body_robot {
+    left: 932px;
+    visibility: visible;
+}
+
+.part1 #monster_body_robot {
+    left: 932px;
+}
+
+#monster_body_squid {
+    top: 216px;
+    height: 166px;
+    width: 335px;
+    background: url(../images/MaM_SquidTorso_a.png) no-repeat;
+}
+
+.part5 #monster_body_squid {
+    left: -525px;
+}
+
+.part6 #monster_body_squid {
+    left: -525px;
+    visibility: visible;
+}
+
+.part7 #monster_body_squid {
+    left: 212px;
+    visibility: visible;
+}
+
+.part1 #monster_body_squid {
+    left: 989px;
+    visibility: visible;
+}
+
+.part2 #monster_body_squid {
+    left: 989px;
+}
+
+/* ------------------- monster legs ---------------------- */
+
+#monster_legs_dino {
+    top: 382px;
+    height: 132px;
+    width: 325px;
+    background: url(../images/MaM_DinoLegs_a.png) no-repeat;
+}
+
+.part6 #monster_legs_dino {
+    left: -540px;
+}
+
+.part7 #monster_legs_dino {
+    left: -540px;
+    visibility: visible;
+}
+
+.part1 #monster_legs_dino {
+    left: 197px;
+    visibility: visible;
+}
+
+.part2 #monster_legs_dino {
+    left: 974px;
+    visibility: visible;
+}
+
+.part3 #monster_legs_dino {
+    left: 974px;
+}
+
+#monster_legs_fuzzy {
+    top: 381px;
+    height: 139px;
+    width: 253px;
+    background: url(../images/MaM_FuzzyLegs_a.png) no-repeat;
+}
+
+.part7 #monster_legs_fuzzy {
+    left: -484px;
+}
+
+.part1 #monster_legs_fuzzy {
+    left: -484px;
+    visibility: visible;
+}
+
+.part2 #monster_legs_fuzzy {
+    left: 253px;
+    visibility: visible;
+}
+
+.part3 #monster_legs_fuzzy {
+    left: 1030px;
+    visibility: visible;
+}
+
+.part4 #monster_legs_fuzzy {
+    left: 1030px;
+}
+
+#monster_legs_ghost {
+    top: 382px;
+    height: 123px;
+    width: 273px;
+    background: url(../images/MaM_GhostLegs_a.png) no-repeat;
+}
+
+.part1 #monster_legs_ghost {
+    left: -492px;
+}
+
+.part2 #monster_legs_ghost {
+    left: -492px;
+    visibility: visible;
+}
+
+.part3 #monster_legs_ghost {
+    left: 245px;
+    visibility: visible;
+}
+
+.part4 #monster_legs_ghost {
+    left: 1022px;
+    visibility: visible;
+}
+
+.part5 #monster_legs_ghost {
+    left: 1022px;
+}
+
+#monster_legs_nerd {
+    top: 382px;
+    height: 125px;
+    width: 275px;
+    background: url(../images/MaM_NerdLegs_a.png) no-repeat;
+}
+
+.part2 #monster_legs_nerd {
+    left: -496px;
+}
+
+.part3 #monster_legs_nerd {
+    left: -496px;
+    visibility: visible;
+}
+
+.part4 #monster_legs_nerd {
+    left: 241px;
+    visibility: visible;
+}
+
+.part5 #monster_legs_nerd {
+    left: 1018px;
+    visibility: visible;
+}
+
+.part6 #monster_legs_nerd {
+    left: 1018px;
+}
+
+#monster_legs_rhino {
+    top: 382px;
+    height: 121px;
+    width: 260px;
+    background: url(../images/MaM_RhinoLegs_a.png) no-repeat;
+}
+
+.part3 #monster_legs_rhino {
+    left: -502px;
+}
+
+.part4 #monster_legs_rhino {
+    left: -502px;
+    visibility: visible;
+}
+
+.part5 #monster_legs_rhino {
+    left: 235px;
+    visibility: visible;
+}
+
+.part6 #monster_legs_rhino {
+    left: 1012px;
+    visibility: visible;
+}
+
+.part7 #monster_legs_rhino {
+    left: 1012px;
+}
+
+#monster_legs_robot {
+    top: 382px;
+    height: 124px;
+    width: 231px;
+    background: url(../images/MaM_RobotLegs_a.png) no-repeat;
+}
+
+.part4 #monster_legs_robot {
+    left: -473px;
+}
+
+.part5 #monster_legs_robot {
+    left: -473px;
+    visibility: visible;
+}
+
+.part6 #monster_legs_robot {
+    left: 264px;
+    visibility: visible;
+}
+
+.part7 #monster_legs_robot {
+    left: 1041px;
+    visibility: visible;
+}
+
+.part1 #monster_legs_robot {
+    left: 1041px;
+}
+
+#monster_legs_squid {
+    top: 382px;
+    height: 158px;
+    width: 483px;
+    background: url(../images/MaM_SquidLegs_a.png) no-repeat;
+}
+
+.part5 #monster_legs_squid {
+    left: -611px;
+}
+
+.part6 #monster_legs_squid {
+    left: -611px;
+    visibility: visible;
+}
+
+.part7 #monster_legs_squid {
+    left: 126px;
+    visibility: visible;
+}
+
+.part1 #monster_legs_squid {
+    left: 903px;
+    visibility: visible;
+}
+
+.part2 #monster_legs_squid {
+    left: 903px;
+}
+
+/* ------------------- fonts ---------------------- */
+
+@font-face {
+    font-family: 'PatuaOne';
+    src: url(../lib/patua/index.woff);
+}

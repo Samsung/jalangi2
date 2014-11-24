@@ -1,0 +1,1585 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the 
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/* -------------------------------- home page ----------------------------- */
+
+body {
+    margin: 0px;
+    -webkit-user-select: none;
+    background-color: "white";
+    box-shadow: 5px 5px 20px black;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    position: absolute;
+    width: 1024px;
+    height: 600px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+}
+
+.game_page {
+    background-position: left top;
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+    width: 1024px;
+    height: 600px;
+}
+
+/* 800 x 480 */
+@media (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.78125, 0.8); }
+}
+/* 600 x 989 */
+@media (min-width: 989px) and (min-height: 600px) and (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.9658, 1.0); }
+}
+/* 1024 x 600 */
+@media (min-width: 1024px) and (min-height: 600px) and (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); }
+}
+/* 1280 x 720 */
+@media (min-width: 1280px) and (min-height: 720px) and (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1.25, 1.199); }
+}
+
+/* 480 x 800 */
+@media (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.8, 0.78125) translate(50%, -50%); }
+}
+/* 600 x 989 */
+@media (min-width: 600px) and (min-height: 989px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.9658, 1.0) translate(50%, -50%); }
+}
+/* 600 x 1024 */
+@media (min-width: 600px) and (min-height: 1024px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) translate(50%, -50%); }
+}
+/* 720 x 1230 */
+@media (min-width: 720px) and (min-height: 1230px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(1.2, 1.199) translate(50%, -50%); }
+}
+/* 720 x 1280 */
+@media (min-width: 720px) and (min-height: 1280px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(1.25, 1.199) translate(50%, -50%); }
+}
+
+#home_bg {
+    background:url(../images/home/background.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#home_pirates {
+    position: absolute;
+    top: 350px;
+    left: 123px;
+    width: 216px;
+    height: 217px;
+    background:url(../images/home/pirates_inactive.png) no-repeat;
+}
+
+#home_pirates:active {
+    background:url(../images/home/pirates_active.png) no-repeat;
+}
+
+#home_pirates_text {
+    position: absolute;
+    top: 560px;
+    left: 96px;
+    width: 273px;
+    height: 40px;
+    font-family: Montserrat;
+    font-size: 16pt;
+    color: white;
+    text-align: center;
+}
+
+#home_rockets {
+    position: absolute;
+    top: 350px;
+    left: 398px;
+    width: 216px;
+    height: 217px;
+    background:url(../images/home/rockets_inactive.png) no-repeat;
+}
+
+#home_rockets:active {
+    background:url(../images/home/rockets_active.png) no-repeat;
+}
+
+#home_rockets_text {
+    position: absolute;
+    top: 560px;
+    left: 370px;
+    width: 275px;
+    height: 40px;
+    font-family: Montserrat;
+    font-size: 16pt;
+    color: white;
+    text-align: center;
+}
+
+#home_bowling {
+    position: absolute;
+    top: 350px;
+    left: 672px;
+    width: 216px;
+    height: 217px;
+    background:url(../images/home/bowling_inactive.png) no-repeat;
+}
+
+#home_bowling:active {
+    background:url(../images/home/bowling_active.png) no-repeat;
+}
+
+#home_bowling_text {
+    position: absolute;
+    top: 560px;
+    left: 646px;
+    width: 273px;
+    height: 40px;
+    font-family: Montserrat;
+    font-size: 16pt;
+    color: white;
+    text-align: center;
+}
+
+.msg_default {
+    position: absolute;
+    opacity: 0;
+    font-family: BreeSerif;
+    font-size: 24pt;
+    color: white;
+    -webkit-transition: opacity 1s linear;
+}
+
+.msg_default b {
+    font-family: AlfaSlabOne;
+    font-size: 24pt;
+    color: white;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity 0.5s linear;
+}
+
+.show {
+    opacity: 1;
+}
+
+.winmsg1 {
+    position: absolute;
+    top: 120px;
+    left: 0px;
+    width: 1024px;
+    height: 80px;
+    text-align: center;
+    font-family: AlfaSlabOne;
+    font-size: 50pt;
+    color: white;
+}
+
+.winmsg2 {
+    position: absolute;
+    top: 210px;
+    left: 0px;
+    width: 1024px;
+    height: 80px;
+    text-align: center;
+    font-family: BreeSerif;
+    font-size: 30pt;
+    color: white;
+}
+
+/* -------------------------------- game menu ----------------------------- */
+
+#game_menu_border {
+    position: absolute;
+    pointer-events: none;
+    width: 1024px;
+    height: 600px;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+#game_menu {
+    position: absolute;
+    pointer-events: auto;
+    background:url(../images/gamemenu/menu_overlay.png) no-repeat;
+    width: 1024px;
+    height: 303px;
+    left: 0px;
+    top: -265px;
+    opacity: 0.4;
+    -webkit-transition: all 0.4s ease-in-out;
+}
+
+#game_menu:hover {
+    opacity: 1;
+}
+
+#game_menu.slide {
+    opacity: 1;
+    -webkit-transform: translate(0px, 195px);
+}
+
+#game_menu_new {
+    position: absolute;
+    background:url(../images/gamemenu/new_game_inactive.png) no-repeat;
+    width: 151px;
+    height: 150px;
+    left: 614px;
+    top: 94px;
+    font-family: Montserrat;
+    font-size: 16pt;
+    color: white;
+    text-align: center;
+    line-height: 300px;
+}
+
+#game_menu_home {
+    position: absolute;
+    background:url(../images/gamemenu/main_menu_inactive.png) no-repeat;
+    width: 151px;
+    height: 150px;
+    left: 819px;
+    top: 94px;
+    font-family: Montserrat;
+    font-size: 16pt;
+    color: white;
+    text-align: center;
+    line-height: 300px;
+}
+
+#game_menu_tab {
+    position: absolute;
+    width: 80px;
+    height: 53px;
+    left: 944px;
+    top: 250px;
+}
+
+#game_menu_button {
+    position: absolute;
+    background:url(../images/gamemenu/menu_tri_down.png) no-repeat;
+    width: 32px;
+    height: 17px;
+    left: 964px;
+    top: 272px;
+    pointer-events: none;
+}
+
+.slide #game_menu_button {
+    background:url(../images/gamemenu/menu_tri_up.png) no-repeat;
+}
+
+#game_menu_new:active {
+    background:url(../images/gamemenu/new_game_active.png) no-repeat;
+}
+
+#game_menu_home:active {
+    background:url(../images/gamemenu/main_menu_active.png) no-repeat;
+}
+
+/* -------------------------------- pirates page ----------------------------- */
+
+.pirates_bg {
+    background:url(../images/pirates/sky.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#pirates_island {
+    position: absolute;
+    background:url(../images/pirates/island.png) no-repeat;
+    top: 0px;
+    left: 0px;
+    width: 1024px;
+    height: 600px;
+}
+
+#pirates_msg1 {
+    top: 40px;
+    left: 50px;
+    width: 700px;
+    height: 80px;
+}
+
+#pirates_msg2 {
+    top: 130px;
+    left: 50px;
+    width: 700px;
+    height: 80px;
+}
+
+#pirates_msg3 {
+    top: 60px;
+    left: 450px;
+    width: 500px;
+    height: 80px;
+}
+
+#pirates_msg4 {
+    top: 60px;
+    left: 450px;
+    width: 500px;
+    height: 80px;
+}
+
+@-webkit-keyframes rock_horiz {
+    0%, 100% { left:0px; }
+    50% { left:-123px; }
+}
+
+#pirates_waves {
+    position: absolute;
+    top: 557px;
+    left: 0px;
+    width: 1147px;
+    height: 43px;
+    display: block;
+    background:url(../images/pirates/water.png) no-repeat;
+    -webkit-animation: rock_horiz 12s ease-in-out infinite;
+}
+
+@-webkit-keyframes pirates_ship_distant_anim {
+    0% { left: 960px; }
+    100% { left: 901px; }
+}
+
+#pirates_ship_distant {
+    position: absolute;
+    top: 450px;
+    left: 901px;
+    width: 123px;
+    height: 109px;
+    display: block;
+    background:url(../images/pirates/shipdistant.png) no-repeat;
+    -webkit-animation: pirates_ship_distant_anim 12s ease-out 1;
+}
+
+#pirates_ship {
+    position: absolute;
+    top: 93px;
+    left: 1024px;
+    width: 449px;
+    height: 507px;
+    display: block;
+    background:url(../images/pirates/pirate_boat.png) no-repeat;
+    -webkit-transition: all 4s ease-in;
+}
+
+#pirates_ship.slide {
+    -webkit-transform: translate(-464px, 0px);
+    -webkit-transition: all 4s ease-out;
+}
+
+#pirates_slot1 {top: 56px;left: 117px;}
+#pirates_slot2 {top: 56px;left: 166px;}
+#pirates_slot3 {top: 56px;left: 215px;}
+#pirates_slot4 {top: 56px;left: 264px;}
+#pirates_slot5 {top: 56px;left: 313px;}
+#pirates_slot6 {top: 110px;left: 117px;}
+#pirates_slot7 {top: 110px;left: 166px;}
+#pirates_slot8 {top: 110px;left: 215px;}
+#pirates_slot9 {top: 110px;left: 264px;}
+#pirates_slot10 {top: 110px;left: 313px;}
+
+.pirates_slot {
+    position: absolute;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s linear;
+}
+
+.pirates_slot.green {
+    width: 33px;
+    height: 33px;
+    background:url(../images/pirates/btn_green.png) no-repeat;
+    opacity: 1;
+}
+
+.pirates_slot.red {
+    width: 33px;
+    height: 33px;
+    background:url(../images/pirates/btn_red.png) no-repeat;
+    opacity: 1;
+}
+
+/* red pirate */
+@-webkit-keyframes redpirate_rock {
+    0%, 100% { -webkit-transform: rotate(5deg); }
+    50% { -webkit-transform: rotate(-5deg); }
+}
+
+@-webkit-keyframes redpiratelarm_wave {
+    0%, 100% { -webkit-transform: rotate(20deg); }
+    50% { -webkit-transform: rotate(-40deg); }
+}
+
+@-webkit-keyframes redpiraterarm_wave {
+    0%, 100% { -webkit-transform: rotate(-40deg); }
+    50% { -webkit-transform: rotate(40deg); }
+}
+
+@media (orientation: landscape) {
+.stranded .redpiratelarm {-webkit-animation: redpiratelarm_wave 3s ease-in-out infinite;}
+.stranded .redpiraterarm {-webkit-animation: redpiraterarm_wave 3s ease-in-out infinite;}
+.flying .redpiratelarm {-webkit-animation: redpiratelarm_wave .1s ease-in-out infinite;}
+.flying .redpiraterarm {-webkit-animation: redpiraterarm_wave .1s ease-in-out infinite;}
+.saved .redpiratelarm {-webkit-animation:;-webkit-transform: rotate(-30deg);}
+.saved .redpiraterarm {-webkit-animation: redpiraterarm_wave 1s ease-in-out infinite;}
+}
+
+.redpirate1 {
+    position: absolute;
+    top: 450px;
+    left: 300px;
+    width: 79px;
+    height: 102px;
+    -webkit-transform-origin: 42px 75px;
+}
+
+.redpiratebody {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 79px;
+    height: 102px;
+    background:url(../images/pirates/pirate_parts/red_pirate_body.png) no-repeat;
+}
+
+.redpiratelarm {
+    position: absolute;
+    top: 36px;
+    left: 0px;
+    width: 32px;
+    height: 26px;
+    background:url(../images/pirates/pirate_parts/red_pirate_l_arm.png) no-repeat;
+    -webkit-transform-origin: 28px 5px;
+}
+
+.redpiraterarm {
+    position: absolute;
+    top: 32px;
+    left: 48px;
+    width: 31px;
+    height: 22px;
+    background:url(../images/pirates/pirate_parts/red_pirate_r_arm.png) no-repeat;
+    -webkit-transform-origin: 4px 11px;
+}
+
+/* blue pirate */
+@-webkit-keyframes bluepirate_rock {
+    0%, 100% { -webkit-transform: rotate(5deg); }
+    50% { -webkit-transform: rotate(-5deg); }
+}
+
+@-webkit-keyframes bluepiratelarm_wave {
+    0%, 100% { -webkit-transform: rotate(20deg); }
+    50% { -webkit-transform: rotate(-40deg); }
+}
+
+@-webkit-keyframes bluepiraterarm_wave {
+    0%, 100% { -webkit-transform: rotate(-40deg); }
+    50% { -webkit-transform: rotate(40deg); }
+}
+
+@media (orientation: landscape) {
+.stranded .bluepiratelarm {-webkit-animation: bluepiratelarm_wave 4s ease-in-out infinite;}
+.stranded .bluepiraterarm {-webkit-animation: bluepiraterarm_wave 4s ease-in-out infinite;}
+.flying .bluepiratelarm {-webkit-animation: bluepiratelarm_wave .1s ease-in-out infinite;}
+.flying .bluepiraterarm {-webkit-animation: bluepiraterarm_wave .1s ease-in-out infinite;}
+.saved .bluepiratelarm {-webkit-animation: bluepiratelarm_wave 1s ease-in-out infinite;}
+.saved .bluepiraterarm {-webkit-animation:;-webkit-transform: rotate(65deg);}
+}
+
+.bluepirate1 {
+    position: absolute;
+    top: 450px;
+    left: 400px;
+    width: 81px;
+    height: 94px;
+    -webkit-transform-origin: 42px 75px;
+}
+
+.bluepiratebody {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 81px;
+    height: 94px;
+    background:url(../images/pirates/pirate_parts/blue_pirate_body.png) no-repeat;
+}
+
+.bluepiratelarm {
+    position: absolute;
+    top: 20px;
+    left: 0px;
+    width: 30px;
+    height: 23px;
+    background:url(../images/pirates/pirate_parts/blue_pirate_l_arm.png) no-repeat;
+    -webkit-transform-origin: 27px 16px;
+}
+
+.bluepiraterarm {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    width: 42px;
+    height: 13px;
+    background:url(../images/pirates/pirate_parts/blue_pirate_r_arm.png) no-repeat;
+    -webkit-transform-origin: 4px 6px;
+}
+
+/* green pirate */
+@-webkit-keyframes greenpirate_rock {
+    0%, 100% { -webkit-transform: rotate(5deg); }
+    50% { -webkit-transform: rotate(-5deg); }
+}
+
+@-webkit-keyframes greenpiratelarm_wave {
+    0%, 100% { -webkit-transform: rotate(20deg); }
+    50% { -webkit-transform: rotate(-40deg); }
+}
+
+@-webkit-keyframes greenpiraterarm_wave {
+    0%, 100% { -webkit-transform: rotate(-10deg); }
+    50% { -webkit-transform: rotate(70deg); }
+}
+
+@media (orientation: landscape) {
+.stranded .greenpiratelarm {-webkit-animation: greenpiratelarm_wave 2s ease-in-out infinite;}
+.stranded .greenpiraterarm {-webkit-animation: greenpiraterarm_wave 2s ease-in-out infinite;}
+.flying .greenpiratelarm {-webkit-animation: greenpiratelarm_wave .1s ease-in-out infinite;}
+.flying .greenpiraterarm {-webkit-animation: greenpiraterarm_wave .1s ease-in-out infinite;}
+.saved .greenpiratelarm {-webkit-animation: greenpiratelarm_wave 1s ease-in-out infinite;}
+.saved .greenpiraterarm {-webkit-animation:; -webkit-transform: rotate(110deg);}
+}
+
+.greenpirate1 {
+    position: absolute;
+    top: 450px;
+    left: 200px;
+    width: 77px;
+    height: 98px;
+    -webkit-transform-origin: 42px 75px;
+}
+
+.greenpiratebody {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 77px;
+    height: 98px;
+    background:url(../images/pirates/pirate_parts/green_pirate_body.png) no-repeat;
+}
+
+.greenpiratelarm {
+    position: absolute;
+    top: 24px;
+    left: 0px;
+    width: 35px;
+    height: 21px;
+    background:url(../images/pirates/pirate_parts/green_pirate_l_arm.png) no-repeat;
+    -webkit-transform-origin: 34px 16px;
+}
+
+.greenpiraterarm {
+    position: absolute;
+    top: 8px;
+    left: 42px;
+    width: 37px;
+    height: 35px;
+    background:url(../images/pirates/pirate_parts/green_pirate_r_arm.png) no-repeat;
+    -webkit-transform-origin: 6px 31px;
+}
+
+/* pirates win page */
+.pirates_boat {
+    position: absolute;
+    width: 171px;
+    height: 140px;
+    background:url(../images/pirates/small_boat.png) no-repeat;
+}
+
+#pirates_boat1 {top: 290px;left: 84px;}
+#pirates_boat2 {top: 290px;left: 312px;}
+#pirates_boat3 {top: 290px;left: 540px;}
+#pirates_boat4 {top: 290px;left: 768px;}
+
+.pirates_grid {
+    position: absolute;
+    width: 263px;
+    height: 167px;
+    background:url(../images/pirates/small_tenframe.png) no-repeat;
+}
+
+#pirates_grid1 {top: 430px;left: 38px;}
+#pirates_grid2 {top: 430px;left: 266px;}
+#pirates_grid3 {top: 430px;left: 494px;}
+#pirates_grid4 {top: 430px;left: 722px;}
+
+.pirates_mslot {
+    position: absolute;
+    width: 23px;
+    height: 24px;
+}
+
+.pirates_mslot.green {
+    background:url(../images/pirates/btn_green_small.png) no-repeat;
+}
+
+.pirates_mslot.red {
+    background:url(../images/pirates/btn_red_small.png) no-repeat;
+}
+
+.pirates_mslot.s1  {top: 52px;left: 52px;}
+.pirates_mslot.s2  {top: 52px;left: 85px;}
+.pirates_mslot.s3  {top: 52px;left: 120px;}
+.pirates_mslot.s4  {top: 52px;left: 155px;}
+.pirates_mslot.s5  {top: 52px;left: 188px;}
+.pirates_mslot.s6  {top: 90px;left: 52px;}
+.pirates_mslot.s7  {top: 90px;left: 85px;}
+.pirates_mslot.s8  {top: 90px;left: 120px;}
+.pirates_mslot.s9  {top: 90px;left: 155px;}
+.pirates_mslot.s10 {top: 90px;left: 188px;}
+
+/* -------------------------------- rockets page ----------------------------- */
+
+.rockets_bg {
+    background:url(../images/rockets/rockets_background.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#rockets_status {
+    position: absolute;
+    width: 600px;
+    height: 110px;
+    left: 0px;
+    top: 490px;
+    opacity: 0;
+    -webkit-transition: opacity 1s linear;
+}
+
+#rockets_status.show {
+    opacity: 1;
+}
+
+#rockets_msg2 {
+    position: absolute;
+    width: 334px;
+    height: 88px;
+    left: 266px;
+    top: 22px;
+    line-height: 88px;
+    font-family: Montserrat;
+    font-size: 20px;
+    color: #ffcc00;
+}
+
+.rocketicon {
+    position: absolute;
+    background:url(../images/rockets/rocket_icon_blue.png) no-repeat;
+    width: 38px;
+    height: 83px;
+    top: 15px;
+}
+
+.rocketicon.highlight {
+    background:url(../images/rockets/rocket_icon_yellow.png) no-repeat;
+}
+
+#rocketicon1 {left: 15px;}
+#rocketicon2 {left: 64px;}
+#rocketicon3 {left: 113px;}
+#rocketicon4 {left: 161px;}
+#rocketicon5 {left: 210px;}
+
+#rockets_fueldepot {
+    position: absolute;
+    background:url(../images/rockets/structures.png) no-repeat;
+    width: 1024px;
+    height: 531px;
+    left: 0px;
+    top: 69px;
+}
+
+#rockets_rocket {
+    position: absolute;
+    width: 400px;
+    height: 769px;
+    left: 656px;
+    top: 0px;
+}
+
+#rockets_rocket.launch {
+    -webkit-transition: all 1.5s ease-in;
+    top: -800px;
+}
+
+#rocket_body {
+    position: absolute;
+    background:url(../images/rockets/rocket.png) no-repeat;
+    width: 400px;
+    height: 590px;
+    left: 0px;
+    top: -2px;
+}
+
+#rocket_flame {
+    position: absolute;
+    background:url(../images/rockets/flame.png) no-repeat;
+    width: 348px;
+    height: 569px;
+    left: 17px;
+    top: 293px;
+    opacity: 0;
+}
+
+#rocket_flame.launch {
+    opacity: 1;
+}
+
+#rockets_smoke {
+    position: absolute;
+    pointer-events: none;
+    background:url(../images/rockets/rocket_glow.png) no-repeat;
+    width: 1024px;
+    height: 326px;
+    left: 0px;
+    top: 186px;
+    opacity: 0;
+}
+
+#rockets_smoke.launch {
+    -webkit-transition: all 3s linear;
+    opacity: 1;
+}
+
+
+#rocket_smoke1 {
+    position: absolute;
+    background:url(../images/rockets/smoke_glow.png) no-repeat;
+    width: 726px;
+    height: 141px;
+    left: 298px;
+    top: 185px;
+}
+
+#rockets_fueltarget {
+    position: absolute;
+    width: 60px;
+    height: 78px;
+    left: 170px;
+    top: 263px;
+    font-family: MedulaOne;
+    font-size: 65px;
+    color: black;
+    text-align: center;
+    line-height: 78px;
+}
+
+#rockets_fuelguage {
+    position: absolute;
+    width: 53px;
+    height: 41px;
+    left: 496px;
+    top: 91px;
+    font-family: Digital;
+    font-size: 35px;
+    color: red;
+    text-align: center;
+    line-height: 41px;
+}
+
+#rockets_fueltank {
+    position: absolute;
+    width: 221px;
+    height: 246px;
+    left: 406px;
+    top: 219px;
+}
+
+#rockets_fuellight {
+    position: absolute;
+    background:url(../images/rockets/light_bulb.png) no-repeat;
+    width: 100px;
+    height: 70px;
+    left: 473px;
+    top: 9px;
+}
+
+#rockets_fuellight.green {
+    background:url(../images/rockets/light_bulb_green.png) no-repeat;
+}
+
+#rockets_fuellight.red {
+    background:url(../images/rockets/light_bulb_red.png) no-repeat;
+}
+
+.rockets_drop {
+    position: absolute;
+    background:url(../images/rockets/drop.png) no-repeat;
+    width: 22px;
+    height: 30px;
+}
+
+.rockets_drop.bdrop1 {top: 15px; left: 40px;}
+.rockets_drop.bdrop2 {top: 15px; left: 82px;}
+.rockets_drop.bdrop3 {top: 15px; left: 124px;}
+.rockets_drop.bdrop4 {top: 15px; left: 168px;}
+.rockets_drop#drop1 {top: 212px; left: 10px; display: none;}
+.rockets_drop#drop2 {top: 212px; left: 54px; display: none;}
+.rockets_drop#drop3 {top: 212px; left: 98px; display: none;}
+.rockets_drop#drop4 {top: 212px; left: 142px; display: none;}
+.rockets_drop#drop5 {top: 212px; left: 187px; display: none;}
+.rockets_drop#drop6 {top: 174px; left: 10px; display: none;}
+.rockets_drop#drop7 {top: 174px; left: 54px; display: none;}
+.rockets_drop#drop8 {top: 174px; left: 98px; display: none;}
+.rockets_drop#drop9 {top: 174px; left: 142px; display: none;}
+.rockets_drop#drop10 {top: 174px; left: 187px; display: none;}
+.rockets_drop#drop11 {top: 132px; left: 10px; display: none;}
+.rockets_drop#drop12 {top: 132px; left: 54px; display: none;}
+.rockets_drop#drop13 {top: 132px; left: 98px; display: none;}
+.rockets_drop#drop14 {top: 132px; left: 142px; display: none;}
+.rockets_drop#drop15 {top: 132px; left: 187px; display: none;}
+.rockets_drop#drop16 {top: 92px; left: 10px; display: none;}
+.rockets_drop#drop17 {top: 92px; left: 54px; display: none;}
+.rockets_drop#drop18 {top: 92px; left: 98px; display: none;}
+.rockets_drop#drop19 {top: 92px; left: 142px; display: none;}
+.rockets_drop#drop20 {top: 92px; left: 187px; display: none;}
+.rockets_drop#drop21 {top: 50px; left: 10px; display: none;}
+.rockets_drop#drop22 {top: 50px; left: 54px; display: none;}
+.rockets_drop#drop23 {top: 50px; left: 98px; display: none;}
+.rockets_drop#drop24 {top: 50px; left: 142px; display: none;}
+.rockets_drop#drop25 {top: 50px; left: 187px; display: none;}
+.rockets_drop#drop26 {top: 9px; left: 10px; display: none;}
+.rockets_drop#drop27 {top: 9px; left: 54px; display: none;}
+.rockets_drop#drop28 {top: 9px; left: 98px; display: none;}
+.rockets_drop#drop29 {top: 9px; left: 142px; display: none;}
+.rockets_drop#drop30 {top: 9px; left: 187px; display: none;}
+
+.rockets_bottle {
+    position: absolute;
+    background:url(../images/rockets/bottle.png) no-repeat;
+    background-position: right;
+    width: 300px;
+    height: 90px;
+    left: 15px;
+}
+
+.rockets_bottle.bottle1 {top: 40px;}
+.rockets_bottle.bottle2 {top: 150px;}
+.rockets_bottle.bottle3 {top: 260px;}
+.rockets_bottle.bottle4 {top: 370px;}
+
+.rockets_plus {
+    position: absolute;
+    background:url(../images/rockets/plus.png) no-repeat;
+    width:34px;
+    height: 35px;
+    left: 0px;
+    top: 10px;
+}
+
+.rockets_plus:hover {
+}
+
+.rockets_plus.disable {
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.rockets_minus {
+    position: absolute;
+    background:url(../images/rockets/minus.png) no-repeat;
+    width:34px;
+    height: 35px;
+    left: 0px;
+    top: 45px;
+}
+
+.rockets_minus:hover {
+}
+
+.rockets_minus.disable {
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+#rockets_msg1a {
+    top: 25px;
+    left: 590px;
+    width: 434px;
+    height: 120px;
+}
+
+#rockets_msg1b {
+    top: 25px;
+    left: 590px;
+    width: 434px;
+    height: 120px;
+}
+
+#rockets_msg1c {
+    top: 25px;
+    left: 590px;
+    width: 434px;
+    height: 120px;
+}
+
+#rockets_msg1d {
+    top: 25px;
+    left: 590px;
+    width: 434px;
+    height: 120px;
+}
+
+#rockets_msg1e {
+    top: 25px;
+    left: 590px;
+    width: 434px;
+    height: 120px;
+}
+
+.rockets_mini {
+    position: absolute;
+    background:url(../images/rockets/rocket.png) no-repeat;
+    width: 400px;
+    height: 590px;
+    top: 130px;
+    font-family: MedulaOne;
+    font-size: 65px;
+    color: black;
+    text-align: center;
+    line-height: 606px;
+    -webkit-transform: scale(0.7);
+}
+
+#rockets_mini1 {left: -88px;}
+#rockets_mini2 {left: 112px;}
+#rockets_mini3 {left: 312px;}
+#rockets_mini4 {left: 512px;}
+#rockets_mini5 {left: 712px;}
+
+/* -------------------------------- bowling page ----------------------------- */
+
+#bowling_bg {
+    background:url(../images/bowling/background.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#bowling_rawbg {
+    background:url(../images/bowling/bowling_rawbg.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#bowling_woodbg {
+    position: absolute;
+    background:url(../images/bowling/wood_bg.png) no-repeat;
+    width: 664px;
+    height: 600px;
+    top: 0px;
+    left: 361px;
+    overflow: hidden;
+    -webkit-transition: all .5s ease-in-out;
+}
+
+.state1 #bowling_woodbg {
+    width: 504px;
+    left: 520px;
+}
+
+.state2 #bowling_woodbg {
+    width: 504px;
+    left: 1024px;
+}
+
+#bowling_numbertray {
+    position: absolute;
+    background:url(../images/bowling/number_tray.png) no-repeat;
+    width: 661px;
+    height: 167px;
+    top: 600px;
+    left: 363px;
+    overflow: hidden;
+    -webkit-transition: all .5s ease-in-out;
+}
+
+.state2 #bowling_numbertray {
+    top: 433px;
+}
+
+#bowling_scorecard {
+    position: absolute;
+    width: 664px;
+    height: 600px;
+    top: 0px;
+    left: 360px;
+    overflow: hidden;
+}
+
+#bowling_inset {
+    position: absolute;
+    background:url(../images/bowling/inset.png) no-repeat;
+    width: 372px;
+    height: 32px;
+    top: 0px;
+    left: 200px;
+    font-family: Montserrat;
+    font-size: 18px;
+    color: #fef1c1;
+    text-align: center;
+    line-height: 32px;
+}
+
+#bowling_scoregrid {
+    position: absolute;
+    background:url(../images/bowling/tenframe_grid.png) no-repeat;
+    width: 643px;
+    height: 316px;
+    top: 75px;
+    left: 17px;
+}
+
+.bowling_msg {
+    font-family: BreeSerif;
+    font-size: 34px;
+    color: white;
+    text-align: center;
+}
+
+.bowling_msg b {
+    font-family: AlfaSlabOne;
+    font-size: 40px;
+}
+
+.bowling_msg n {
+    font-family: AlfaSlabOne;
+    font-size: 50px;
+}
+
+#bowling_msg1 {
+    position: absolute;
+    width: 100%;
+    margin-top: 35%;
+    opacity: 1;
+}
+
+.state1 #bowling_msg1 {
+    opacity: 0;
+}
+
+#bowling_msg2 {
+    position: absolute;
+    width: 504px;
+    margin-top: 25%;
+    opacity: 0;
+}
+
+#bowling_msg3 {
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    width: 1024px;
+    height: 300px;
+    font-family: BreeSerif;
+    font-size: 34px;
+    color: black;
+    text-align: center;
+}
+
+#bowling_msg3 b {
+    color: black;
+    font-family: AlfaSlabOne;
+    font-size: 40px;
+}
+
+
+.state1 #bowling_msg2 {
+    -webkit-transition: opacity 0.5s linear;
+    opacity: 1;
+}
+
+.bowling_label {
+    position: absolute;
+    font-family: Montserrat;
+    font-size: 16px;
+    color: #353b3f;
+    text-align: center;
+    top: 60px;
+}
+
+#bowling_label1 {left: 22px; width: 130px;}
+#bowling_label2 {left: 193px; width: 150px;}
+#bowling_label3 {left: 477px; width: 70px;}
+
+.bowling_val {
+    position: absolute;
+    font-family: Montserrat;
+    font-size: 50px;
+    color: #353b3f;
+    text-align: center;
+    top: 380px;
+}
+
+#bowling_val1 {left: 22px; width: 130px;}
+#bowling_val2 {left: 193px; width: 150px;}
+#bowling_val3 {left: 477px; width: 70px;}
+
+#bowling_lane {
+    position: absolute;
+    width: 360px;
+    height: 448px;
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+}
+
+#bowling_overlay {
+    position: absolute;
+    pointer-events: none;
+    width: 360px;
+    height: 600px;
+    top: 0px;
+    left: 0px;
+    background-color: #002f41;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+}
+
+.state2 #bowling_overlay {
+    opacity: 0.9;
+    pointer-events: auto;
+}
+
+@-webkit-keyframes ball_slide {
+    0%, 100% { left:-75px;}
+    50% { left:325px;}
+}
+
+#bowling_ball {
+    position: absolute;
+    background:url(../images/bowling/ball.png) no-repeat;
+    width: 110px;
+    height: 110px;
+    top: 330px;
+    left: 0px;
+    -webkit-animation: ball_slide 6s ease-in-out infinite;
+}
+
+@-webkit-keyframes ball_roll1 {
+    0% { top:324px; left: -webkit-transform: scale(1);}
+    100% { top:100px; -webkit-transform: scale(0.5);}
+}
+
+#bowling_ball_rolling {
+    position: absolute;
+    background:url(../images/bowling/bowling_ball.png) no-repeat;
+    width: 140px;
+    height: 126px;
+    top: 324px;
+    left: 0px;
+    -webkit-transition: -webkit-transform 1.3s linear;
+}
+
+#bowling_ball_rolling.anim { 
+    -webkit-transform: scale(0.5);
+}
+
+.bowlingpinshadow {
+    position: absolute;
+    background:url(../images/bowling/pin_shadow.png) no-repeat;
+    width: 49px;
+    height: 20px;
+}
+
+#bowling_pin1shadow {top: 188px; left: 82px;}
+#bowling_pin2shadow {top: 188px; left: 125px;}
+#bowling_pin3shadow {top: 188px; left: 169px;}
+#bowling_pin4shadow {top: 188px; left: 212px;}
+#bowling_pin5shadow {top: 206px; left: 104px;}
+#bowling_pin6shadow {top: 206px; left: 147px;}
+#bowling_pin7shadow {top: 206px; left: 191px;}
+#bowling_pin8shadow {top: 224px; left: 125px;}
+#bowling_pin9shadow {top: 224px; left: 169px;}
+#bowling_pin10shadow {top: 242px; left: 147px;}
+
+.bowlingpin {
+    position: absolute;
+    background:url(../images/bowling/pin_noshadow.png) no-repeat;
+    width: 27px;
+    height: 79px;
+}
+
+@-webkit-keyframes pinflyleft {
+    0% { -webkit-transform: translate(0px, 0px) rotate(0deg);}
+    10% { -webkit-transform: translate(-30px, -31px) rotate(90deg);}
+    20% { -webkit-transform: translate(-60px, -57px) rotate(180deg);}
+    30% { -webkit-transform: translate(-90px, -77px) rotate(270deg);}
+    40% { -webkit-transform: translate(-120px, -91px) rotate(360deg);}
+    50% { -webkit-transform: translate(-150px, -97px) rotate(450deg);}
+    60% { -webkit-transform: translate(-180px, -91px) rotate(540deg);}
+    70% { -webkit-transform: translate(-210px, -77px) rotate(630deg);}
+    80% { -webkit-transform: translate(-240px, -57px) rotate(720deg);}
+    90% { -webkit-transform: translate(-270px, -31px) rotate(810deg);}
+    100% { -webkit-transform: translate(-300px, 0px) rotate(900deg);}
+}
+
+@-webkit-keyframes pinflyright {
+    0% { -webkit-transform: translate(0px, 0px) rotate(0deg);}
+    10% { -webkit-transform: translate(30px, -31px) rotate(-90deg);}
+    20% { -webkit-transform: translate(60px, -57px) rotate(-180deg);}
+    30% { -webkit-transform: translate(90px, -77px) rotate(-270deg);}
+    40% { -webkit-transform: translate(120px, -91px) rotate(-360deg);}
+    50% { -webkit-transform: translate(150px, -97px) rotate(-450deg);}
+    60% { -webkit-transform: translate(180px, -91px) rotate(-540deg);}
+    70% { -webkit-transform: translate(210px, -77px) rotate(-630deg);}
+    80% { -webkit-transform: translate(240px, -57px) rotate(-720deg);}
+    90% { -webkit-transform: translate(270px, -31px) rotate(-810deg);}
+    100% { -webkit-transform: translate(300px, 0px) rotate(-900deg);}
+}
+
+#bowling_pin1 {top: 120px; left: 100px;}
+#bowling_pin1.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.1s;}
+#bowling_pin1.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.1s;}
+#bowling_pin2 {top: 120px; left: 143px;}
+#bowling_pin2.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.1s;}
+#bowling_pin2.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.1s;}
+#bowling_pin3 {top: 120px; left: 187px;}
+#bowling_pin3.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.1s;}
+#bowling_pin3.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.1s;}
+#bowling_pin4 {top: 120px; left: 230px;}
+#bowling_pin4.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.1s;}
+#bowling_pin4.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.1s;}
+#bowling_pin5 {top: 138px; left: 122px;}
+#bowling_pin5.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.0s;}
+#bowling_pin5.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.0s;}
+#bowling_pin6 {top: 138px; left: 165px;}
+#bowling_pin6.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.0s;}
+#bowling_pin6.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.0s;}
+#bowling_pin7 {top: 138px; left: 209px;}
+#bowling_pin7.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 1.0s;}
+#bowling_pin7.flyright {-webkit-animation: pinflyright 1.5s linear 1 1.0s;}
+#bowling_pin8 {top: 156px; left: 143px;}
+#bowling_pin8.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 0.9s;}
+#bowling_pin8.flyright {-webkit-animation: pinflyright 1.5s linear 1 0.9s;}
+#bowling_pin9 {top: 156px; left: 187px;}
+#bowling_pin9.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 0.9s;}
+#bowling_pin9.flyright {-webkit-animation: pinflyright 1.5s linear 1 0.9s;}
+#bowling_pin10 {top: 174px; left: 165px;}
+#bowling_pin10.flyleft {-webkit-animation: pinflyleft 1.5s linear 1 0.8s;}
+#bowling_pin10.flyright {-webkit-animation: pinflyright 1.5s linear 1 0.8s;}
+
+#bowling_rollbutton {
+    position: absolute;
+    width: 343px;
+    height: 106px;
+    top: 485px;
+    left: 15px;
+    font-family: Montserrat;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    line-height: 95px;
+    text-shadow: 2px 2px 5px #000000;
+    background:url(../images/bowling/roll_ball_inactive.png) no-repeat;
+}
+
+#bowling_rollbutton.active {
+    background:url(../images/bowling/roll_ball_active.png) no-repeat;
+}
+
+.bowlingpinmini {
+    position: absolute;
+    background:url(../images/bowling/pin_small.png) no-repeat;
+    width: 36px;
+    height: 58px;
+    -webkit-transition: opacity 0.3s linear;
+    opacity: 0;
+}
+
+.bowlingpinmini.show {
+    opacity: 1;
+}
+
+#bowling_t1p1 { top: 15px; left: 20px;}
+#bowling_t1p2 { top: 69px; left: 20px;}
+#bowling_t1p3 { top: 123px; left: 20px;}
+#bowling_t1p4 { top: 177px; left: 20px;}
+#bowling_t1p5 { top: 231px; left: 20px;}
+#bowling_t1p6 { top: 15px; left: 75px;}
+#bowling_t1p7 { top: 69px; left: 75px;}
+#bowling_t1p8 { top: 123px; left: 75px;}
+#bowling_t1p9 { top: 177px; left: 75px;}
+#bowling_t1p10 { top: 231px; left: 75px;}
+#bowling_t2p1 { top: 15px; left: 200px;}
+#bowling_t2p2 { top: 69px; left: 200px;}
+#bowling_t2p3 { top: 123px; left: 200px;}
+#bowling_t2p4 { top: 177px; left: 200px;}
+#bowling_t2p5 { top: 231px; left: 200px;}
+#bowling_t2p6 { top: 15px; left: 255px;}
+#bowling_t2p7 { top: 69px; left: 255px;}
+#bowling_t2p8 { top: 123px; left: 255px;}
+#bowling_t2p9 { top: 177px; left: 255px;}
+#bowling_t2p10 { top: 231px; left: 255px;}
+
+.bowlingnumbtn {
+    position: absolute;
+    background:url(../images/bowling/number_bkgrd.png) no-repeat;
+    width: 59px;
+    height: 60px;
+    font-family: Montserrat;
+    font-size: 26px;
+    color: #002635;
+    text-align: center;
+    line-height: 60px;
+}
+
+.bowlingnumbtn:active {
+    background:url(../images/bowling/number_bkgrd_active.png) no-repeat;
+}
+
+#bowling_numbtn0 {top: 50px; left: 15px;}
+#bowling_numbtn1 {top: 50px; left: 72px;}
+#bowling_numbtn2 {top: 50px; left: 129px;}
+#bowling_numbtn3 {top: 50px; left: 186px;}
+#bowling_numbtn4 {top: 50px; left: 243px;}
+#bowling_numbtn5 {top: 50px; left: 300px;}
+#bowling_numbtn6 {top: 50px; left: 357px;}
+#bowling_numbtn7 {top: 50px; left: 414px;}
+#bowling_numbtn8 {top: 50px; left: 471px;}
+#bowling_numbtn9 {top: 50px; left: 528px;}
+#bowling_numbtn10 {top: 50px; left: 585px;}
+#bowling_numbtn11 {top: 100px; left: 43px;}
+#bowling_numbtn12 {top: 100px; left: 100px;}
+#bowling_numbtn13 {top: 100px; left: 157px;}
+#bowling_numbtn14 {top: 100px; left: 214px;}
+#bowling_numbtn15 {top: 100px; left: 271px;}
+#bowling_numbtn16 {top: 100px; left: 328px;}
+#bowling_numbtn17 {top: 100px; left: 385px;}
+#bowling_numbtn18 {top: 100px; left: 442px;}
+#bowling_numbtn19 {top: 100px; left: 499px;}
+#bowling_numbtn20 {top: 100px; left: 556px;}
+
+#bowling_dialog_container {
+    position: absolute;
+    pointer-events: none;
+    width: 1024px;
+    height: 600px;
+    top: 0px;
+    left: 0px;
+    background-color: #002f41;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+}
+
+.state3 #bowling_dialog_container {
+    opacity: 0.9;
+    pointer-events: auto;
+}
+
+#bowling_dialog {
+    position: absolute;
+    pointer-events: none;
+    background:url(../images/bowling/great_job_bkgrd.png) no-repeat;
+    width: 687px;
+    height: 499px;
+    top: 50px;
+    left: 168.5px;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+}
+
+.state3 #bowling_dialog {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dialogtext {
+    margin-top: 100px;
+    text-align: center;
+    font-family: BreeSerif;
+    font-size: 35px;
+    color: white;
+}
+
+.dialogtext b {
+    font-family: AlfaSlabOne;
+    font-size: 50pt;
+    color: white;
+}
+
+#bowling_correct {
+    display: none;
+}
+
+#bowling_incorrect {
+    display: none;
+}
+
+.correct #bowling_correct {
+    display: block;
+}
+
+.incorrect #bowling_incorrect {
+    display: block;
+}
+
+.dialogbtn {
+    position: absolute;
+    background:url(../images/bowling/Button_A.png) no-repeat;
+    width: 156px;
+    height: 52px;
+    text-align: center;
+    font-family: BreeSerif;
+    font-size: 22px;
+    color: white;
+    line-height: 52px;
+}
+
+.dialogbtn.active {
+    background:url(../images/bowling/Button_B.png) no-repeat;
+}
+
+#bowling_next {
+    top: 370px;
+    left: 70px;
+}
+
+#bowling_tryagain {
+    top: 370px;
+    left: 265px;
+    display: none;
+}
+
+.incorrect #bowling_tryagain {
+    display: block;
+}
+
+#bowling_quit {
+    top: 370px;
+    left: 460px;
+}
+
+.bowling_mini {
+    position: absolute;
+    width: 429px;
+    height: 216px;
+    -webkit-transform: scale(0.7);
+}
+
+.bowling_mini.green {background:url(../images/bowling/tenframe_grid_small_green.png) no-repeat;}
+.bowling_mini.red {background:url(../images/bowling/tenframe_grid_small_red.png) no-repeat;}
+.bowling_mini.brown {background:url(../images/bowling/tenframe_grid_small.png) no-repeat;}
+
+#bowling_mini1 {top: 180px; left: -40px;}
+#bowling_mini2 {top: 180px; left: 298px;}
+#bowling_mini3 {top: 180px; left: 635px;}
+#bowling_mini4 {top: 360px; left: 112px;}
+#bowling_mini5 {top: 360px; left: 480px;}
+
+.bowlingpinmicro {
+    position: absolute;
+    background:url(../images/bowling/pin_x_small.png) no-repeat;
+    width: 22px;
+    height: 36px;
+}
+
+.bowlingpinmicro.m1p1 { top: 20px; left: 30px;}
+.bowlingpinmicro.m1p2 { top: 54px; left: 30px;}
+.bowlingpinmicro.m1p3 { top: 88px; left: 30px;}
+.bowlingpinmicro.m1p4 { top: 122px; left: 30px;}
+.bowlingpinmicro.m1p5 { top: 155px; left: 30px;}
+.bowlingpinmicro.m1p6 { top: 20px; left: 68px;}
+.bowlingpinmicro.m1p7 { top: 54px; left: 68px;}
+.bowlingpinmicro.m1p8 { top: 88px; left: 68px;}
+.bowlingpinmicro.m1p9 { top: 122px; left: 68px;}
+.bowlingpinmicro.m1p10 { top: 155px; left: 68px;}
+.bowlingpinmicro.m2p1 { top: 20px; left: 145px;}
+.bowlingpinmicro.m2p2 { top: 54px; left: 145px;}
+.bowlingpinmicro.m2p3 { top: 88px; left: 145px;}
+.bowlingpinmicro.m2p4 { top: 122px; left: 145px;}
+.bowlingpinmicro.m2p5 { top: 155px; left: 145px;}
+.bowlingpinmicro.m2p6 { top: 20px; left: 183px;}
+.bowlingpinmicro.m2p7 { top: 54px; left: 183px;}
+.bowlingpinmicro.m2p8 { top: 88px; left: 183px;}
+.bowlingpinmicro.m2p9 { top: 122px; left: 183px;}
+.bowlingpinmicro.m2p10 { top: 155px; left: 183px;}
+.bowlingpinmicro.m3p1 { top: 20px; left: 260px;}
+.bowlingpinmicro.m3p2 { top: 54px; left: 260px;}
+.bowlingpinmicro.m3p3 { top: 88px; left: 260px;}
+.bowlingpinmicro.m3p4 { top: 122px; left: 260px;}
+.bowlingpinmicro.m3p5 { top: 155px; left: 260px;}
+.bowlingpinmicro.m3p6 { top: 20px; left: 298px;}
+.bowlingpinmicro.m3p7 { top: 54px; left: 298px;}
+.bowlingpinmicro.m3p8 { top: 88px; left: 298px;}
+.bowlingpinmicro.m3p9 { top: 122px; left: 298px;}
+.bowlingpinmicro.m3p10 { top: 155px; left: 298px;}
+.bowlingpinmicro.m3p11 { top: 20px; left: 342px;}
+.bowlingpinmicro.m3p12 { top: 54px; left: 342px;}
+.bowlingpinmicro.m3p13 { top: 88px; left: 342px;}
+.bowlingpinmicro.m3p14 { top: 122px; left: 342px;}
+.bowlingpinmicro.m3p15 { top: 155px; left: 342px;}
+.bowlingpinmicro.m3p16 { top: 20px; left: 380px;}
+.bowlingpinmicro.m3p17 { top: 54px; left: 380px;}
+.bowlingpinmicro.m3p18 { top: 88px; left: 380px;}
+.bowlingpinmicro.m3p19 { top: 122px; left: 380px;}
+.bowlingpinmicro.m3p20 { top: 155px; left: 380px;}
+
+.bowling_mval {
+    position: absolute;
+    font-family: Montserrat;
+    font-size: 40px;
+    color: #353b3f;
+    text-align: center;
+    top: 200px;
+    width: 50px;
+}
+
+.bowling_mval.v1 {left: 35px;}
+.bowling_mval.v2 {left: 150px;}
+.bowling_mval.v3 {left: 305px;}
+
+/* -------------------------------- fonts ----------------------------- */
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'AlfaSlabOne';
+    src: url('../fonts/Alfa_Slab_One/AlfaSlabOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'BreeSerif';
+    src: url('../fonts/Bree_Serif/BreeSerif-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'MedulaOne';
+    src: url('../fonts/Medula_One/MedulaOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Digital';
+    src: url('../fonts/Black_Ops_One/BlackOpsOne.ttf');
+}

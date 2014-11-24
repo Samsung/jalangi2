@@ -1,0 +1,588 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the 
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+@CHARSET "UTF-8";
+a{
+	outline:none;
+	text-decoration:none;
+	cursor:hand;
+	cursor:pointer;
+}
+
+@font-face{
+	font-family: default_font;
+	src: url('../fonts/Yesteryear-Regular.ttf'),
+	     url('../fonts/wqy-microhei.ttc');
+}
+
+@font-face{
+	font-family: sans_font;
+	src: url('../fonts/OpenSans-Bold.ttf');
+}
+
+.display_none {
+	display:none;
+	z-index:-1;
+}
+
+body {
+    margin: 0px;
+    -webkit-user-select: none;
+    background-color: "white";
+    box-shadow: 5px 5px 20px black;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    position: absolute;
+    width: 1024px;
+    height: 600px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+}
+
+.world {
+    position:absolute;
+    background:url('../images/GO_GridWoodBG_022312_a.png') no-repeat;
+    width: 1024px;
+    height: 600px;
+}
+
+/* 800 x 480 */
+@media (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(0.78125, 0.8); }
+}
+/* 1024 x 600 */
+@media (min-width: 1024px) and (min-height: 600px) and (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); }
+}
+/* 1280 x 720 */
+@media (min-width: 1280px) and (min-height: 720px) and (orientation: landscape) {
+  body { top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1.25, 1.199); }
+}
+
+/* 480 x 800 */
+@media (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.8, 0.78125) translate(50%, -50%); }
+}
+/* 600 x 989 */
+@media (min-width: 600px) and (min-height: 989px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(0.9658, 1.0) translate(50%, -50%); }
+}
+/* 600 x 1024 */
+@media (min-width: 600px) and (min-height: 1024px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) translate(50%, -50%); }
+}
+/* 720 x 1230 */
+@media (min-width: 720px) and (min-height: 1230px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(1.2, 1.199) translate(50%, -50%); }
+}
+/* 720 x 1280 */
+@media (min-width: 720px) and (min-height: 1280px) and (orientation: portrait) {
+  body { top: 0%; left: 0%; -webkit-transform: translate(-50%, -50%) rotate(90deg) scale(1.25, 1.199) translate(50%, -50%); }
+}
+
+.board {
+	position:absolute;
+	top:19px;
+	left:219px;
+	width:586px;
+	height:586px;
+	/* line-height:0px; */
+}
+
+.stone_select{
+	padding:0px;
+	border:1px solid #021a40;
+}
+
+.board_img{
+	padding:1px 1px 0px 1px;
+}
+
+.img_style{
+	width:36px;
+	height:36px;
+	margin: 0px;
+}
+
+.left_pit {
+	position:absolute;
+	top:133px;
+	left:30px;
+	width:153px;
+	height:371px;
+	background:url('../images/GO_Pit_010612_a.png') no-repeat;
+}
+
+.right_pit {
+	position:absolute;
+	top:133px;
+	right:30px;
+	width:153px;
+	height:371px;
+	background:url('../images/GO_Pit_010612_b.png') no-repeat;
+}
+
+.stone_in_pit{
+	position:absolute;
+	width:36px;
+	height:36px;
+}
+
+.left_arrow {
+	position:absolute;
+	top:14px;
+	left:14px;
+	width:179px;
+	height:100px;
+	font-family: default_font;
+	font-size: 25pt;
+	color: #57451b;	
+	line-height:120%;
+}
+
+.player_arrow_img {
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+.right_arrow {
+	position:absolute;
+	top:14px;
+	right:14px;
+	width:179px;
+	height:100px;
+	font-family: default_font;
+	font-size: 25pt;
+	color: #57451b;	
+	line-height:120%;
+}
+
+.left_time_arrow {
+	position:absolute;
+	bottom:31px;
+	left:21px;
+}
+
+.right_time_arrow {
+	position:absolute;
+	bottom:31px;
+	right:21px;
+}
+
+.left_timer {
+	position:absolute;
+	bottom:20px;
+	left:35px;
+	font-family: default_font;
+	font-size: 30pt;
+	color: #57451b;
+}
+
+.right_timer {
+	position:absolute;
+	bottom:20px;
+	left:853px;
+	font-family: default_font;
+	font-size: 30pt;
+	color: #57451b;	
+}
+
+.left_skip {
+	position:absolute;
+	bottom:-1px;
+	left:55px;
+	margin:0px;
+	padding:0px;	
+}
+
+.right_skip {
+	position:absolute;
+	bottom:-1px;
+	right:50px;
+	margin:0px;
+	padding:0px;
+}
+
+.skip_arrow {
+	font-family: default_font;
+	font-size: 20pt;
+	width:100px;
+	color: #57451b;
+	background:url('../images/GO_SkipArrow_022212_a.png') no-repeat right;
+}
+
+.skip_arrow:active {
+	color: #e2df00;
+	background:url('../images/GO_SkipArrow_022212_b.png') no-repeat right;
+}
+
+.setting_icon {
+	position:absolute;
+	bottom:2px;
+	right:7px;
+}
+
+.undue_icon_left {
+	position:absolute;
+	bottom:2px;
+	left:12px;	
+}
+
+.undue_icon_right {
+	position:absolute;
+	bottom:2px;
+	right:170px;
+}
+
+.play_button {
+	position:absolute;
+	left:310px;
+	bottom:20px;
+	width:480px;
+	height:155px;
+	color:#57451b;
+	z-index:1;
+}
+
+.play_button_img {
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:480px;
+	height:155px;
+	line-height:180%;
+	background:url('../images/GO_PlaySlab_012012_a.png') no-repeat;
+}
+
+.play_button_text {
+	font-family: default_font;
+	font-size: 60pt;
+	position:relative;
+	left:150px;
+	top:60px;
+}
+
+.play_button:active {
+	color:#e2df00;
+}
+
+.setting_panel {
+	position:absolute;
+	top:-500px;
+	right:290px;
+	width:448px;
+	height:543px;
+	overflow:hidden;
+	background:url('../images/GO_SettingsSlab_010612_a.png') no-repeat;
+	z-index:2;
+	-webkit-transition:all .4s ease-in-out;
+	-moz-transition:all .4s ease-in-out;
+	-o-transition:all .4s ease-in-out;
+	-ms-transition:all .4s ease-in-out;
+	transition:all .4s ease-in-out;
+}
+
+.setting_panel_in{
+	top:43px;
+}
+
+.setting_arrow {
+	position:absolute;
+	top:23px;
+	right:104px;
+	width:237px;
+	height:134px;
+	font-family: default_font;
+	font-size: 50pt;
+	color: #57451b;	
+}
+
+.setting_arrow_img {
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+.setting_sound {
+	position:absolute;
+	top:200px;
+	left:88px;
+	width:360px;
+	font-family: default_font;
+	font-size: 40pt;
+	color: #57451b;	
+}
+
+.setting_sound_check {
+	position:absolute;
+	right:50px;
+	top:15px;
+	width:39px;
+	height:39px;
+}
+
+.setting_sound_checked {
+	position:absolute;
+	right:43px;
+	top:14px;
+	width:47px;
+	height:41px;
+}
+
+.setting_timer {
+	position:absolute;
+	bottom:190px;
+	left:88px;
+	width:360px;
+	font-family: default_font;
+	font-size: 40pt;
+	color: #57451b;		
+}
+
+.setting_timer_check {
+	position:absolute;
+	right:50px;
+	top:15px;
+	width:39px;
+	height:39px;	
+}
+
+.setting_timer_checked {
+	position:absolute;
+	right:43px;
+	top:14px;
+	width:47px;
+	height:41px;	
+}
+
+.setting_restart {
+	position:absolute;
+	bottom:122px;
+	left:88px;
+	width:50%;
+	font-family: default_font;
+	font-size: 32pt;
+	color: #57451b;	
+	text-align:left;
+}
+
+.setting_restart_check {
+	position:relative;
+	left:5px;
+	top:10px;
+	width:39px;
+	height:39px;	
+}
+
+.setting_restart_checked {
+	position:relative;
+	left:4px;
+	top:11px;
+	width:47px;
+	height:41px;	
+}
+
+.setting_quit {
+	position:absolute;
+	bottom:185px;
+	right:45px;
+	font-family: default_font;
+	font-size: 32pt;
+	color: #57451b;
+}
+
+.setting_quit_text {
+	position:absolute;
+	right:55px;
+	width:100px;
+	text-align:right;
+}
+
+.setting_quit_check {
+	float:right;
+	position:absolute;
+	right:4px;
+	top:10px;
+	width:39px;
+	height:39px;	
+}
+
+.setting_quit_checked {
+	float:right;
+	position:absolute;
+	right:-3px;
+	top:9px;
+	width:47px;
+	height:41px;	
+}
+
+.setting_exit {
+	position:absolute;
+	top:3px;
+	right:23px;
+	font-family: sans_font;
+	color:#57451b;
+	font-size:30pt;
+}
+
+.setting_help {
+	position:absolute;
+	top:3px;
+	left:30px;
+	font-family: sans_font;
+	color:#57451b;
+	font-size:30pt;
+}
+
+.setting_resume {
+	position:absolute;
+	bottom:25px;
+	left:120px;
+	width:223px;
+	height:68px;
+	font-family: default_font;
+	font-size: 32pt;
+	text-align:center;
+}
+
+.setting_resume_inactive {
+	color: #57451b;
+	background:url('../images/GO_ResumeBTN_022212_a.png') no-repeat;	
+}
+
+.setting_resume:active {
+	color: #e2df00;
+	background:url('../images/GO_ResumeBTN_022212_b.png') no-repeat;	
+}
+
+.text_shadow {
+   text-shadow:0px 1px #bcb4a4,0px -1px #000000;
+}
+
+.win_panel {
+	position:absolute;
+	top:43px;
+	right:290px;
+	width:448px;
+	height:543px;
+	background:url('../images/GO_SettingsSlab_010612_a.png') no-repeat;	
+	font-family: default_font;
+	color: #57451b;
+	z-index:3;
+}
+
+.win_arrow {
+	position:absolute;
+	top:46px;
+	left:30px;
+	width:388px;
+	height:210;
+	
+}
+
+.win_arrow_img {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+}
+
+.replay {
+	position:absolute;
+	bottom:45px;
+	width:100%;
+	font-family: default_font;
+	color: #57451b;
+	font-size:52pt;
+	text-align:center;
+}
+
+.replay:active {
+	color:#e2df00;
+}
+
+.win_exit {
+	position:absolute;
+	top:3px;
+	right:23px;
+	font-family: sans_font;
+	color:#57451b;
+	font-size:30pt;
+}
+
+.replay_img {
+	position:absolute;
+	right:-85px;
+	bottom:25px;
+	width:55px;
+	height:56px;
+}
+
+.help_panel {
+	position:absolute;
+	top:42px;
+	left:270px;
+	width:488px;
+	height:543px;
+	background:url('../images/GO_RulesSlab_022812_a.png') no-repeat;
+	font-family:sans_font;
+	color: #57451b;
+	z-index:2;
+}
+
+.help_text {
+	position:absolute;
+	top:60px;
+	left:20px;
+	width:92%;
+	height:80%;
+	padding: 5px;
+	font-size:13pt;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+.help_exit {
+	position:absolute;
+	top:5px;
+	right:25px;
+	font-size:30pt;
+}
+
+.help_title {
+	position:absolute;
+	top:5px;
+	left:15%;
+	width:70%;
+	font-size:35pt;
+	text-align:center;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px 4px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px 6px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-button:single-button {
+	width: 12px;
+	height:16px;
+	-webkit-box-shadow: inset 0 0 6px 6px rgba(0,0,0,0.5);
+}

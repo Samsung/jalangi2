@@ -1,0 +1,15 @@
+{
+  "name": "Calculator",
+  "version": "2.0",
+  "default_locale": "en_US",
+  "description": "A scientific calculator",
+  "icons": { 
+  	"128": "icon_128.png"
+  },
+  "app": {
+    "launch": {
+        "local_path": "index.html"
+    }
+  }
+}
+

@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+a {
+    text-decoration: none;
+}
+
+#context-menu {
+	position:relative;
+	width:320px;
+	height:320px;
+	min-height: 320px !important;
+	display:none;
+	z-Index:1001;
+	border:2px solid black;
+	background-color:#FFFFFF;
+	text-align:right;
+}
+
+#context-menu ul {
+	margin-right: 0px;
+	margin-top: 0px;
+}
+
+#context-menu ul li {
+	list-style-type: none;
+	vertical-align: middle;
+}
+
+#context-menu li img {
+	height: 80px;
+	width: 80px;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+#context-menu span {
+	font-family: 'Lato Regular', Helvetica, sans;
+	vertical-align: middle;
+	text-shadow: none;
+	font-size: 40px;
+	color: #000000;
+	cursor: default;	
+}
+
+ul, menu, dir {
+	-webkit-margin-start: -40px;
+	margin-bottom: 0px;
+}
+
+#context-menu li:hover {
+  	background-color: #e0e0e0;
+}

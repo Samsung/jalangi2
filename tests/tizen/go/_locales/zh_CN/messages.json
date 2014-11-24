@@ -1,0 +1,25 @@
+{
+    "alphabet": {
+        "message": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "description": "除去空格之外的所有字符集合"
+    },
+    "name": {"message": "围棋"},
+    "description": {"message": "一个围棋游戏"},
+	"player": {"message": "选手"},
+	"one": {"message": "1"},
+	"two": {"message": "2"},
+	"rules": {"message": "游戏规则"},
+	"resume": {"message": "提交"},
+	"timer_setting": {"message": "计时器......"},
+	"sound_setting": {"message": "音效.........."},
+	"settings": {"message": "设置"},
+	"play": {"message": "开始"},
+	"quit": {"message": "退出"},
+	"draw": {"message": "平局"},
+	"skip": {"message": "跳过"},
+	"score": {"message": "分数"},
+	"restart": {"message": "重玩"},
+	"win": {"message": "胜"},
+	"newGame": {"message": "新游戏"},
+	"help": {"message": "&nbsp;&nbsp;&nbsp;&nbsp;将棋子放在空白交叉点上。黑子先手，下子之后除被吃之外不能移动棋子。当选手认为本轮无需下子时，可以跳过。<br>&nbsp;&nbsp;&nbsp;&nbsp;横纵相接的相同颜色的棋子链使用相同的气，它们不能进行拆分，应看做一个整体。棋子横纵两个方向相连才算作连接，对角线方向不算。将同色的棋子放在相连接的空位可以扩展棋子链，如果放在多个棋子链共同的连接空位能够将这些棋子链连接起来。<br>&nbsp;&nbsp;&nbsp;&nbsp;一个棋子链必须至少有一个气，当其没有气时必须从棋盘上拿掉。<br>当比赛双方都跳过时，棋局结束。得分（一方棋子所围的空白格数加上棋盘上其棋子的数量）高的选手获胜。<br>&nbsp;&nbsp;&nbsp;&nbsp;有关围棋游戏的详细资料请查看维基百科:<span><a style='opacity: 0.6; color: #0000FF' href='http://en.wikipedia.org/wiki/Go_(game)'>http://en.wikipedia.org/wiki/Go_(game)</a></span>."}
+}

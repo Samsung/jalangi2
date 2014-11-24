@@ -1,0 +1,28 @@
+{
+    "alphabet": {
+        "message": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "description": "除去空格之外的所有字符集合"
+    },
+    "name": {"message": "Annex黑白棋"},
+    "description": {"message": "一个黑白棋游戏"},
+	"license": {"message": "授权"},
+	"readme": {"message": "自述"},	
+	"player": {"message": "选手"},
+	"computer": {"message": "电脑"},
+	"startover": {"message": "重来"},
+	"rules": {"message": "规则"},
+	"exit": {"message": "退出"},
+	"1PlayerGame": {"message": "单人游戏"},
+	"2PlayerGame": {"message": "双人游戏"},
+	"howtoPlay": {"message": "游戏规则"},
+	"turn": {"message": "方下"},
+	"pieces": {"message": "分"},
+	"winDraw": {"message": "平局!"},
+	"winComputer": {"message": "电脑赢!"},
+	"win": {"message": "赢"},
+	"newOneGame": {"message": "单人游戏"},
+	"newTwoGame": {"message": "双人游戏"},
+	"help": {"message": "在棋盘空位上下子，并保证至少有一个对方的棋子被夹在你的两颗棋子中间。然后将这些夹在中间的对方的棋子翻转为你的棋子。<br>
+	最终棋子多的一方获胜！"},
+	"goBack": {"message": "返回"}
+}

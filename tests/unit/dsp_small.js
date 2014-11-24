@@ -1,0 +1,6 @@
+function setupTypedArray() {
+    this;
+}
+
+setupTypedArray();
+

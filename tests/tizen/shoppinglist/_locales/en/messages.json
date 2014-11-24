@@ -1,0 +1,272 @@
+{
+    "appName": {
+        "message": "shoppinglist",
+        "description": "The name of the app."
+    },
+    "appDescription": {
+        "message": "Create a Shopping List today. Keep track of the products user wants to buy; Create and share and add to favourite your wish list",
+        "description": "The description of the app."
+    },
+    "select_items": {
+        "message": "Select items."
+    },
+    "go_back_and_select_list_first": {
+        "message": "Go back and Select list first."
+    },
+    "items_saved_in_the": {
+        "message": "Items saved in the "
+    },
+    "list": {
+        "message": "list "
+    },
+    "database_error": {
+        "message": "Database Error."
+    },
+    "item_name_is_empty": {
+        "message": "Item name is empty."
+    },
+    "list_is_empty": {
+        "message": "List is empty."
+    },
+    "already_exists_in_the": {
+        "message": "already exists in the "
+    },
+    "do_you_want_to_add_anyway": {
+        "message": " list. Do you want to add item(s) anyway?"
+    },
+    "store_name_is_empty": {
+        "message": "Store name is empty."
+    },
+    "store": {
+        "message": "Store "
+    },
+    "already_exists_define_other_name": {
+        "message": " already exists.\n Please define another name."
+    },
+    "list_name_is_empty": {
+        "message": "List name is empty."
+    },
+    "list_color_is_empty": {
+        "message": "List color is empty."
+    },
+    "invalid_list_data": {
+        "message": "Invalid List Data!"
+    },
+    "no_store": {
+        "message": "(no store)"
+    },
+    "no_list": {
+        "message": "(no list)"
+    },
+    "create_new_list": {
+        "message": "Create New List"
+    },
+    "name_of_list": {
+        "message": "Name of List:"
+    },
+    "choose_color": {
+        "message": "Choose a Color to Define Your List:"
+    },
+    "item_type": {
+        "message": "Choose a Color:"
+    },
+    "edit_list": {
+        "message": "Edit List"
+    },
+    "view_all": {
+        "message": "View All"
+    },
+    "all_my_favorites": {
+        "message": "All My Favorites"
+    },
+    "add_new_list": {
+        "message": "Add New List"
+    },
+    "add_new_store": {
+        "message": "Add New Store"
+    },
+    "add": {
+        "message": "Add"
+    },
+    "add_store": {
+        "message": "Add Store"
+    },
+    "edit_store": {
+        "message": "Edit Store"
+    },
+    "storename_label": {
+        "message": "Name:"
+    },
+    "save_text": {
+        "message": "Save"
+    },
+    "info_text": {
+        "message": "Info"
+    },
+    "ok_text": {
+        "message": "Ok"
+    },
+    "question_text": {
+        "message": "Question"
+    },
+    "yes_text": {
+        "message": "Yes"
+    },
+    "no_text": {
+        "message": "No"
+    },
+    "options_title": {
+        "message": "Options"
+    },
+    "edit_item": {
+        "message": "Edit item"
+    },
+    "move_item": {
+        "message": "Move item to"
+    },
+    "delete_item": {
+        "message": "Delete item"
+    },
+    "edit_list_2": {
+        "message": "Edit list"
+    },
+    "uncheck_all_list_items": {
+        "message": "Uncheck all list items"
+    },
+    "move_all_list_items": {
+        "message": "Move all list items to"
+    },
+    "remove_all_list_items": {
+        "message": "Remove all list items"
+    },
+    "delete_list": {
+        "message": "Delete list"
+    },
+    "change_name": {
+        "message": "Change name"
+    },
+    "uncheck_all_store_names": {
+        "message": "Uncheck all store items"
+    },
+    "move_all_store_items_to": {
+        "message": "Move all store items to"
+    },
+    "remove_all_store_items": {
+        "message": "Remove all store items"
+    },
+    "delete_store": {
+        "message": "Delete store"
+    },
+    "sortby_title": {
+        "message": "Sort by"
+    },
+    "sortby_alphabet": {
+        "message": "Alphabetically"
+    },
+    "sortby_store": {
+        "message": "Store"
+    },
+    "sortby_type": {
+        "message": "Type"
+    },
+    "sortby_bought_status": {
+        "message": "Bought status"
+    },
+    "listselection_title": {
+        "message": "Select List"
+    },
+    "storeselection_title": {
+        "message": "Select Store"
+    },
+    "addfromfavorites_view_title": {
+        "message": "Add from My Favorites"
+    },
+    "enter_keyword": {
+        "message": "Enter keyword"
+    },
+    "favorites_item_list_label": {
+        "message": "List:"
+    },
+    "favorites_item_store_label": {
+        "message": "Store:"
+    },
+    "add_one_item": {
+        "message": "Add One Item"
+    },
+    "set_store": {
+        "message": "Set Store"
+    },
+    "some_selected_items_already_in": {
+        "message": "Some of the selected items are already in "
+    },
+    "add_item": {
+        "message": "Add item"
+    },
+    "edit_item": {
+        "message": "Edit item"
+    },
+    "item_name_label": {
+        "message": "Item Name:"
+    },
+    "item_list_label": {
+        "message": "List:"
+    },
+    "item_type_label": {
+        "message": "Item Type:"
+    },
+    "item_store_label": {
+        "message": "Store:"
+    },
+    "photo_label": {
+        "message": "Photo:"
+    },
+    "add_photo_label": {
+        "message": "Tap to add Photo"
+    },
+    "add_from_my_favorites": {
+        "message": "Add from My Faves"
+    },
+    "delete_text": {
+        "message": "Delete"
+    },
+    "items_saved_in": {
+        "message": "Items saved in the "
+    },
+    "list_dot": {
+        "message": " list."
+    },
+    "lists_not_available": {
+        "message": "Lists not available. First create a new list from Lists view."
+    },
+    "stores_not_available": {
+        "message": "Stores not available. First create a new store from Stores view."
+    },
+    "photo_source": {
+        "message": "Photo Source"
+    },
+    "take_from_camera": {
+        "message": "Take from camera"
+    },
+    "select_from_gallery": {
+        "message": "Select from gallery"
+    },
+    "gallery_launch_failed": {
+        "message": "Gallery launch failed."
+    },
+    "error_adding_photo": {
+        "message": "Error while adding photo."
+    },
+    "change_text": {
+        "message": "Change"
+    },
+    "photo_capture_not_supported": {
+        "message": "Photo capture is not supported."
+    },
+    "photo_saving_failed_do_you_want_to_save": {
+        "message": "Photo saving failed. Do you want to save item ?"
+    },
+    "image_data_reading_failed": {
+        "message": "Reading image data failed."
+    }    
+    
+}

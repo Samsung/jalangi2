@@ -1,0 +1,12 @@
+{
+    "memoryclearall_text": {"message": "Clear All"},
+    "memoryClose_text": {"message": "Close"},
+    "dialogheading_text": {"message": "Clear All Memory slots"},
+    "dialogcontent_text": {"message": "All memory slots will be cleared."},
+    "dialogokbutton_text": {"message": "OK"},
+    "dialogcancelbutton_text": {"message": "Cancel"},
+    "mnesave_text": {"message": "Save"},
+    "mnecancel_text": {"message": "Cancel"},
+    "malformedexpression_text": {"message": "Malformed expression"}
+}
+

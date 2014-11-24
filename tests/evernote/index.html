@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=360,height=720,user-scalable=no">
+    <meta charset="utf-8"/>
+    <meta name="description" content="Evernote-gear"/>
+    <title>Evernote-gear</title>
+    <link rel="stylesheet" href="themes/black.min.css" />
+    <link rel="stylesheet" href="./css/jquery.mobile.structure-1.3.2.css" />
+    <link rel="stylesheet" href="./css/jquery-ui-1.10.3.css" />
+    <script src="./js/libs/jquery-2.0.2.js"></script>
+    <script>
+        // disable animated page transitions
+        $(document).on("mobileinit", function() {
+            $.mobile.defaultPageTransition = "none";
+        });
+    </script>
+    <script src="./js/libs/jquery.mobile-1.3.2.js"></script>
+    <script src="./js/libs/jquery-ui-1.10.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+</head>
+<body>
+    <div data-role="page" id="ajax-loader">
+        <div data-role="content">
+            <img src="css/images/tw_widget_popup_activity.png" class="rotating"/>
+            <div class="sub">Initializing...</div>
+        </div>
+    </div>
+
+    <div data-role="page" id="main">
+        <div data-role="header" data-position="fixed">
+            <img src="./images/evernote_icon_title.png" class="ui-btn-left"/>
+            <h1><div class="header_title">Evernote</div></h1>
+        </div>
+    <div data-role="content" class="tails">
+        <a href="#" id="camera-btn" class="tail icon-camera" data-transition="none">
+            <div class="title">Photo</div>
+        </a>
+        <a href="#" id="audio-btn" class="tail icon-audio" data-transition="none">
+            <div class="title">Audio</div>
+        </a>
+        <a href="#" id="recent-btn" class="tail icon-recently" data-transition="none">
+            <div class="title">Recently</div>
+        </a>
+        <a href="#checkList" class="tail icon-checklist" data-transition="none">
+            <div class="title">Check list</div>
+        </a>
+    </div>
+    </div>
+
+    <div data-role="page" id="recent">
+        <div data-role="header" data-position="fixed">
+            <img src="./images/evernote_icon_title.png" class="ui-btn-left"/>
+            <h1><div class="header_title">Recently</div></h1>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" class="listview scrollable">
+                <li data-icon="false"><a href="#" data-transition="none">List 01</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 02</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 03</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 04</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 05</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 06</a></li>
+                <li data-icon="false"><a href="#" data-transition="none">List 07</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div data-role="page" id="checkList">
+        <div data-role="header" data-position="fixed">
+            <img src="./images/evernote_icon_title.png" class="ui-btn-left"/>
+            <h1><div class="header_title">Check list</div></h1>
+        </div>
+        <div data-role="content">
+
+            <div data-role="fieldcontain" class="checkListElements scrollable">
+                <fieldset data-role="controlgroup">
+                   <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                   <label for="checkbox-1">Cheetos</label>
+                   <input type="checkbox" name="checkbox-2" id="checkbox-2" class="custom" />
+                   <label for="checkbox-2">Doritos</label>
+                   <input type="checkbox" name="checkbox-3" id="checkbox-3" class="custom" />
+                   <label for="checkbox-3">Fritos</label>
+                   <input type="checkbox" name="checkbox-4" id="checkbox-4" class="custom" />
+                   <label for="checkbox-4">Sun Chips</label>
+                   <input type="checkbox" name="checkbox-1" id="checkbox-5" class="custom" />
+                   <label for="checkbox-5">Cheetos</label>
+                   <input type="checkbox" name="checkbox-2" id="checkbox-6" class="custom" />
+                   <label for="checkbox-6">Doritos</label>
+                   <input type="checkbox" name="checkbox-3" id="checkbox-7" class="custom" />
+                   <label for="checkbox-7">Fritos</label>
+                   <input type="checkbox" name="checkbox-4" id="checkbox-8" class="custom" />
+                   <label for="checkbox-8">Sun Chips</label>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="page" id="text-page">
+        <div data-role="header" data-position="fixed">
+            <img src="./images/evernote_icon_title.png" class="ui-btn-left"/>
+            <h1><div class="header_title" id="page_title">Title</div></h1>
+        </div>
+        <div data-role="content" class="text-page scrollable" id="page_content">
+            It was a real pleasure for me to finally get to meet you. My colleagues join me in sending you our holiday.
+            It was a real pleasure for me to finally get to meet you. My colleagues join me in sending you our holiday.
+        </div>
+    </div>
+
+    <div data-role="page" id="progress-page">
+        <div data-role="header" data-position="fixed">
+            <h1><div id="progress-page-title" class="header_title"></div></h1>
+        </div>
+        <div data-role="content">
+            <div id="progress-container">
+                <div id="progress-bar-title"></div>
+                <div id="progress-bar"></div>
+                <div class="progress-info" id="progress-info-left"></div>
+                <div class="progress-info" id="progress-info-right"></div>
+            </div>
+        </div>
+    </div>
+
+   <script src="./js/core/core.js"></script>
+   <script src="./js/app.js"></script>
+
+</body>
+</html>

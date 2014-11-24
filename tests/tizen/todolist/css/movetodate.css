@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2012, Intel Corporation.
+ *
+ * This program is licensed under the terms and conditions of the
+ * Apache License, version 2.0.  The full text of the Apache License is at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+#move-to-date {
+	position: absolute;
+	width: 680px;
+	height: 640px;
+	display:none;
+	z-Index:1001;
+	border-radius: 10px;
+	background-color: #D1ECFF;
+	left: expression(window.width > window.height ? "300px": "20px" );
+	top: expression(window.width > window.height ? "40px": "320px" );
+}
+
+#move-to-date .header {
+	height: 66px;
+	border-radius: 10px 10px 0 0;
+	padding: 0px;
+	background-image: url('../images/box-corner-left-top.png'),
+                      url('../images/box-corner-right-top-tab.png'),
+                      url('../images/box-corner-middle-top.png');
+	background-position: left top, right top, left top;
+	background-repeat: no-repeat, no-repeat, repeat-x;
+}
+
+#move-to-date .header label {
+	font-family: 'Lato Light', Helvetica, sans;
+	font-size: 45px;
+	display: inline-block;
+	color: #8C8C8C;
+	text-shadow: none;
+	text-transform: uppercase;
+	margin-left: 10px;
+}
+
+#move-to-date .movetodate_form {
+	height: 453px; /* (640-66-121) */
+	width: 100%;
+	background-image: url('../images/box-corner-left-bottom.png'),
+                      url('../images/box-corner-right-bottom.png'),
+                      url('../images/box-corner-left-middle.png'),
+                      url('../images/box-corner-right-middle.png'),
+                      url('../images/box-corner-middle-bottom.png');
+	background-position: left bottom, right bottom, left top, right top;
+	background-repeat: no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
+}
+
+/*************************************/
+#move-to-date form img
+{
+	margin-right: 10px;
+	margin-left: 45px;
+}
+
+#move-to-date form label {
+	font-size: 42px;
+	font-family: 'Lato Regular';
+	color: #666666;
+	text-align: center;	
+ 	margin-left: 40px;
+ 	margin-top: 20px;
+} 
+
+#move-to-date .container .dateselector {
+	height: 510px;
+}
+#move-to-date .container .dateselector .dateselectortable {
+	height: 510px;
+	width: 680px;
+}
+/* #move-to-date .container .dateselector .dateselectortable tr td{
+	margin-left: -120px;
+}
+ */
+#move-to-date .container .dateselector .dateselectortable td {
+	height: 80px;
+}
+
+#move-to-date form label[for="movetodate_dayvalue"]{
+	background: #C4D4DF;
+}
+#move-to-date form label[for="movetodate_monthvalue"]{
+	background: #C4D4DF;
+}
+#move-to-date form label[for="movetodate_yearvalue"]{
+	background: #C4D4DF;
+}
+
+/*************************************/
+#move-to-date a.close {
+	position: absolute;
+	top: 12px;
+	right: 30px;
+}
+
+#move-to-date a.close img {
+	vertical-align: middle;
+	height: 60px;
+	width: 60px;
+}
+
+#move-to-date .footer {
+	height: 121px;
+	width: 100%;
+	background-color: #eeeeee;
+	border-radius: 0px 0px 10px 10px;
+	background-image: url('../images/box-shadow-big.png');
+	background-position: center top;
+	background-repeat: no-repeat;
+}
+
+#move-to-date .buttons {
+	height: 80px;
+	float: right;
+	margin-top: 20px;
+}
+
+#move-to-date fieldset.save {
+	margin-left: 50px;
+	vertical-align: middle;
+}
+
+#move-to-date fieldset.save .text {
+	font-size: 45px;
+	color: #595959;
+	font-family: 'Lato Regular';
+	vertical-align: middle;
+}
+
+#move-to-date fieldset.save img {
+	height: 80px;
+	width: 80px;
+	vertical-align: middle;
+}
+

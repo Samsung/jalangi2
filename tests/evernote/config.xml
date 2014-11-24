@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://sample-web-application.tizen.org/Evernote-gear" version="2.2.0" viewmodes="fullscreen">
+	<tizen:application id="QiIuG1b0CA.Evernote" package="QiIuG1b0CA" required_version="2.2"/>
+	<content src="index.html"/>
+	<icon src="icon.png"/>
+	<name>Web Evernote</name>
+	<feature name="http://tizen.org/feature/screen.size.normal.720.1280"/>
+	<tizen:privilege name="http://tizen.org/privilege/application.launch"/>
+	<tizen:privilege name="http://tizen.org/privilege/filesystem.read"/>
+	<tizen:setting screen-orientation="portrait" context-menu="disable" background-support="disable" encryption="disable" install-location="auto"/>
+</widget>

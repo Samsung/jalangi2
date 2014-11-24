@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://github.com/01org/webapps-annex" version="1.0" viewmodes="fullscreen">
+    <icon src="annex-icon.png"/>
+    <content src="index.html"/>
+<name>annex</name>
+<tizen:application id="33CFo0eFJe" required_version="1.0"/>
+<tizen:setting screen-orientation="landscape" contextmenu="enable"/>
+</widget>
