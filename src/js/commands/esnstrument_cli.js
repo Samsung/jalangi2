@@ -32,6 +32,10 @@ if (typeof J$ === 'undefined') {
         require("./../../../"+header);
     });
 
+    var proxy = require("rewriting-proxy");
+    var instUtil = require("../instrument/instUtil");
+    var fs = require('fs');
+    var path = require('path');
 
     var instrumentCode = sandbox.instrumentCode;
     var INITIAL_IID_FILE_NAME = "jalangi_initialIID.json";
@@ -41,12 +45,14 @@ if (typeof J$ === 'undefined') {
     var HOP = Constants.HOP;
     var FILESUFFIX1 = "_jalangi_";
     var JALANGI_VAR = Constants.JALANGI_VAR;
+    var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
 
     var orig2Inst = {};
-    var instCodeFileName;
-    var curFileName;
 
 
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
 
     //***************************
     // Node.js specific stuff
@@ -60,7 +66,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function makeInstCodeFileName(name) {
-        return name.replace(/.js$/, FILESUFFIX1 + ".js");
+        return name.replace(/.js$/, FILESUFFIX1 + ".js").replace(/.html$/, FILESUFFIX1 + ".html");
     }
 
 
@@ -105,7 +111,7 @@ if (typeof J$ === 'undefined') {
      * if not yet open, open the IID map file and write the header.
      * @param {string} outputDir an optional output directory for the sourcemap file
      */
-    function writeIIDMapFile(outputDir, initIIDs, isAppend, iidSourceInfo, nBranches) {
+    function writeIIDMapFile(outputDir, initIIDs, isAppend, iidSourceInfo, nBranches, curFileName) {
         var traceWfh, fs = require('fs'), path = require('path');
         var smapFile = path.join(outputDir, SMAP_FILE_NAME);
         if (initIIDs) {
@@ -160,22 +166,6 @@ if (typeof J$ === 'undefined') {
     }
 
 
-    function getCode(filename) {
-        var fs = require('fs');
-        return fs.readFileSync(filename, "utf8");
-    }
-
-    function saveCode(n_code, isAppend) {
-        var fs = require('fs');
-        var path = require('path');
-        //if (isAppend) {
-        //    fs.appendFileSync(instCodeFileName, n_code, "utf8");
-        //} else {
-            fs.writeFileSync(instCodeFileName, n_code, "utf8");
-
-//        }
-    }
-
     // args.wrapProgram can be true or false
     // args.initIID can be true or false
     // args.dirIIDFile can be undefined
@@ -183,8 +173,11 @@ if (typeof J$ === 'undefined') {
     // args.fileName must be a string
     // args.instFileName must be a string
 
-    function instrumentAux(code, args) {
+    function instrumentCodeManageIIDFiles(code, args) {
         orig2Inst = {};
+        var instCodeFileName;
+        var curFileName;
+
         if (!args.dirIIDFile) {
             throw new Error("must provide dirIIDFile");
         }
@@ -196,16 +189,49 @@ if (typeof J$ === 'undefined') {
 
         var startIids = loadInitialIID(args.dirIIDFile, args.initIID);
 
-        var wrapProgram = HOP(args, 'wrapProgram') ? args.wrapProgram : true;
-        var codeAndMData = instrumentCode({code:code, wrapWithTryCatch:wrapProgram, callAnalysisHooks:false, instCodeFileName:instCodeFileName, startIids:startIids});
+        var codeAndMData = instrumentCode({code:code, wrapWithTryCatch:args.wrapProgram, callAnalysisHooks:false, instCodeFileName:instCodeFileName, startIids:startIids});
 
         storeInitialIID(args.dirIIDFile, codeAndMData.startIids);
-//        var extraCode = writeIIDMapFile(args.dirIIDFile, args.initIID, false, codeAndMData.iidSourceInfo, codeAndMData.nBranches);
-        var extraCode = writeIIDMapFile(args.dirIIDFile, args.initIID, args.inlineIID, codeAndMData.iidSourceInfo, codeAndMData.nBranches);
+        var extraCode = writeIIDMapFile(args.dirIIDFile, args.initIID, args.inlineIID, codeAndMData.iidSourceInfo, codeAndMData.nBranches, curFileName);
         if (extraCode !== null) {
             codeAndMData.code = extraCode+codeAndMData.code;
         }
         return codeAndMData;
+    }
+
+
+    function createOrigScriptFilename(name) {
+        return name.replace(new RegExp(".js$"), "_orig_.js");
+    }
+
+
+    var dirIIDFile, inlineIID, initIID, analyses, extraAppScripts, fileName, instFileName;
+
+    function rewriteInlineScript(src, metadata) {
+        var instname = instUtil.createFilenameForScript(metadata.url);
+        var origname = createOrigScriptFilename(instname);
+        var options = {
+            wrapProgram: true,
+            filename: origname,
+            instFileName: instname,
+            dirIIDFile: dirIIDFile,
+            initIID: initIID,
+            inlineIID: inlineIID
+        };
+
+        if (initIID) {
+            initIID = false;
+        }
+        var instResult = instrumentCodeManageIIDFiles(src, options);
+        var instrumentedCode = instResult.code;
+
+        fs.writeFileSync(path.join(dirIIDFile, origname), src, "utf8");
+        fs.writeFileSync(path.join(dirIIDFile, instname), instrumentedCode, "utf8");
+        return instrumentedCode;
+    }
+
+    function getJalangiRoot() {
+        return path.join(__dirname, '../../..');
     }
 
 
@@ -225,11 +251,27 @@ if (typeof J$ === 'undefined') {
             help: "Instrumented file name (with path).  The default is to append _jalangi_ to the original JS file name",
             defaultValue: undefined
         });
+        parser.addArgument(['--extra_app_scripts'], {help: "list of extra application scripts to be injected and instrumented, separated by path.delimiter"});
+        parser.addArgument(['--analysis'], {
+            help: "Analysis script.",
+            action: "append"
+        });
+
         parser.addArgument(['file'], {
             help: "file to instrument",
             nargs: 1
         });
         var args = parser.parseArgs();
+
+        initIID = args.initIID;
+        inlineIID = args.inlineIID;
+        dirIIDFile = args.dirIIDFile;
+
+        analyses = args.analysis;
+        extraAppScripts = [];
+        if (args.extra_app_scripts) {
+            extraAppScripts = args.extra_app_scripts.split(path.delimiter);
+        }
 
         if (args.file.length === 0) {
             console.error("must provide file to instrument");
@@ -237,18 +279,33 @@ if (typeof J$ === 'undefined') {
         }
 
         var fname = args.file[0];
-        args.filename = sanitizePath(require('path').resolve(process.cwd(), fname));
-        args.instFileName = args.out ? args.out : makeInstCodeFileName(fname);
+        fileName = sanitizePath(require('path').resolve(process.cwd(), fname));
+        instFileName = args.out ? args.out : makeInstCodeFileName(fname);
 
-        var codeAndMData = instrumentAux(getCode(fname), args);
-        saveCode(codeAndMData.code, args.inlineIID);
+        var origCode = fs.readFileSync(fname, "utf8");
+        var instCode;
+
+        if (fname.endsWith(".js")) {
+            instCode = instrumentCodeManageIIDFiles(origCode, {
+                wrapProgram: true,
+                filename: fileName,
+                instFileName: instFileName,
+                dirIIDFile: dirIIDFile,
+                initIID: initIID,
+                inlineIID: inlineIID
+            }).code;
+
+        } else {
+            instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot()));
+        }
+        fs.writeFileSync(instFileName, instCode, "utf8");
     }
 
 
     if (typeof window === 'undefined' && (typeof require !== "undefined") && require.main === module) {
         instrumentFile();
     } else {
-        exports.instrumentCodeInternal = instrumentAux;
+        exports.instrumentCodeManageIIDFiles = instrumentCodeManageIIDFiles;
     }
 }(J$));
 

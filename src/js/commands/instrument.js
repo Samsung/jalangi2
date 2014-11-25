@@ -114,7 +114,7 @@ function instrument(options, cb) {
             firstEntry = false;
         }
 
-        var instResult = esnstrument.instrumentCodeInternal(src, options);
+        var instResult = esnstrument.instrumentCodeManageIIDFiles(src, options);
         var instrumentedCode = instResult.code;
         // TODO make this async?
         fs.writeFileSync(path.join(copyDir, origname), src);
@@ -253,7 +253,7 @@ function instrument(options, cb) {
 
         var instResult;
         try {
-            instResult = esnstrument.instrumentCodeInternal(this.data, options);
+            instResult = esnstrument.instrumentCodeManageIIDFiles(this.data, options);
         } catch (e) {
             if (e instanceof SyntaxError) {
                 // just output the same file
