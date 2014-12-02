@@ -177,7 +177,7 @@ if (typeof J$ === 'undefined') {
     var iid;
     var opIid;
     var hasInitializedIIDs = false;
-    var curFileName = null;
+    var curFileName;
     var instCodeFileName;
     var iidSourceInfo = {};
 
@@ -209,7 +209,7 @@ if (typeof J$ === 'undefined') {
 
     function printLineInfoAux(i, ast) {
         if (ast && ast.loc) {
-            iidSourceInfo[i] = [curFileName, ast.loc.start.line, ast.loc.start.column + 1, ast.loc.end.line, ast.loc.end.column + 1];
+            iidSourceInfo[i] = [ast.loc.start.line, ast.loc.start.column + 1, ast.loc.end.line, ast.loc.end.column + 1];
             //writeLineToIIDMap('iids[' + i + '] = [filename,' + (ast.loc.start.line) + "," + (ast.loc.start.column + 1) + "];\n");
         }
 //        else {
@@ -728,11 +728,11 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
-    function createCallAsScriptEnterStatement(node, instrumentedFileName) {
+    function createCallAsScriptEnterStatement(node) {
         printIidToLoc(node);
-        var ret = replaceInStatement(logScriptEntryFunName + "(" + RP + "1," + RP + "2)",
+        var ret = replaceInStatement(logScriptEntryFunName + "(" + RP + "1," + RP + "2, " + RP + "3)",
             getIid(),
-            createLiteralAst(instrumentedFileName));
+            createLiteralAst(instCodeFileName), createLiteralAst(curFileName));
         transferLoc(ret[0].expression, node);
         return ret;
     }
@@ -861,10 +861,7 @@ if (typeof J$ === 'undefined') {
      *
      */
     function instrumentScriptEntryExit(node, body0) {
-        var modFile = (typeof instCodeFileName === "string") ?
-            instCodeFileName :
-            "internal";
-        var body = createCallAsScriptEnterStatement(node, modFile).
+        var body = createCallAsScriptEnterStatement(node).
             concat(syncDefuns(node, scope, true)).
             concat(body0);
         return body;
@@ -1473,29 +1470,26 @@ if (typeof J$ === 'undefined') {
     // the code will not be instrumented
     var noInstr = "// JALANGI DO NOT INSTRUMENT";
 
-    function getInitialIIDCounters(forEval) {
-        var adj = forEval?IID_INC_STEP / 2:0;
-        return {condCount: IID_INC_STEP + adj + 0, iid: IID_INC_STEP + adj + 1, opIid: IID_INC_STEP + adj + 2}
-    }
-
-    function initializeIIDCountersForEval() {
+    function initializeIIDCounters(forEval) {
         if (!hasInitializedIIDs) {
+            var adj = forEval ? IID_INC_STEP / 2 : 0;
+            condCount = IID_INC_STEP + adj + 0;
+            iid = IID_INC_STEP + adj + 1;
+            opIid = IID_INC_STEP + adj + 2;
             hasInitializedIIDs = true;
-            return getInitialIIDCounters(true);
-        } else {
-            return {condCount: condCount, iid: iid, opIid: opIid};
         }
     }
 
+
     function instrumentEvalCode(code, iid) {
-        return instrumentCode({code:code, thisIid:iid, wrapWithTryCatch:false, callAnalysisHooks:true, startIids:initializeIIDCountersForEval()}).code;
+        return instrumentCode({code:code, thisIid:iid, wrapWithTryCatch:false, callAnalysisHooks:true}).code;
     }
 
     /**
      * Instruments the provided code.
      *
-     * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, startIids: object, instCodeFileName: string }} options
-     * @return {{code:string, instAST: object, iidSourceInfo: object, startIids: object, nBranches: int}}
+     * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string }} options
+     * @return {{code:string, instAST: object, iidSourceInfo: object, nBranches: int}}
      *
      */
     function instrumentCode(options) {
@@ -1504,10 +1498,9 @@ if (typeof J$ === 'undefined') {
             callAnalysisHooks = options.callAnalysisHooks,
             code = options.code, thisIid = options.thisIid;
 
-        iid = options.startIids.iid;
-        condCount = options.startIids.condCount;
-        opIid = options.startIids.opIid;
+        initializeIIDCounters(!options.wrapWithTryCatch);
         instCodeFileName = options.instCodeFileName?options.instCodeFileName:"internal";
+        curFileName = options.origCodeFileName?options.origCodeFileName:"internal";
 
 
         if (callAnalysisHooks && sandbox.analysis && sandbox.analysis.instrumentCodePre) {
@@ -1540,7 +1533,6 @@ if (typeof J$ === 'undefined') {
     }
 
     sandbox.instrumentCode = instrumentCode;
-    sandbox.instrumentCode.getInitialIIDCounters = getInitialIIDCounters;
     sandbox.instrumentEvalCode = instrumentEvalCode;
 
 }(J$));

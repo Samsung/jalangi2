@@ -38,7 +38,6 @@ if (typeof J$ === 'undefined') {
     var path = require('path');
 
     var instrumentCode = sandbox.instrumentCode;
-    var INITIAL_IID_FILE_NAME = "jalangi_initialIID.json";
     var COVERAGE_FILE_NAME = "jalangi_coverage.json";
     var SMAP_FILE_NAME = "jalangi_sourcemap.js";
     var Constants = sandbox.Constants;
@@ -47,7 +46,6 @@ if (typeof J$ === 'undefined') {
     var JALANGI_VAR = Constants.JALANGI_VAR;
     var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
 
-    var orig2Inst = {};
 
 
     String.prototype.endsWith = function(suffix) {
@@ -69,34 +67,10 @@ if (typeof J$ === 'undefined') {
         return name.replace(/.js$/, FILESUFFIX1 + ".js").replace(/.html$/, FILESUFFIX1 + ".html");
     }
 
-
-    function loadInitialIID(outputDir, initIIDs) {
-        var path = require('path');
-        var fs = require('fs');
-        var iidf = path.join(outputDir ? outputDir : process.cwd(), INITIAL_IID_FILE_NAME);
-        var startIids;
-
-        if (initIIDs) {
-            startIids = sandbox.instrumentCode.getInitialIIDCounters(false);
-        } else {
-            try {
-                var line;
-                startIids = JSON.parse(line = fs.readFileSync(iidf, "utf8"));
-            } catch (e) {
-                startIids = sandbox.instrumentCode.getInitialIIDCounters(false);
-            }
-        }
-        return startIids;
+    function makeSMapFileName(name) {
+        return name.replace(/.js$/, ".json");
     }
 
-
-    function storeInitialIID(outputDir, iids) {
-        var path = require('path');
-        var fs = require('fs');
-        var line;
-        var iidf = path.join(outputDir ? outputDir : process.cwd(), INITIAL_IID_FILE_NAME);
-        fs.writeFileSync(iidf, JSON.stringify(iids));
-    }
 
     function writeLineToIIDMap(fs, traceWfh, fh, str) {
         if (fh !== null) {
@@ -111,14 +85,9 @@ if (typeof J$ === 'undefined') {
      * if not yet open, open the IID map file and write the header.
      * @param {string} outputDir an optional output directory for the sourcemap file
      */
-    function writeIIDMapFile(outputDir, initIIDs, isAppend, iidSourceInfo, nBranches, curFileName) {
+    function writeIIDMapFile(outputDir, isAppend, iidSourceInfo, nBranches, curFileName) {
         var traceWfh, fs = require('fs'), path = require('path');
         var smapFile = path.join(outputDir, SMAP_FILE_NAME);
-        if (initIIDs) {
-            traceWfh = fs.openSync(smapFile, 'w');
-        } else {
-            traceWfh = fs.openSync(smapFile, 'a');
-        }
 
         var fh = null;
         if (isAppend) {
@@ -166,68 +135,31 @@ if (typeof J$ === 'undefined') {
     }
 
 
-    // args.wrapProgram can be true or false
-    // args.initIID can be true or false
-    // args.dirIIDFile can be undefined
-    // args.inlineIID can be true or false
-    // args.fileName must be a string
-    // args.instFileName must be a string
-
-    function instrumentCodeManageIIDFiles(code, args) {
-        orig2Inst = {};
-        var instCodeFileName;
-        var curFileName;
-
-        if (!args.dirIIDFile) {
-            throw new Error("must provide dirIIDFile");
-        }
-        curFileName = args.filename;
-        instCodeFileName = args.instFileName;
-        if (curFileName && instCodeFileName) {
-            orig2Inst[curFileName] = instCodeFileName;
-        }
-
-        var startIids = loadInitialIID(args.dirIIDFile, args.initIID);
-
-        var codeAndMData = instrumentCode({code:code, wrapWithTryCatch:args.wrapProgram, callAnalysisHooks:false, instCodeFileName:instCodeFileName, startIids:startIids});
-
-        storeInitialIID(args.dirIIDFile, codeAndMData.startIids);
-        var extraCode = writeIIDMapFile(args.dirIIDFile, args.initIID, args.inlineIID, codeAndMData.iidSourceInfo, codeAndMData.nBranches, curFileName);
-        if (extraCode !== null) {
-            codeAndMData.code = extraCode+codeAndMData.code;
-        }
-        return codeAndMData;
-    }
-
-
     function createOrigScriptFilename(name) {
         return name.replace(new RegExp(".js$"), "_orig_.js");
     }
 
 
-    var dirIIDFile, inlineIID, initIID, analyses, extraAppScripts, fileName, instFileName;
+    var outDir, inlineIID, analyses, extraAppScripts, fileName, instFileName;
 
     function rewriteInlineScript(src, metadata) {
         var instname = instUtil.createFilenameForScript(metadata.url);
         var origname = createOrigScriptFilename(instname);
-        var options = {
-            wrapProgram: true,
-            filename: origname,
-            instFileName: instname,
-            dirIIDFile: dirIIDFile,
-            initIID: initIID,
-            inlineIID: inlineIID
-        };
 
-        if (initIID) {
-            initIID = false;
-        }
-        var instResult = instrumentCodeManageIIDFiles(src, options);
-        var instrumentedCode = instResult.code;
+        var instCodeAndData = instrumentCode({code:src, wrapWithTryCatch:true, callAnalysisHooks:false, origCodeFileName:origname, instCodeFileName:instname});
+        instCodeAndData.iidSourceInfo.nBranches = instCodeAndData.nBranches;
+        instCodeAndData.iidSourceInfo.original = origname;
+        instCodeAndData.iidSourceInfo.instrumented = instname;
+        var preprend = JSON.stringify(instCodeAndData.iidSourceInfo);
+        var instCode = JALANGI_VAR+".iids = "+preprend+";\n"+instCodeAndData.code;
 
-        fs.writeFileSync(path.join(dirIIDFile, origname), src, "utf8");
-        fs.writeFileSync(path.join(dirIIDFile, instname), instrumentedCode, "utf8");
-        return instrumentedCode;
+        fs.writeFileSync(instFileName, instCode, "utf8");
+
+
+        fs.writeFileSync(path.join(outDir, origname), src, "utf8");
+        fs.writeFileSync(makeSMapFileName(path.join(outDir, instname)), preprend, "utf8");
+        fs.writeFileSync(path.join(outDir, instname), instCode, "utf8");
+        return instCode;
     }
 
     function getJalangiRoot() {
@@ -241,10 +173,9 @@ if (typeof J$ === 'undefined') {
             addHelp: true,
             description: "Command-line utility to perform instrumentation"
         });
-        parser.addArgument(['--initIID'], {help: "Initialize IIDs to 0", action: 'storeTrue'});
         parser.addArgument(['--inlineIID'], {help: "Inline IIDs in the instrumented file", action: 'storeTrue'});
-        parser.addArgument(['--dirIIDFile'], {
-            help: "Directory containing " + SMAP_FILE_NAME + " and " + INITIAL_IID_FILE_NAME,
+        parser.addArgument(['--outDir'], {
+            help: "Directory containing scripts inlined in html",
             defaultValue: process.cwd()
         });
         parser.addArgument(['--out'], {
@@ -263,9 +194,8 @@ if (typeof J$ === 'undefined') {
         });
         var args = parser.parseArgs();
 
-        initIID = args.initIID;
         inlineIID = args.inlineIID;
-        dirIIDFile = args.dirIIDFile;
+        outDir = args.outDir;
 
         analyses = args.analysis;
         extraAppScripts = [];
@@ -278,23 +208,24 @@ if (typeof J$ === 'undefined') {
             process.exit(1);
         }
 
-        var fname = args.file[0];
-        fileName = sanitizePath(require('path').resolve(process.cwd(), fname));
-        instFileName = args.out ? args.out : makeInstCodeFileName(fname);
+        fileName = sanitizePath(args.file[0]);
+        instFileName = args.out ? args.out : makeInstCodeFileName(fileName);
 
-        var origCode = fs.readFileSync(fname, "utf8");
-        var instCode;
+        var origCode = fs.readFileSync(fileName, "utf8");
+        var instCodeAndData, instCode;
 
-        if (fname.endsWith(".js")) {
-            instCode = instrumentCodeManageIIDFiles(origCode, {
-                wrapProgram: true,
-                filename: fileName,
-                instFileName: instFileName,
-                dirIIDFile: dirIIDFile,
-                initIID: initIID,
-                inlineIID: inlineIID
-            }).code;
-
+        if (fileName.endsWith(".js")) {
+            instCodeAndData = instrumentCode({code:origCode, wrapWithTryCatch:true, callAnalysisHooks:false, origCodeFileName:fileName, instCodeFileName:instFileName});
+            instCodeAndData.iidSourceInfo.nBranches = instCodeAndData.nBranches;
+            instCodeAndData.iidSourceInfo.original = fileName;
+            instCodeAndData.iidSourceInfo.instrumented = instFileName;
+            var preprend = JSON.stringify(instCodeAndData.iidSourceInfo);
+            if (inlineIID) {
+                instCode = JALANGI_VAR + ".iids = " + preprend + ";\n" + instCodeAndData.code;
+            } else {
+                instCode = instCodeAndData.code;
+            }
+            fs.writeFileSync(makeSMapFileName(instFileName), preprend, "utf8");
         } else {
             instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot()));
         }
@@ -304,8 +235,6 @@ if (typeof J$ === 'undefined') {
 
     if (typeof window === 'undefined' && (typeof require !== "undefined") && require.main === module) {
         instrumentFile();
-    } else {
-        exports.instrumentCodeManageIIDFiles = instrumentCodeManageIIDFiles;
     }
 }(J$));
 

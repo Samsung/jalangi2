@@ -339,9 +339,9 @@ if (typeof J$ === 'undefined') {
     }
 
     // Script enter
-    function Se(iid, val) {
+    function Se(iid, val, origFileName) {
         if (sandbox.analysis && sandbox.analysis.scriptEnter) {
-            sandbox.analysis.scriptEnter(iid, val);
+            sandbox.analysis.scriptEnter(iid, val, origFileName);
         }
     }
 

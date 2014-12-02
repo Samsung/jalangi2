@@ -47,7 +47,7 @@ API compared to analysis.js.  An analysis in analysis.js can be written using th
 
         this.functionExit = function(iid, returnVal, exceptionVal){return {returnVal:returnVal,exceptionVal:exceptionVal,isBacktrack:false};};
 
-        this.scriptEnter = function(iid, val){};
+        this.scriptEnter = function(iid, instrumentedFileName, originalFileName){};
 
         this.scriptExit = function(iid, exceptionVal){return {exceptionVal:exceptionVal,isBacktrack:false};};
 
