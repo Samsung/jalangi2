@@ -18,8 +18,14 @@
 
 /*jslint node: true */
 
+acorn = require("acorn");
+escodegen = require("escodegen");
+require('../headers').headerSources.forEach(function (header) {
+    require("./../../../" + header);
+});
+
 var proxy = require("rewriting-proxy");
-var esnstrument = require("../commands/esnstrument_cli");
+require("../instrument/esnstrument");
 var instUtil = require("../instrument/instUtil");
 var fs = require('fs');
 var path = require("path");
@@ -34,6 +40,7 @@ var ArgumentParser = require('argparse').ArgumentParser;
 
 var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
 var JALANGI_RUNTIME_DIR = "jalangiRuntime";
+var JALANGI_VAR = "J$";
 
 /**
  * computes the Jalangi root directory based on the directory of the script
@@ -73,6 +80,7 @@ function instrument(options, cb) {
     instUtil.setHeaders();
 
     var instrumentInline = options.instrumentInline;
+    var inlineIID = options.inlineIID;
 
     var copyRuntime = options.copy_runtime;
 
@@ -102,21 +110,24 @@ function instrument(options, cb) {
     function rewriteInlineScript(src, metadata) {
         var instname = instUtil.createFilenameForScript(metadata.url);
         var origname = createOrigScriptFilename(instname);
-        var options = {
-            wrapProgram: true,
-            filename: origname,
-            instFileName: instname,
-            dirIIDFile: copyDir,
-            initIID: firstEntry,
-            inlineIID: instrumentInline
-        };
-        if (firstEntry) {
-            firstEntry = false;
-        }
 
-        var instResult = esnstrument.instrumentCodeManageIIDFiles(src, options);
-        var instrumentedCode = instResult.code;
-        // TODO make this async?
+        var options = {
+            code:src,
+            wrapWithTryCatch: true,
+            callAnalysisHooks: false,
+            origCodeFileName: origname,
+            instCodeFileName: instname
+        };
+
+        var instResult = J$.instrumentCode(options);
+        var preprend = JSON.stringify(instResult.iidSourceInfo);
+        var instrumentedCode;
+        if (inlineIID) {
+            instrumentedCode = JALANGI_VAR + ".iids = " + preprend + ";\n" + instResult.code;
+        } else {
+            instrumentedCode = instResult.code;
+        }
+        fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, ".json"), preprend, "utf8");
         fs.writeFileSync(path.join(copyDir, origname), src);
         fs.writeFileSync(path.join(copyDir, instname), instrumentedCode);
         return instrumentedCode;
@@ -217,7 +228,6 @@ function instrument(options, cb) {
 
     InstrumentJSStream.prototype._transform = accumulateData;
 
-    var firstEntry = true;
 
 
     function writeMetadataToFile(metadata, path) {
@@ -240,20 +250,16 @@ function instrument(options, cb) {
             console.log("instrumenting " + this.origScriptName);
         }
         var options = {
-            wrapProgram: true,
-            filename: this.origScriptName,
-            instFileName: this.instScriptName,
-            dirIIDFile: copyDir,
-            initIID: firstEntry,
-            inlineIID: instrumentInline
+            code: this.data,
+            wrapWithTryCatch: true,
+            callAnalysisHooks: false,
+            origCodeFileName: this.origScriptName,
+            instCodeFileName: this.instScriptName
         };
-        if (firstEntry) {
-            firstEntry = false;
-        }
 
         var instResult;
         try {
-            instResult = esnstrument.instrumentCodeManageIIDFiles(this.data, options);
+            instResult = J$.instrumentCode(options);
         } catch (e) {
             if (e instanceof SyntaxError) {
                 // just output the same file
@@ -263,12 +269,15 @@ function instrument(options, cb) {
             }
         }
         if (instResult) {
-            if (typeof instResult === 'string') {
-                // this can occur if it's a script we're not supposed to instrument
-                this.push(instResult);
+            var preprend = JSON.stringify(instResult.iidSourceInfo);
+            var instrumentedCode;
+            if (inlineIID) {
+                instrumentedCode = JALANGI_VAR + ".iids = " + preprend + ";\n" + instResult.code;
             } else {
-                this.push(instResult.code);
+                instrumentedCode = instResult.code;
             }
+            fs.writeFileSync(this.instScriptName.replace(/.js$/, ".json"), preprend, "utf8");
+            this.push(instrumentedCode);
         }
         cb();
     };
@@ -278,7 +287,7 @@ function instrument(options, cb) {
         assert.ok(fileName.indexOf(appDir) === 0, "oops");
         var scriptRelativePath = fileName.substring(appDir.length + 1);
         var origScriptCopyName = createOrigScriptFilename(scriptRelativePath);
-        readStream.pipe(new InstrumentJSStream(undefined, createOrigScriptFilename(fileName), fileName)).pipe(writeStream);
+        readStream.pipe(new InstrumentJSStream(undefined, path.join(copyDir,origScriptCopyName), path.join(copyDir,scriptRelativePath))).pipe(writeStream);
         readStream.pipe(fs.createWriteStream(path.join(copyDir, origScriptCopyName)));
     }
 
@@ -428,6 +437,7 @@ if (require.main === module) { // main script
     parser.addArgument(['-x', '--exclude'], {help: "do not instrument any scripts whose file path contains this substring"});
     parser.addArgument(['--only_include'], {help: "list of path prefixes specifying which sub-directories should be instrumented, separated by path.delimiter"});
     parser.addArgument(['-i', '--instrumentInline'], {help: "instrument inline scripts", action: 'storeTrue'});
+    parser.addArgument(['--inlineIID'], {help: "inline source map in instrumented files", action: 'storeTrue'});
     parser.addArgument(['--analysis'], {
         help: "Analysis script.",
         action: "append"

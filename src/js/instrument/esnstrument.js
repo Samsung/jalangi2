@@ -173,11 +173,11 @@ if (typeof J$ === 'undefined') {
 
     var IID_INC_STEP = 8;
     // current static identifier for each conditional expression
-    var condCount;
-    var iid;
+    var condIid;
+    var memIid;
     var opIid;
     var hasInitializedIIDs = false;
-    var curFileName;
+    var origCodeFileName;
     var instCodeFileName;
     var iidSourceInfo = {};
 
@@ -185,18 +185,18 @@ if (typeof J$ === 'undefined') {
 
 
     function getIid() {
-        var tmpIid = iid;
-        iid = iid + IID_INC_STEP;
+        var tmpIid = memIid;
+        memIid = memIid + IID_INC_STEP;
         return createLiteralAst(tmpIid);
     }
 
     function getPrevIidNoInc() {
-        return createLiteralAst(iid - IID_INC_STEP);
+        return createLiteralAst(memIid - IID_INC_STEP);
     }
 
     function getCondIid() {
-        var tmpIid = condCount;
-        condCount = condCount + IID_INC_STEP;
+        var tmpIid = condIid;
+        condIid = condIid + IID_INC_STEP;
         return createLiteralAst(tmpIid);
     }
 
@@ -210,22 +210,18 @@ if (typeof J$ === 'undefined') {
     function printLineInfoAux(i, ast) {
         if (ast && ast.loc) {
             iidSourceInfo[i] = [ast.loc.start.line, ast.loc.start.column + 1, ast.loc.end.line, ast.loc.end.column + 1];
-            //writeLineToIIDMap('iids[' + i + '] = [filename,' + (ast.loc.start.line) + "," + (ast.loc.start.column + 1) + "];\n");
         }
-//        else {
-//            console.log(i+":undefined:undefined");
-//        }
     }
 
     // iid+2 is usually unallocated
     // we are using iid+2 for the sub-getField operation of a method call
     // see analysis.M
     function printSpecialIidToLoc(ast0) {
-        printLineInfoAux(iid + 2, ast0);
+        printLineInfoAux(memIid + 2, ast0);
     }
 
     function printIidToLoc(ast0) {
-        printLineInfoAux(iid, ast0);
+        printLineInfoAux(memIid, ast0);
     }
 
     function printOpIidToLoc(ast0) {
@@ -233,7 +229,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function printCondIidToLoc(ast0) {
-        printLineInfoAux(condCount, ast0);
+        printLineInfoAux(condIid, ast0);
     }
 
 // J$_i in expression context will replace it by an AST
@@ -732,7 +728,7 @@ if (typeof J$ === 'undefined') {
         printIidToLoc(node);
         var ret = replaceInStatement(logScriptEntryFunName + "(" + RP + "1," + RP + "2, " + RP + "3)",
             getIid(),
-            createLiteralAst(instCodeFileName), createLiteralAst(curFileName));
+            createLiteralAst(instCodeFileName), createLiteralAst(origCodeFileName));
         transferLoc(ret[0].expression, node);
         return ret;
     }
@@ -1473,8 +1469,8 @@ if (typeof J$ === 'undefined') {
     function initializeIIDCounters(forEval) {
         if (!hasInitializedIIDs) {
             var adj = forEval ? IID_INC_STEP / 2 : 0;
-            condCount = IID_INC_STEP + adj + 0;
-            iid = IID_INC_STEP + adj + 1;
+            condIid = IID_INC_STEP + adj + 0;
+            memIid = IID_INC_STEP + adj + 1;
             opIid = IID_INC_STEP + adj + 2;
             hasInitializedIIDs = true;
         }
@@ -1489,7 +1485,7 @@ if (typeof J$ === 'undefined') {
      * Instruments the provided code.
      *
      * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string }} options
-     * @return {{code:string, instAST: object, iidSourceInfo: object, nBranches: int}}
+     * @return {{code:string, instAST: object, iidSourceInfo: object}}
      *
      */
     function instrumentCode(options) {
@@ -1500,7 +1496,7 @@ if (typeof J$ === 'undefined') {
 
         initializeIIDCounters(!options.wrapWithTryCatch);
         instCodeFileName = options.instCodeFileName?options.instCodeFileName:"internal";
-        curFileName = options.origCodeFileName?options.origCodeFileName:"internal";
+        origCodeFileName = options.origCodeFileName?options.origCodeFileName:"internal";
 
 
         if (callAnalysisHooks && sandbox.analysis && sandbox.analysis.instrumentCodePre) {
@@ -1528,7 +1524,11 @@ if (typeof J$ === 'undefined') {
                 code = aret.result;
             }
         }
-        return {code: code, instAST: newAst, iidSourceInfo: iidSourceInfo, startIids: {condCount:condCount, iid:iid, opIid:opIid}, nBranches:condCount / IID_INC_STEP * 2};
+        iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
+        iidSourceInfo.original = origCodeFileName;
+        iidSourceInfo.instrumented = instCodeFileName;
+
+        return {code: code, instAST: newAst, iidSourceInfo: iidSourceInfo};
 
     }
 
