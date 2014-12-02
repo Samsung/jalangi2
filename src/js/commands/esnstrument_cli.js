@@ -38,11 +38,9 @@ if (typeof J$ === 'undefined') {
     var path = require('path');
 
     var instrumentCode = sandbox.instrumentCode;
-    var Constants = sandbox.Constants;
     var FILESUFFIX1 = "_jalangi_";
-    var JALANGI_VAR = Constants.JALANGI_VAR;
     var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
-    var outDir;
+    var outDir, inlineIID, inlineSource;
 
 
     String.prototype.endsWith = function (suffix) {
@@ -85,15 +83,15 @@ if (typeof J$ === 'undefined') {
                 wrapWithTryCatch: true,
                 callAnalysisHooks: false,
                 origCodeFileName: sanitizePath(origname),
-                instCodeFileName: sanitizePath(instname)
+                instCodeFileName: sanitizePath(instname),
+                inlineSourceMap: inlineIID,
+                inlineSource: inlineSource
             });
-        var preprend = JSON.stringify(instCodeAndData.iidSourceInfo);
-        var instCode = JALANGI_VAR + ".iids = " + preprend + ";\n" + instCodeAndData.code;
 
         fs.writeFileSync(path.join(outDir, origname), src, "utf8");
-        fs.writeFileSync(makeSMapFileName(path.join(outDir, instname)), preprend, "utf8");
-        fs.writeFileSync(path.join(outDir, instname), instCode, "utf8");
-        return instCode;
+        fs.writeFileSync(makeSMapFileName(path.join(outDir, instname)), instCodeAndData.sourceMapString, "utf8");
+        fs.writeFileSync(path.join(outDir, instname), instCodeAndData.code, "utf8");
+        return instCodeAndData.code;
     }
 
     function getJalangiRoot() {
@@ -107,7 +105,8 @@ if (typeof J$ === 'undefined') {
             addHelp: true,
             description: "Command-line utility to perform instrumentation"
         });
-        parser.addArgument(['--inlineIID'], {help: "Inline IIDs in the instrumented file", action: 'storeTrue'});
+        parser.addArgument(['--inlineIID'], {help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file", action: 'storeTrue'});
+        parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
         parser.addArgument(['--outDir'], {
             help: "Directory containing scripts inlined in html",
             defaultValue: process.cwd()
@@ -128,7 +127,8 @@ if (typeof J$ === 'undefined') {
         });
         var args = parser.parseArgs();
 
-        var inlineIID = args.inlineIID;
+        inlineIID = args.inlineIID;
+        inlineSource = args.inlineSource;
         outDir = args.outDir;
 
         var analyses = args.analysis;
@@ -155,16 +155,12 @@ if (typeof J$ === 'undefined') {
                     wrapWithTryCatch: true,
                     callAnalysisHooks: false,
                     origCodeFileName: sanitizePath(fileName),
-                    instCodeFileName: sanitizePath(instFileName)
+                    instCodeFileName: sanitizePath(instFileName),
+                    inlineSourceMap: inlineIID,
+                    inlineSource: inlineSource
                 });
-            var preprend = JSON.stringify(instCodeAndData.iidSourceInfo);
-            if (inlineIID) {
-                instCode = JALANGI_VAR + ".iids = " + preprend + ";\n" + instCodeAndData.code;
-            } else {
-                instCode = instCodeAndData.code;
-            }
-            fs.writeFileSync(makeSMapFileName(instFileName), preprend, "utf8");
-            fs.writeFileSync(instFileName, instCode, "utf8");
+            fs.writeFileSync(makeSMapFileName(instFileName), instCodeAndData.sourceMapString, "utf8");
+            fs.writeFileSync(instFileName, instCodeAndData.code, "utf8");
         } else {
             instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot()));
             fs.writeFileSync(instFileName, instCode, "utf8");

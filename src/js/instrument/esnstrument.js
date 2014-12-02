@@ -168,7 +168,6 @@ if (typeof J$ === 'undefined') {
     }
 
 
-
     // name of the file containing the instrumented code
 
     var IID_INC_STEP = 8;
@@ -179,9 +178,7 @@ if (typeof J$ === 'undefined') {
     var hasInitializedIIDs = false;
     var origCodeFileName;
     var instCodeFileName;
-    var iidSourceInfo = {};
-
-
+    var iidSourceInfo;
 
 
     function getIid() {
@@ -1467,36 +1464,40 @@ if (typeof J$ === 'undefined') {
     var noInstr = "// JALANGI DO NOT INSTRUMENT";
 
     function initializeIIDCounters(forEval) {
-        if (!hasInitializedIIDs) {
-            var adj = forEval ? IID_INC_STEP / 2 : 0;
-            condIid = IID_INC_STEP + adj + 0;
-            memIid = IID_INC_STEP + adj + 1;
-            opIid = IID_INC_STEP + adj + 2;
-            hasInitializedIIDs = true;
-        }
+        var adj = forEval ? IID_INC_STEP / 2 : 0;
+        condIid = IID_INC_STEP + adj + 0;
+        memIid = IID_INC_STEP + adj + 1;
+        opIid = IID_INC_STEP + adj + 2;
     }
 
 
     function instrumentEvalCode(code, iid) {
-        return instrumentCode({code:code, thisIid:iid, wrapWithTryCatch:false, callAnalysisHooks:true}).code;
+        return instrumentCode({
+            code: code,
+            thisIid: iid,
+            wrapWithTryCatch: false,
+            callAnalysisHooks: true,
+            inlineSourceMap: false
+        }).code;
     }
 
     /**
      * Instruments the provided code.
      *
-     * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string }} options
-     * @return {{code:string, instAST: object, iidSourceInfo: object}}
+     * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean }} options
+     * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
     function instrumentCode(options) {
         var aret, skip = false;
         var tryCatchAtTop = options.wrapWithTryCatch,
             callAnalysisHooks = options.callAnalysisHooks,
-            code = options.code, thisIid = options.thisIid;
+            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource;
 
+        iidSourceInfo = {};
         initializeIIDCounters(!options.wrapWithTryCatch);
-        instCodeFileName = options.instCodeFileName?options.instCodeFileName:"internal";
-        origCodeFileName = options.origCodeFileName?options.origCodeFileName:"internal";
+        instCodeFileName = options.instCodeFileName ? options.instCodeFileName : "internal";
+        origCodeFileName = options.origCodeFileName ? options.origCodeFileName : "internal";
 
 
         if (callAnalysisHooks && sandbox.analysis && sandbox.analysis.instrumentCodePre) {
@@ -1525,10 +1526,19 @@ if (typeof J$ === 'undefined') {
             }
         }
         iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
-        iidSourceInfo.original = origCodeFileName;
-        iidSourceInfo.instrumented = instCodeFileName;
 
-        return {code: code, instAST: newAst, iidSourceInfo: iidSourceInfo};
+        if (inlineSource) {
+            iidSourceInfo.code = options.code;
+        }
+        var prepend = JSON.stringify(iidSourceInfo);
+        var instCode;
+        if (options.inlineSourceMap) {
+            instCode = JALANGI_VAR + ".iids = " + prepend + ";\n" + code;
+        } else {
+            instCode = code;
+        }
+
+        return {code: instCode, instAST: newAst, sourceMapObject: iidSourceInfo, sourceMapString: prepend};
 
     }
 
