@@ -25,7 +25,6 @@ require('../headers').headerSources.forEach(function (header) {
 });
 
 var proxy = require("rewriting-proxy");
-require("../instrument/esnstrument");
 var instUtil = require("../instrument/instUtil");
 var fs = require('fs');
 var path = require("path");
@@ -40,7 +39,7 @@ var ArgumentParser = require('argparse').ArgumentParser;
 
 var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
 var JALANGI_RUNTIME_DIR = "jalangiRuntime";
-var JALANGI_VAR = "J$";
+var JALANGI_VAR = J$.Constants.JALANGI_VAR;
 
 /**
  * computes the Jalangi root directory based on the directory of the script
