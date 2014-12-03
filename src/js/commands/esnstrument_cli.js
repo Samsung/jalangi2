@@ -80,8 +80,7 @@ if (typeof J$ === 'undefined') {
         var instCodeAndData = instrumentCode(
             {
                 code: src,
-                wrapWithTryCatch: true,
-                callAnalysisHooks: false,
+                isEval: false,
                 origCodeFileName: sanitizePath(origname),
                 instCodeFileName: sanitizePath(instname),
                 inlineSourceMap: inlineIID,
@@ -152,8 +151,7 @@ if (typeof J$ === 'undefined') {
             instCodeAndData = instrumentCode(
                 {
                     code: origCode,
-                    wrapWithTryCatch: true,
-                    callAnalysisHooks: false,
+                    isEval: false,
                     origCodeFileName: sanitizePath(fileName),
                     instCodeFileName: sanitizePath(instFileName),
                     inlineSourceMap: inlineIID,

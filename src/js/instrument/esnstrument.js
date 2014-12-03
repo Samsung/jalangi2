@@ -405,11 +405,12 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
-    function wrapWrite(node, name, val, lhs, isGlobal, isPseudoGlobal) {
+    function wrapWrite(node, name, val, lhs, isGlobal, isPseudoGlobal, isDeclaration) {
         if (!Config.INSTR_WRITE || Config.INSTR_WRITE(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isGlobal ? "true" : "false") + "," + (isPseudoGlobal ? "true" : "false") + ")",
+                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isGlobal ? "true" : "false") +
+                "," + (isPseudoGlobal ? "true" : "false") + "," + (isDeclaration ? "true" : "false") + ")",
                 getIid(),
                 name,
                 val,
@@ -760,7 +761,7 @@ if (typeof J$ === 'undefined') {
             "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
             JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
             "e); } finally { if (" + logScriptExitFunName + "(" +
-            RP + "3)) continue jalangiLabel" + l + ";\n else \n  break jalangiLabel" + l + ";\n }\n }}", body,
+            RP + "3)) { " + JALANGI_VAR + ".lastValue; continue jalangiLabel" + l + ";\n } else {\n  " + JALANGI_VAR + ".lastValue; break jalangiLabel" + l + ";\n }}\n }}", body,
             iid1,
             getIid()
         );
@@ -885,7 +886,7 @@ if (typeof J$ === 'undefined') {
         var ret;
         if (node.left.type === 'Identifier') {
             if (scope.hasVar(node.left.name)) {
-                ret = wrapWrite(node.right, createLiteralAst(node.left.name), node.right, node.left, false, scope.isGlobal(node.left.name));
+                ret = wrapWrite(node.right, createLiteralAst(node.left.name), node.right, node.left, false, scope.isGlobal(node.left.name), false);
             } else {
                 ret = wrapWriteWithUndefinedCheck(node.right, createLiteralAst(node.left.name), node.right, node.left);
 
@@ -910,13 +911,13 @@ if (typeof J$ === 'undefined') {
             }
             if (ast.name === JALANGI_VAR) {
                 return ast;
-            } else if (scope.hasVar(ast.name)) {
+            } else { //if (scope.hasVar(ast.name)) {
                 ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, false, scope.isGlobal(ast.name));
                 return ret;
-            } else {
-                ret = wrapReadWithUndefinedCheck(ast, ast.name);
-                return ret;
-            }
+            } //else {
+            //ret = wrapReadWithUndefinedCheck(ast, ast.name);
+            //return ret;
+            //}
         } else if (ast.type === 'MemberExpression') {
             return wrapGetField(ast, ast.object, getPropertyAsAst(ast));
         } else {
@@ -934,7 +935,7 @@ if (typeof J$ === 'undefined') {
 
             var tmp2;
             if (scope.hasVar(node.left.name)) {
-                tmp2 = wrapWrite(node.right, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name));
+                tmp2 = wrapWrite(node.right, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name), false);
             } else {
                 tmp2 = wrapWriteWithUndefinedCheck(node.right, createLiteralAst(node.left.name), tmp1, node.left);
 
@@ -974,7 +975,6 @@ if (typeof J$ === 'undefined') {
     // as a top-level 'Program', but the wrapping code may not be syntactically valid in
     // the surrounding context, e.g.:
     //    var y = eval("x + 1");
-    var wrapProgramNode = true;
 
     function setScope(node) {
         scope = node.scope;
@@ -1016,18 +1016,16 @@ if (typeof J$ === 'undefined') {
             }
         },
         "Program": function (node) {
-            if (wrapProgramNode) {
-                var ret = instrumentScriptEntryExit(node, node.body);
-                node.body = ret;
+            var ret = instrumentScriptEntryExit(node, node.body);
+            node.body = ret;
 
-            }
             scope = scope.parent;
             return node;
         },
         "VariableDeclaration": function (node) {
             var declarations = MAP(node.declarations, function (def) {
                 if (def.init !== null) {
-                    var init = wrapWrite(def.init, createLiteralAst(def.id.name), def.init, def.id, false, scope.isGlobal(def.id.name));
+                    var init = wrapWrite(def.init, createLiteralAst(def.id.name), def.init, def.id, false, scope.isGlobal(def.id.name), true);
                     def.init = init;
                 }
                 return def;
@@ -1152,12 +1150,10 @@ if (typeof J$ === 'undefined') {
 
     var visitorOps = {
         "Program": function (node) {
-            if (wrapProgramNode) {
-                var body = wrapScriptBodyWithTryCatch(node, node.body);
+            var body = wrapScriptBodyWithTryCatch(node, node.body);
 //                var ret = prependScriptBody(node, body);
-                node.body = body;
+            node.body = body;
 
-            }
             return node;
         },
         'BinaryExpression': function (node) {
@@ -1475,32 +1471,31 @@ if (typeof J$ === 'undefined') {
         return instrumentCode({
             code: code,
             thisIid: iid,
-            wrapWithTryCatch: false,
-            callAnalysisHooks: true,
-            inlineSourceMap: false
+            isEval: true,
+            inlineSourceMap: true,
+            inlineSource: true
         }).code;
     }
 
     /**
      * Instruments the provided code.
      *
-     * @param {{wrapWithTryCatch: boolean, callAnalysisHooks: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean }} options
+     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean }} options
      * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
     function instrumentCode(options) {
         var aret, skip = false;
-        var tryCatchAtTop = options.wrapWithTryCatch,
-            callAnalysisHooks = options.callAnalysisHooks,
+        var isEval = options.isEval,
             code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource;
 
         iidSourceInfo = {};
-        initializeIIDCounters(!options.wrapWithTryCatch);
-        instCodeFileName = options.instCodeFileName ? options.instCodeFileName : "internal";
-        origCodeFileName = options.origCodeFileName ? options.origCodeFileName : "internal";
+        initializeIIDCounters(isEval);
+        instCodeFileName = options.instCodeFileName ? options.instCodeFileName : "eval";
+        origCodeFileName = options.origCodeFileName ? options.origCodeFileName : "eval";
 
 
-        if (callAnalysisHooks && sandbox.analysis && sandbox.analysis.instrumentCodePre) {
+        if (sandbox.analysis && sandbox.analysis.instrumentCodePre) {
             aret = sandbox.analysis.instrumentCodePre(thisIid, code);
             if (aret) {
                 code = aret.code;
@@ -1508,22 +1503,15 @@ if (typeof J$ === 'undefined') {
             }
         }
 
-        if (!skip && code.indexOf(noInstr) < 0) {
+        if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
             // this is a call in eval
             iidSourceInfo = {};
-            wrapProgramNode = tryCatchAtTop;
             var newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
             // post-process AST to hoist function declarations (required for Firefox)
             var hoistedFcts = [];
             newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
             var newCode = escodegen.generate(newAst);
             code = newCode + "\n" + noInstr + "\n";
-        }
-        if (callAnalysisHooks && sandbox.analysis && sandbox.analysis.instrumentCode) {
-            aret = sandbox.analysis.instrumentCode(thisIid, code, newAst);
-            if (aret) {
-                code = aret.result;
-            }
         }
         iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
 
@@ -1536,6 +1524,13 @@ if (typeof J$ === 'undefined') {
             instCode = JALANGI_VAR + ".iids = " + prepend + ";\n" + code;
         } else {
             instCode = code;
+        }
+
+        if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {
+            aret = sandbox.analysis.instrumentCode(thisIid, instCode, newAst);
+            if (aret) {
+                instCode = aret.result;
+            }
         }
 
         return {code: instCode, instAST: newAst, sourceMapObject: iidSourceInfo, sourceMapString: prepend};

@@ -120,8 +120,7 @@ if (typeof J$ === 'undefined') {
 
             var options = {
                 code: src,
-                wrapWithTryCatch: true,
-                callAnalysisHooks: false,
+                isEval: false,
                 origCodeFileName: origname,
                 instCodeFileName: instname,
                 inlineSourceMap: inlineIID,
@@ -253,8 +252,7 @@ if (typeof J$ === 'undefined') {
             }
             var options = {
                 code: this.data,
-                wrapWithTryCatch: true,
-                callAnalysisHooks: false,
+                isEval: false,
                 origCodeFileName: this.origScriptName,
                 instCodeFileName: this.instScriptName,
                 inlineSourceMap: inlineIID,

@@ -83,7 +83,8 @@ if (typeof J$ === 'undefined') {
             ret = callAsNativeConstructor(Constructor, args);
             return ret;
         } else {
-            var Temp = function () {}, inst;
+            var Temp = function () {
+            }, inst;
             Temp.prototype = Constructor.prototype;
             inst = new Temp;
             ret = Constructor.apply(inst, args);
@@ -140,7 +141,7 @@ if (typeof J$ === 'undefined') {
     function F(iid, f, isConstructor) {
         return function () {
             var base = this;
-            return invokeFun(iid, base, f, arguments, isConstructor, false);
+            return (sandbox.lastValue = invokeFun(iid, base, f, arguments, isConstructor, false));
         }
     }
 
@@ -148,7 +149,7 @@ if (typeof J$ === 'undefined') {
     function M(iid, base, offset, isConstructor) {
         return function () {
             var f = G(iid + 2, base, offset);
-            return invokeFun(iid, base, f, arguments, isConstructor, true);
+            return (sandbox.lastValue = invokeFun(iid, base, f, arguments, isConstructor, true));
         };
     }
 
@@ -166,7 +167,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return val;
+        return (sandbox.lastValue = val);
     }
 
     function H(iid, val) {
@@ -186,7 +187,7 @@ if (typeof J$ === 'undefined') {
         // isLocalSync is only true when we sync variables inside a for-in loop
         var aret;
 
-        isCatchParam = !! isCatchParam;
+        isCatchParam = !!isCatchParam;
         if (isArgument) {
             argIndex++;
         }
@@ -225,7 +226,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return val;
+        return (sandbox.lastValue = val);
     }
 
     // putField (property write)
@@ -251,7 +252,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return val;
+        return (sandbox.lastValue = val);
     }
 
     // variable write
@@ -266,11 +267,11 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return val;
+        return (sandbox.lastValue = val);
     }
 
     // variable write
-    function W(iid, name, val, lhs, isGlobal, isPseudoGlobal) {
+    function W(iid, name, val, lhs, isGlobal, isPseudoGlobal, isDeclaration) {
         var aret;
         if (sandbox.analysis && sandbox.analysis.write) {
             aret = sandbox.analysis.write(iid, name, val, lhs, isGlobal, isPseudoGlobal);
@@ -278,7 +279,12 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return val;
+        if (!isDeclaration) {
+            return (sandbox.lastValue = val);
+        } else {
+            sandbox.lastValue = undefined;
+            return val;
+        }
     }
 
     // Uncaught exception
@@ -290,7 +296,7 @@ if (typeof J$ === 'undefined') {
     function Rt(iid, val) {
         returnStack.pop();
         returnStack.push(val);
-        return val;
+        return (sandbox.lastValue = val);
     }
 
     // Actual return from function, invoked from 'finally' block
@@ -338,8 +344,14 @@ if (typeof J$ === 'undefined') {
         return isBacktrack;
     }
 
+    var sidStack = [];
     // Script enter
     function Se(iid, val, origFileName) {
+        //sidStack.push(sandbox.sid);
+        //sandbox.sid = sandbox.sidCounter = (sandbox.sidCounter | 0)+1;
+        //if (!sandbox.smap) sandbox.smap = {};
+        //sandbox.smap[sandbox.sid] = {"originalCodeFileName": origFileName, "instrumentedCodeFileName":val, "iids":sandbox.iids};
+
         if (sandbox.analysis && sandbox.analysis.scriptEnter) {
             sandbox.analysis.scriptEnter(iid, val, origFileName);
         }
@@ -355,6 +367,7 @@ if (typeof J$ === 'undefined') {
                 isBacktrack = aret.isBacktrack;
             }
         }
+//        sandbox.sid = sidStack.pop();
         if (exceptionVal !== undefined) {
             tmp = exceptionVal;
             exceptionVal = undefined;
@@ -468,7 +481,7 @@ if (typeof J$ === 'undefined') {
                 result = aret.result;
             }
         }
-        return result;
+        return (sandbox.lastValue = result);
     }
 
 
@@ -514,7 +527,7 @@ if (typeof J$ === 'undefined') {
                 result = aret.result;
             }
         }
-        return result;
+        return (sandbox.lastValue = result);
     }
 
     function pushSwitchKey() {
@@ -526,7 +539,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function last() {
-        return lastVal;
+        return (sandbox.lastValue = lastVal);
     }
 
     // Switch key
@@ -534,7 +547,7 @@ if (typeof J$ === 'undefined') {
     // C1 is invoked with value of x
     function C1(iid, left) {
         switchLeft = left;
-        return left;
+        return (sandbox.lastValue = left);
     }
 
     // case label inside switch
@@ -551,7 +564,7 @@ if (typeof J$ === 'undefined') {
                 }
             }
         }
-        return left;
+        return (sandbox.lastValue = left);
     }
 
     // Expression in conditional
@@ -565,7 +578,7 @@ if (typeof J$ === 'undefined') {
         }
 
         lastVal = left;
-        return left;
+        return (sandbox.lastValue = left);
     }
 
     function endExecution() {
