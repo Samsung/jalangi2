@@ -1481,14 +1481,14 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments the provided code.
      *
-     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean }} options
+     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string }} options
      * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
     function instrumentCode(options) {
         var aret, skip = false;
         var isEval = options.isEval,
-            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource;
+            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
@@ -1517,6 +1517,9 @@ if (typeof J$ === 'undefined') {
         iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
         iidSourceInfo.originalCodeFileName = origCodeFileName;
         iidSourceInfo.instrumentedCodeFileName = instCodeFileName;
+        if (url) {
+            iidSourceInfo.url = url;
+        }
         if (isEval) {
             iidSourceInfo.evalSid = sandbox.sid;
             iidSourceInfo.evalIid = thisIid;

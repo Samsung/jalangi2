@@ -34,13 +34,15 @@ if (typeof J$ === 'undefined') {
 
     var proxy = require("rewriting-proxy");
     var instUtil = require("../instrument/instUtil");
+    instUtil.setHeaders();
     var fs = require('fs');
     var path = require('path');
+    var md5 = require('./md5');
 
     var instrumentCode = sandbox.instrumentCode;
     var FILESUFFIX1 = "_jalangi_";
     var EXTRA_SCRIPTS_DIR = "__jalangi_extra";
-    var outDir, inlineIID, inlineSource;
+    var outDir, inlineIID, inlineSource, url;
 
 
     String.prototype.endsWith = function (suffix) {
@@ -74,8 +76,11 @@ if (typeof J$ === 'undefined') {
 
 
     function rewriteInlineScript(src, metadata) {
-        var instname = instUtil.createFilenameForScript(metadata.url);
-        var origname = createOrigScriptFilename(instname);
+        //var instname = instUtil.createFilenameForScript(metadata.url);
+        //var origname = createOrigScriptFilename(instname);
+
+        var origname = md5(src)+".js";
+        var instname = makeInstCodeFileName(origname);
 
         var instCodeAndData = instrumentCode(
             {
@@ -84,7 +89,8 @@ if (typeof J$ === 'undefined') {
                 origCodeFileName: sanitizePath(origname),
                 instCodeFileName: sanitizePath(instname),
                 inlineSourceMap: inlineIID,
-                inlineSource: inlineSource
+                inlineSource: inlineSource,
+                url:url
             });
 
         fs.writeFileSync(path.join(outDir, origname), src, "utf8");
@@ -114,6 +120,10 @@ if (typeof J$ === 'undefined') {
             help: "Instrumented file name (with path).  The default is to append _jalangi_ to the original JS file name",
             defaultValue: undefined
         });
+        parser.addArgument(['--url'], {
+            help: "URL of the file to be instrumented.  The URL is stored as metadata in the source map and is not used for retrieving the file.",
+            defaultValue: undefined
+        });
         parser.addArgument(['--extra_app_scripts'], {help: "list of extra application scripts to be injected and instrumented, separated by path.delimiter"});
         parser.addArgument(['--analysis'], {
             help: "Analysis script.",
@@ -129,6 +139,7 @@ if (typeof J$ === 'undefined') {
         inlineIID = args.inlineIID;
         inlineSource = args.inlineSource;
         outDir = args.outDir;
+        url = args.url;
 
         var analyses = args.analysis;
         var extraAppScripts = [];
@@ -155,7 +166,8 @@ if (typeof J$ === 'undefined') {
                     origCodeFileName: sanitizePath(fileName),
                     instCodeFileName: sanitizePath(instFileName),
                     inlineSourceMap: inlineIID,
-                    inlineSource: inlineSource
+                    inlineSource: inlineSource,
+                    url: url
                 });
             fs.writeFileSync(makeSMapFileName(instFileName), instCodeAndData.sourceMapString, "utf8");
             fs.writeFileSync(instFileName, instCodeAndData.code, "utf8");
