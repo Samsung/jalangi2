@@ -4,6 +4,7 @@ analysis.js is a new API for performing direct or in browser analysis.  It has a
 API compared to analysis.js.  An analysis in analysis.js can be written using the following template:
 
 ```
+
     // In the following callbacks one can choose to not return anything.
     // If all of the callbacks return nothing, we get a passive analysis where the
     // concrete execution happens unmodified and callbacks are used to observe the execution.
