@@ -45,13 +45,13 @@
 
         this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam){return {result:val};};
 
-        this.getFieldPre = function(iid, base, offset){return {base:base,offset:offset,skip:false};};
+        this.getFieldPre = function(iid, base, offset, isComputed){return {base:base,offset:offset,skip:false};};
 
-        this.getField = function(iid, base, offset, val){return {result:val};};
+        this.getField = function(iid, base, offset, val, isComputed){return {result:val};};
 
-        this.putFieldPre = function(iid, base, offset, val){return {base:base,offset:offset,val:val,skip:false};};
+        this.putFieldPre = function(iid, base, offset, val, isComputed){return {base:base,offset:offset,val:val,skip:false};};
 
-        this.putField = function(iid, base, offset, val){return {result:val};};
+        this.putField = function(iid, base, offset, val, isComputed){return {result:val};};
 
         this.read = function(iid, name, val, isGlobal, isPseudoGlobal){return {result:val};};
 

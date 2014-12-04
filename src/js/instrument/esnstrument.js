@@ -280,12 +280,12 @@ if (typeof J$ === 'undefined') {
             newNode.raw = oldNode.loc;
     }
 
-    function wrapPutField(node, base, offset, rvalue) {
-        if (!Config.INSTR_PUTFIELD || Config.INSTR_PUTFIELD(node.computed ? null : offset.value, node)) {
+    function wrapPutField(node, base, offset, rvalue, isComputed) {
+        if (!Config.INSTR_PUTFIELD || Config.INSTR_PUTFIELD(isComputed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logPutFieldFunName +
-                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4)",
+                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4,"+(isComputed?"true":"false")+")",
                 getIid(),
                 base,
                 offset,
@@ -316,11 +316,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapMethodCall(node, base, offset, isCtor) {
+    function wrapMethodCall(node, base, offset, isCtor, isComputed) {
         printIidToLoc(node);
         printSpecialIidToLoc(node.callee);
         var ret = replaceInExpr(
-            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (isCtor ? "true" : "false") + ")",
+            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (isCtor ? "true" : "false") + ","+ (isComputed ? "true" : "false") + ")",
             getIid(),
             base,
             offset
@@ -340,11 +340,11 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
-    function wrapGetField(node, base, offset) {
+    function wrapGetField(node, base, offset, isComputed) {
         if (!Config.INSTR_GETFIELD || Config.INSTR_GETFIELD(node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3,"+(isComputed?"true":"false")+")",
                 getIid(),
                 base,
                 offset
@@ -872,7 +872,7 @@ if (typeof J$ === 'undefined') {
         if (ast.type === 'MemberExpression') {
             ret = wrapMethodCall(callAst, ast.object,
                 getPropertyAsAst(ast),
-                isCtor);
+                isCtor, ast.computed);
             return ret;
         } else if (ast.type === 'Identifier' && ast.name === "eval") {
             return ast;
@@ -894,7 +894,7 @@ if (typeof J$ === 'undefined') {
             node.right = ret;
             return node;
         } else {
-            ret = wrapPutField(node, node.left.object, getPropertyAsAst(node.left), node.right);
+            ret = wrapPutField(node, node.left.object, getPropertyAsAst(node.left), node.right, node.left.computed);
             return ret;
         }
     }
@@ -919,7 +919,7 @@ if (typeof J$ === 'undefined') {
             //return ret;
             //}
         } else if (ast.type === 'MemberExpression') {
-            return wrapGetField(ast, ast.object, getPropertyAsAst(ast));
+            return wrapGetField(ast, ast.object, getPropertyAsAst(ast), ast.computed);
         } else {
             return ast;
         }

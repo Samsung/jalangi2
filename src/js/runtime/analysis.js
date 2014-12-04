@@ -146,9 +146,9 @@ if (typeof J$ === 'undefined') {
     }
 
     // Method call (e.g., e.f())
-    function M(iid, base, offset, isConstructor) {
+    function M(iid, base, offset, isConstructor, isComputed) {
         return function () {
-            var f = G(iid + 2, base, offset);
+            var f = G(iid + 2, base, offset, isComputed);
             return (sandbox.lastValue = invokeFun(iid, base, f, arguments, isConstructor, true));
         };
     }
@@ -205,11 +205,11 @@ if (typeof J$ === 'undefined') {
     }
 
     // getField (property read)
-    function G(iid, base, offset) {
+    function G(iid, base, offset, isComputed) {
         var aret, skip = false, val;
 
         if (sandbox.analysis && sandbox.analysis.getFieldPre) {
-            aret = sandbox.analysis.getFieldPre(iid, base, offset);
+            aret = sandbox.analysis.getFieldPre(iid, base, offset, isComputed);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -221,7 +221,7 @@ if (typeof J$ === 'undefined') {
             val = base[offset];
         }
         if (sandbox.analysis && sandbox.analysis.getField) {
-            aret = sandbox.analysis.getField(iid, base, offset, val);
+            aret = sandbox.analysis.getField(iid, base, offset, val, isComputed);
             if (aret) {
                 val = aret.result;
             }
@@ -230,11 +230,11 @@ if (typeof J$ === 'undefined') {
     }
 
     // putField (property write)
-    function P(iid, base, offset, val) {
+    function P(iid, base, offset, val, isComputed) {
         var aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.putFieldPre) {
-            aret = sandbox.analysis.putFieldPre(iid, base, offset, val);
+            aret = sandbox.analysis.putFieldPre(iid, base, offset, val, isComputed);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -247,7 +247,7 @@ if (typeof J$ === 'undefined') {
             base[offset] = val;
         }
         if (sandbox.analysis && sandbox.analysis.putField) {
-            aret = sandbox.analysis.putField(iid, base, offset, val);
+            aret = sandbox.analysis.putField(iid, base, offset, val, isComputed);
             if (aret) {
                 val = aret.result;
             }
