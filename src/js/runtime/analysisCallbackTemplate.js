@@ -45,13 +45,13 @@
 
         this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam){return {result:val};};
 
-        this.getFieldPre = function(iid, base, offset, isComputed){return {base:base,offset:offset,skip:false};};
+        this.getFieldPre = function(iid, base, offset, isComputed, isOpAssign, isMethodCall){return {base:base,offset:offset,skip:false};};
 
-        this.getField = function(iid, base, offset, val, isComputed){return {result:val};};
+        this.getField = function(iid, base, offset, val, isComputed, isOpAssign, isMethodCall){return {result:val};};
 
-        this.putFieldPre = function(iid, base, offset, val, isComputed){return {base:base,offset:offset,val:val,skip:false};};
+        this.putFieldPre = function(iid, base, offset, val, isComputed, isOpAssign){return {base:base,offset:offset,val:val,skip:false};};
 
-        this.putField = function(iid, base, offset, val, isComputed){return {result:val};};
+        this.putField = function(iid, base, offset, val, isComputed, isOpAssign){return {result:val};};
 
         this.read = function(iid, name, val, isGlobal, isPseudoGlobal){return {result:val};};
 
@@ -65,9 +65,9 @@
 
         this.scriptExit = function(iid, exceptionVal){return {exceptionVal:exceptionVal,isBacktrack:false};};
 
-        this.binaryPre = function(iid, op, left, right){return {op:op,left:left,right:right,skip:false};};
+        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison){return {op:op,left:left,right:right,skip:false};};
 
-        this.binary = function(iid, op, left, right, result){return {result:result};};
+        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison){return {result:result};};
 
         this.unaryPre = function(iid, op, left) {return {op:op,left:left,skip:false};};
 

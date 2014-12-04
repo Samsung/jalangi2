@@ -38,10 +38,14 @@ if (typeof J$ === 'undefined') {
                 if (ret.evalSid !== undefined) {
                     fname = fname+sandbox.iidToLocation(ret.evalSid, ret.evalIid);
                 }
-                return "("+fname/*.replace("_orig_.js", ".js")*/+":"+arr[0]+":"+arr[1]+":"+arr[2]+":"+arr[3]+")";
+                return "("+fname+":"+arr[0]+":"+arr[1]+":"+arr[2]+":"+arr[3]+")";
             }
         }
         return sid+"";
     };
+
+    sandbox.getGlobalIID = function(iid) {
+        return sandbox.sid +":"+iid;
+    }
 
 }(J$));

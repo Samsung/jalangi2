@@ -31,13 +31,13 @@ API compared to analysis.js.  An analysis in analysis.js can be written using th
 
         this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam){return {result:val};};
 
-        this.getFieldPre = function(iid, base, offset, isComputed){return {base:base,offset:offset,skip:false};};
+        this.getFieldPre = function(iid, base, offset, isComputed, isOpAssign, isMethodCall){return {base:base,offset:offset,skip:false};};
 
-        this.getField = function(iid, base, offset, val, isComputed){return {result:val};};
+        this.getField = function(iid, base, offset, val, isComputed, isOpAssign, isMethodCall){return {result:val};};
 
-        this.putFieldPre = function(iid, base, offset, val, isComputed){return {base:base,offset:offset,val:val,skip:false};};
+        this.putFieldPre = function(iid, base, offset, val, isComputed, isOpAssign){return {base:base,offset:offset,val:val,skip:false};};
 
-        this.putField = function(iid, base, offset, val, isComputed){return {result:val};};
+        this.putField = function(iid, base, offset, val, isComputed, isOpAssign){return {result:val};};
 
         this.read = function(iid, name, val, isGlobal, isPseudoGlobal){return {result:val};};
 
@@ -51,9 +51,9 @@ API compared to analysis.js.  An analysis in analysis.js can be written using th
 
         this.scriptExit = function(iid, exceptionVal){return {exceptionVal:exceptionVal,isBacktrack:false};};
 
-        this.binaryPre = function(iid, op, left, right){return {op:op,left:left,right:right,skip:false};};
+        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison){return {op:op,left:left,right:right,skip:false};};
 
-        this.binary = function(iid, op, left, right, result){return {result:result};};
+        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison){return {result:result};};
 
         this.unaryPre = function(iid, op, left) {return {op:op,left:left,skip:false};};
 
@@ -63,22 +63,23 @@ API compared to analysis.js.  An analysis in analysis.js can be written using th
 
         this.instrumentCodePre = function(iid, code){return {code:code,skip:false};};
 
-        this.instrumentCode = function(iid, newCode, newAst){return {result:newCode};};
+        this.instrumentCode = function(iid, newCode, newAst){ return {result:newCode};};
 
         this.endExecution = function() {};
-     }
-     sandbox.analysis = new MyAnalysis();
+      }
+      sandbox.analysis = new MyAnalysis();
     })(J$);
+
 ```
 
 An analysis can be performed on a JavaScript file by issuing the following commands:
 
-    node src/js/instrument/esnstrument.js tests/octane/deltablue.js
+    node src/js/commands/esnstrument_cli.js --inlineIID --inlineSource tests/octane/deltablue.js
 	node src/js/commands/direct.js --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue_jalangi_.js
 	    
 An analysis can be performed on an web app using the Chrome browser by issuing the following commands:
 
-    node src/js/commands/instrument.js --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js --outputDir /tmp tests/tizen/annex
+    node src/js/commands/instrument.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js --outputDir /tmp tests/tizen/annex
     open file:///tmp/annex/index.html
 
 While performing analysis in a browser, one needs to press Alt-Shift-T to end the analysis and to print the analysis results in the console.

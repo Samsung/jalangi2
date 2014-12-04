@@ -299,11 +299,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapModAssign(node, base, offset, op, rvalue) {
+    function wrapModAssign(node, base, offset, op, rvalue, isComputed) {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4)(" + RP + "5)",
+                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4,"+(isComputed?"true":"false")+")(" + RP + "5)",
                 getIid(),
                 base,
                 offset,
@@ -947,7 +947,7 @@ if (typeof J$ === 'undefined') {
             var ret = wrapModAssign(node, node.left.object,
                 getPropertyAsAst(node.left),
                 node.operator.substring(0, node.operator.length - 1),
-                node.right);
+                node.right, node.left.computed);
             return ret;
         }
     }
@@ -1514,25 +1514,29 @@ if (typeof J$ === 'undefined') {
             var newCode = escodegen.generate(newAst);
             code = newCode + "\n" + noInstr + "\n";
         }
-        iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
-        iidSourceInfo.originalCodeFileName = origCodeFileName;
-        iidSourceInfo.instrumentedCodeFileName = instCodeFileName;
+
+        var tmp = {};
+
+        tmp.nBranches = iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
+        tmp.originalCodeFileName = iidSourceInfo.originalCodeFileName = origCodeFileName;
+        tmp.instrumentedCodeFileName = iidSourceInfo.instrumentedCodeFileName = instCodeFileName;
         if (url) {
-            iidSourceInfo.url = url;
+            tmp.url = iidSourceInfo.url = url;
         }
         if (isEval) {
-            iidSourceInfo.evalSid = sandbox.sid;
-            iidSourceInfo.evalIid = thisIid;
+            tmp.evalSid = iidSourceInfo.evalSid = sandbox.sid;
+            tmp.evalIid = iidSourceInfo.evalIid = thisIid;
         }
         if (inlineSource) {
-            iidSourceInfo.code = options.code;
+            tmp.code = iidSourceInfo.code = options.code;
         }
+
         var prepend = JSON.stringify(iidSourceInfo);
         var instCode;
         if (options.inlineSourceMap) {
             instCode = JALANGI_VAR + ".iids = " + prepend + ";\n" + code;
         } else {
-            instCode = code;
+            instCode = JALANGI_VAR + ".iids = " + JSON.stringify(tmp) + ";\n" + code;
         }
 
         if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {

@@ -181,7 +181,7 @@ if (typeof J$ === 'undefined') {
     // Method call (e.g., e.f())
     function M(iid, base, offset, isConstructor, isComputed) {
         return function () {
-            var f = G(iid + 2, base, offset, isComputed);
+            var f = G(iid + 2, base, offset, isComputed, false, true);
             return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, true));
         };
     }
@@ -239,11 +239,11 @@ if (typeof J$ === 'undefined') {
     }
 
     // getField (property read)
-    function G(iid, base, offset, isComputed) {
+    function G(iid, base, offset, isComputed, isOpAssign, isMethodCall) {
         var aret, skip = false, val;
 
         if (sandbox.analysis && sandbox.analysis.getFieldPre) {
-            aret = sandbox.analysis.getFieldPre(iid, base, offset, isComputed);
+            aret = sandbox.analysis.getFieldPre(iid, base, offset, isComputed, !!isOpAssign, !!isMethodCall);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -255,7 +255,7 @@ if (typeof J$ === 'undefined') {
             val = base[offset];
         }
         if (sandbox.analysis && sandbox.analysis.getField) {
-            aret = sandbox.analysis.getField(iid, base, offset, val, isComputed);
+            aret = sandbox.analysis.getField(iid, base, offset, val, isComputed, !!isOpAssign, !!isMethodCall);
             if (aret) {
                 val = aret.result;
             }
@@ -264,11 +264,11 @@ if (typeof J$ === 'undefined') {
     }
 
     // putField (property write)
-    function P(iid, base, offset, val, isComputed) {
+    function P(iid, base, offset, val, isComputed, isOpAssign) {
         var aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.putFieldPre) {
-            aret = sandbox.analysis.putFieldPre(iid, base, offset, val, isComputed);
+            aret = sandbox.analysis.putFieldPre(iid, base, offset, val, isComputed, !!isOpAssign);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -281,7 +281,7 @@ if (typeof J$ === 'undefined') {
             base[offset] = val;
         }
         if (sandbox.analysis && sandbox.analysis.putField) {
-            aret = sandbox.analysis.putField(iid, base, offset, val, isComputed);
+            aret = sandbox.analysis.putField(iid, base, offset, val, isComputed, !!isOpAssign);
             if (aret) {
                 val = aret.result;
             }
@@ -409,20 +409,20 @@ if (typeof J$ === 'undefined') {
 
 
     // Modify and assign +=, -= ...
-    function A(iid, base, offset, op) {
-        var oprnd1 = G(iid, base, offset);
+    function A(iid, base, offset, op, isComputed) {
+        var oprnd1 = G(iid, base, offset, isComputed, true, false);
         return function (oprnd2) {
-            var val = B(iid, op, oprnd1, oprnd2);
-            return P(iid, base, offset, val);
+            var val = B(iid, op, oprnd1, oprnd2, true, false);
+            return P(iid, base, offset, val, isComputed, true);
         };
     }
 
     // Binary operation
-    function B(iid, op, left, right) {
+    function B(iid, op, left, right, isOpAssign, isSwitchCaseComparison) {
         var result, aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.binaryPre) {
-            aret = sandbox.analysis.binaryPre(iid, op, left, right);
+            aret = sandbox.analysis.binaryPre(iid, op, left, right, !!isOpAssign, !!isSwitchCaseComparison);
             if (aret) {
                 op = aret.op;
                 left = aret.left;
@@ -507,7 +507,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (sandbox.analysis && sandbox.analysis.binary) {
-            aret = sandbox.analysis.binary(iid, op, left, right, result);
+            aret = sandbox.analysis.binary(iid, op, left, right, result, !!isOpAssign, !!isSwitchCaseComparison);
             if (aret) {
                 result = aret.result;
             }
@@ -585,7 +585,7 @@ if (typeof J$ === 'undefined') {
     function C2(iid, left) {
         var aret, result;
 
-        result = B(iid, "===", switchLeft, left);
+        result = B(iid, "===", switchLeft, left, false, true);
 
         if (sandbox.analysis && sandbox.analysis.conditional) {
             aret = sandbox.analysis.conditional(iid, result);
