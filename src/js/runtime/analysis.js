@@ -41,6 +41,7 @@ if (typeof J$ === 'undefined') {
     var switchKeyStack = [];
     var argIndex;
     var EVAL_ORG = eval;
+    var lastComputedValue;
 
 
     function isNative(f) {
@@ -141,7 +142,7 @@ if (typeof J$ === 'undefined') {
     function F(iid, f, isConstructor) {
         return function () {
             var base = this;
-            return (sandbox.lastValue = invokeFun(iid, base, f, arguments, isConstructor, false));
+            return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, false));
         }
     }
 
@@ -149,7 +150,7 @@ if (typeof J$ === 'undefined') {
     function M(iid, base, offset, isConstructor, isComputed) {
         return function () {
             var f = G(iid + 2, base, offset, isComputed);
-            return (sandbox.lastValue = invokeFun(iid, base, f, arguments, isConstructor, true));
+            return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, true));
         };
     }
 
@@ -167,7 +168,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return (sandbox.lastValue = val);
+        return (lastComputedValue = val);
     }
 
     function H(iid, val) {
@@ -226,7 +227,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return (sandbox.lastValue = val);
+        return (lastComputedValue = val);
     }
 
     // putField (property write)
@@ -252,7 +253,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return (sandbox.lastValue = val);
+        return (lastComputedValue = val);
     }
 
     // variable write
@@ -267,7 +268,7 @@ if (typeof J$ === 'undefined') {
                 val = aret.result;
             }
         }
-        return (sandbox.lastValue = val);
+        return (lastComputedValue = val);
     }
 
     // variable write
@@ -280,9 +281,9 @@ if (typeof J$ === 'undefined') {
             }
         }
         if (!isDeclaration) {
-            return (sandbox.lastValue = val);
+            return (lastComputedValue = val);
         } else {
-            sandbox.lastValue = undefined;
+            lastComputedValue = undefined;
             return val;
         }
     }
@@ -296,7 +297,7 @@ if (typeof J$ === 'undefined') {
     function Rt(iid, val) {
         returnStack.pop();
         returnStack.push(val);
-        return (sandbox.lastValue = val);
+        return (lastComputedValue = val);
     }
 
     // Actual return from function, invoked from 'finally' block
@@ -481,7 +482,7 @@ if (typeof J$ === 'undefined') {
                 result = aret.result;
             }
         }
-        return (sandbox.lastValue = result);
+        return (lastComputedValue = result);
     }
 
 
@@ -527,7 +528,7 @@ if (typeof J$ === 'undefined') {
                 result = aret.result;
             }
         }
-        return (sandbox.lastValue = result);
+        return (lastComputedValue = result);
     }
 
     function pushSwitchKey() {
@@ -539,7 +540,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function last() {
-        return (sandbox.lastValue = lastVal);
+        return (lastComputedValue = lastVal);
     }
 
     // Switch key
@@ -547,7 +548,7 @@ if (typeof J$ === 'undefined') {
     // C1 is invoked with value of x
     function C1(iid, left) {
         switchLeft = left;
-        return (sandbox.lastValue = left);
+        return (lastComputedValue = left);
     }
 
     // case label inside switch
@@ -564,7 +565,7 @@ if (typeof J$ === 'undefined') {
                 }
             }
         }
-        return (sandbox.lastValue = left);
+        return (lastComputedValue = left);
     }
 
     // Expression in conditional
@@ -578,7 +579,11 @@ if (typeof J$ === 'undefined') {
         }
 
         lastVal = left;
-        return (sandbox.lastValue = left);
+        return (lastComputedValue = left);
+    }
+
+    function L() {
+        return lastComputedValue;
     }
 
     function endExecution() {
@@ -615,6 +620,7 @@ if (typeof J$ === 'undefined') {
     sandbox.Rt = Rt; // returned value
     sandbox.Ra = Ra;
     sandbox.Ex = Ex;
+    sandbox.L = L;
     sandbox.endExecution = endExecution;
 
     sandbox.EVAL_ORG = EVAL_ORG;

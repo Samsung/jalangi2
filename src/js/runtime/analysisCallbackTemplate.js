@@ -77,7 +77,7 @@
 
         this.instrumentCodePre = function(iid, code){return {code:code,skip:false};};
 
-        this.instrumentCode = function(iid, newCode, newAst){console.log(newCode); return {result:newCode};};
+        this.instrumentCode = function(iid, newCode, newAst){ return {result:newCode};};
 
         this.endExecution = function() {};
     }

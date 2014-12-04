@@ -81,6 +81,7 @@ if (typeof J$ === 'undefined') {
     var logReturnFunName = JALANGI_VAR + ".Rt";
     var logReturnAggrFunName = JALANGI_VAR + ".Ra";
     var logUncaughtExceptionFunName = JALANGI_VAR + ".Ex";
+    var logLastComputedFunName = JALANGI_VAR + ".L";
 
     var logBinaryOpFunName = JALANGI_VAR + ".B";
     var logUnaryOpFunName = JALANGI_VAR + ".U";
@@ -761,7 +762,7 @@ if (typeof J$ === 'undefined') {
             "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
             JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
             "e); } finally { if (" + logScriptExitFunName + "(" +
-            RP + "3)) { " + JALANGI_VAR + ".lastValue; continue jalangiLabel" + l + ";\n } else {\n  " + JALANGI_VAR + ".lastValue; break jalangiLabel" + l + ";\n }}\n }}", body,
+            RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
             iid1,
             getIid()
         );
