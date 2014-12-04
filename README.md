@@ -46,6 +46,10 @@ If Installation succeeds, you should see the following message:
     ---> Installation successful.
     ---> run 'python scripts/test.analysis.js' to make sure all tests pass
 
+### Run tests
+
+    python scripts/test.analysis.py
+    python scripts/test.dlint.py
 
 ### Usage
 

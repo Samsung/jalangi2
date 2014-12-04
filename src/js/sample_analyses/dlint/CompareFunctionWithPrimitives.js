@@ -18,7 +18,7 @@
                 op === '>='){
                 if ((type1 === 'function' && (type2 ==='string' || type2 ==='number' || type2==='boolean')) ||
                     (type2 === 'function' && (type1 ==='string' || type1 ==='number' || type1==='boolean'))) {
-                    info[iid] = (info[iid] | 0) + 1;
+                    info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)] | 0) + 1;
                 }
             }
         };

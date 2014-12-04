@@ -45,10 +45,10 @@
                 var tmp = base.__proto__;
                 while(tmp) {
                     if (HOP(tmp, offset)) {
-                        if (!info[iid]) {
-                            info[iid] = {};
+                        if (!info[sandbox.getGlobalIID(iid)]) {
+                            info[sandbox.getGlobalIID(iid)] = {};
                         }
-                        info[iid][offset] = (info[iid][offset]|0) + 1;
+                        info[sandbox.getGlobalIID(iid)][offset] = (info[sandbox.getGlobalIID(iid)][offset]|0) + 1;
                         return;
                     }
                     tmp = tmp.__proto__;

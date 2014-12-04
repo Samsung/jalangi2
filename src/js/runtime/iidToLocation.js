@@ -34,11 +34,15 @@ if (typeof J$ === 'undefined') {
             }
             if ((ret = sandbox.smap[sid])) {
                 var fname = ret.originalCodeFileName;
-                arr = ret[iid];
                 if (ret.evalSid !== undefined) {
                     fname = fname+sandbox.iidToLocation(ret.evalSid, ret.evalIid);
                 }
-                return "("+fname+":"+arr[0]+":"+arr[1]+":"+arr[2]+":"+arr[3]+")";
+                arr = ret[iid];
+                if (arr) {
+                    return "(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")";
+                } else {
+                    return "(" + fname + ":iid" + iid + ")";
+                }
             }
         }
         return sid+"";

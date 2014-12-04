@@ -3,7 +3,7 @@ import sys
 
 def test(prefix, file, rest):
     sj.create_and_cd_jalangi_tmp()
-    sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' '+prefix+file+'.js')
+    sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
     normal = sj.execute_return_np(prefix+file+'.js '+rest, savestderr=True)
     ana = sj.execute_return_np(sj.ANALYSIS_SCRIPT+'  --analysis ../src/js/sample_analyses/ChainedAnalyses.js --analysis ../src/js/runtime/analysisCallbackTemplate.js '+prefix+file+'_jalangi_.js '+rest, savestderr=True)
 

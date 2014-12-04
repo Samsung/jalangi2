@@ -14,7 +14,7 @@ analysesStr = ' --analysis '+(' --analysis '.join(analyses))
 
 def testDlint (file):
     sj.create_and_cd_jalangi_tmp()
-    sj.execute(sj.INSTRUMENTATION_SCRIPT+' ../'+file+'.js')
+    sj.execute(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource ../'+file+'.js')
     out = sj.execute(sj.ANALYSIS_SCRIPT+ analysesStr+' ../'+file+'_jalangi_.js')
     sj.cd_parent()
 

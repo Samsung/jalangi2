@@ -210,6 +210,7 @@
         };
 
         this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod) {
+            iid = sandbox.getGlobalIID(iid);
             if (isConstructor) {
                 checkArrayUniformity(iid, result);
                 getCreateObjectInfo(iid, result, false);
@@ -218,25 +219,20 @@
         };
 
         this.literal = function (iid, val, hasGetterSetter) {
+            iid = sandbox.getGlobalIID(iid);
             checkArrayUniformity(iid, val);
             getCreateObjectInfo(iid, val, false);
             return {result: val};
         };
 
         this.forinObject = function (iid, val) {
+            iid = sandbox.getGlobalIID(iid);
             forInUse(iid, val);
             return {result: val};
         };
 
-        this.declare = function (iid, name, val, isArgument, argumentIndex) {
-            return {result: val};
-        };
-
-        this.getFieldPre = function (iid, base, offset) {
-            return {base: base, offset: offset, skip: false};
-        };
-
         this.getField = function (iid, base, offset, val) {
+            iid = sandbox.getGlobalIID(iid);
             if (typeof base === 'function' && offset === "prototype") {
                 getCreateObjectInfo(iid, val, true);
             }
@@ -255,6 +251,7 @@
 
         this.putFieldPre = function (iid, base, offset, val) {
             var sobj;
+            iid = sandbox.getGlobalIID(iid);
             if (isArr(base)) {
                 inc(info, "# of instructions where an array property (including integer index) is written");
                 if (isNormalNumber(offset) || offset === 'length') {
@@ -288,18 +285,6 @@
             return {base: base, offset: offset, val: val, skip: false};
         };
 
-        this.putField = function (iid, base, offset, val) {
-            return {result: val};
-        };
-
-        this.read = function (iid, name, val, isGlobal, isPseudoGlobal) {
-            return {result: val};
-        };
-
-        this.write = function (iid, name, val, lhs, isGlobal, isPseudoGlobal) {
-            return {result: val};
-        };
-
         this.functionEnter = function (iid, f, dis, args) {
             if (isCallingConstructor && f === constructorFun) {
                 currThis = dis;
@@ -319,30 +304,6 @@
             if (!scriptName) {
                 scriptName = val;
             }
-        };
-
-        this.scriptExit = function (iid, exceptionVal) {
-            return {exceptionVal: exceptionVal, isBacktrack: false};
-        };
-
-        this.binaryPre = function (iid, op, left, right) {
-            return {op: op, left: left, right: right, skip: false};
-        };
-
-        this.binary = function (iid, op, left, right, result) {
-            return {result: result};
-        };
-
-        this.unaryPre = function (iid, op, left) {
-            return {op: op, left: left, skip: false};
-        };
-
-        this.unary = function (iid, op, left, result) {
-            return {result: result};
-        };
-
-        this.conditional = function (iid, result) {
-            return {result: result};
         };
 
         function createTree(input, name, c) {

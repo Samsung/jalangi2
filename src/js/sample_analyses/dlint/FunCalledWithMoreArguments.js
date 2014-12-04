@@ -45,7 +45,7 @@
 
         this.invokeFunPre = function(iid, f, base, args, isConstructor, isMethod){
             if (f.length < args.length && !isNative(f)) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
             }
         };
 

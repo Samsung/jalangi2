@@ -27,12 +27,12 @@
 
         this.getFieldPre = function(iid, base, offset){
             if (offset === undefined)
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
         };
 
         this.putFieldPre = function(iid, base, offset, val){
             if (offset === undefined)
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
         };
 
 

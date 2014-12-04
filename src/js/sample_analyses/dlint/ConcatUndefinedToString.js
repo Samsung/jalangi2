@@ -9,7 +9,7 @@
 
         this.binary = function(iid, op, left, right, result){
             if (op === '+' && typeof result==='string' && (left===undefined || right===undefined)) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
             }
         };
 
