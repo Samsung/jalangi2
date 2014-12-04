@@ -1515,7 +1515,12 @@ if (typeof J$ === 'undefined') {
             code = newCode + "\n" + noInstr + "\n";
         }
         iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
-
+        iidSourceInfo.originalCodeFileName = origCodeFileName;
+        iidSourceInfo.instrumentedCodeFileName = instCodeFileName;
+        if (isEval) {
+            iidSourceInfo.evalSid = sandbox.sid;
+            iidSourceInfo.evalIid = thisIid;
+        }
         if (inlineSource) {
             iidSourceInfo.code = options.code;
         }

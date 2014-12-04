@@ -24,29 +24,24 @@ if (typeof J$ === 'undefined') {
     if (typeof sandbox.iidToLocation !== 'undefined') {
         return;
     }
-    var Constants = sandbox.Constants;
-    var isBrowser = Constants?Constants.isBrowser:undefined;
-    var isInit = false;
-
-    sandbox.iidToLocation = function (iid) {
-        var ret;
-        if (!isInit) {
-            isInit = true;
-            if (!isBrowser) {
-                try {
-                    require(process.cwd()+"/jalangi_sourcemap");
-                } catch (e) {
-                    // don't crash if we can't find sourcemap file
+    sandbox.iidToLocation = function (sid, iid) {
+        var ret, arr;
+        if (sandbox.smap) {
+            if (typeof sid === 'string' && sid.indexOf(':')>=0) {
+                sid = sid.split(':');
+                iid = parseInt(sid[1]);
+                sid = parseInt(sid[0]);
+            }
+            if ((ret = sandbox.smap[sid])) {
+                var fname = ret.originalCodeFileName;
+                arr = ret[iid];
+                if (ret.evalSid !== undefined) {
+                    fname = fname+sandbox.iidToLocation(ret.evalSid, ret.evalIid);
                 }
+                return "("+fname/*.replace("_orig_.js", ".js")*/+":"+arr[0]+":"+arr[1]+":"+arr[2]+":"+arr[3]+")";
             }
         }
-        if (sandbox.iids) {
-            if ((ret = sandbox.iids[iid])) {
-
-                return "("+ret[0]/*.replace("_orig_.js", ".js")*/+":"+ret[1]+":"+ret[2]+":"+ret[3]+":"+ret[4]+")";
-            }
-        }
-        return iid+"";
+        return sid+"";
     };
 
 }(J$));

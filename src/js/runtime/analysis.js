@@ -42,6 +42,38 @@ if (typeof J$ === 'undefined') {
     var argIndex;
     var EVAL_ORG = eval;
     var lastComputedValue;
+    var SPECIAL_PROP_SID = sandbox.Constants.SPECIAL_PROP_SID;
+
+
+    var sidStack = [], sidCounter = 0;
+
+    function createAndAssignNewSid() {
+        sidStack.push(sandbox.sid);
+        sandbox.sid = sidCounter = sidCounter + 1;
+        if (!sandbox.smap) sandbox.smap = {};
+        sandbox.smap[sandbox.sid] = sandbox.iids;
+    }
+
+    function rollBackSid() {
+        sandbox.sid = sidStack.pop();
+    }
+
+    function associateSidWithFunction(f) {
+        if (typeof f === 'function') {
+            if (Object && Object.defineProperty && typeof Object.defineProperty === 'function') {
+                Object.defineProperty(f, SPECIAL_PROP_SID, {
+                    enumerable:false,
+                    writable:true
+                });
+            }
+            f[SPECIAL_PROP_SID] = sandbox.sid;
+        }
+    }
+
+    function updateSid(f) {
+        sidStack.push(sandbox.sid);
+        sandbox.sid = f[SPECIAL_PROP_SID];
+    }
 
 
     function isNative(f) {
@@ -162,6 +194,7 @@ if (typeof J$ === 'undefined') {
     // object/function/regexp/array Literal
     function T(iid, val, type, hasGetterSetter) {
         var aret;
+        associateSidWithFunction(val);
         if (sandbox.analysis && sandbox.analysis.literal) {
             aret = sandbox.analysis.literal(iid, val, hasGetterSetter);
             if (aret) {
@@ -314,6 +347,7 @@ if (typeof J$ === 'undefined') {
         argIndex = 0;
         returnStack.push(undefined);
         exceptionVal = undefined;
+        updateSid(f);
         if (sandbox.analysis && sandbox.analysis.functionEnter) {
             sandbox.analysis.functionEnter(iid, f, dis, args);
         }
@@ -332,6 +366,7 @@ if (typeof J$ === 'undefined') {
                 isBacktrack = aret.isBacktrack;
             }
         }
+        rollBackSid();
         if (!isBacktrack) {
             returnStack.push(returnVal);
         }
@@ -345,14 +380,9 @@ if (typeof J$ === 'undefined') {
         return isBacktrack;
     }
 
-    var sidStack = [];
     // Script enter
     function Se(iid, val, origFileName) {
-        //sidStack.push(sandbox.sid);
-        //sandbox.sid = sandbox.sidCounter = (sandbox.sidCounter | 0)+1;
-        //if (!sandbox.smap) sandbox.smap = {};
-        //sandbox.smap[sandbox.sid] = {"originalCodeFileName": origFileName, "instrumentedCodeFileName":val, "iids":sandbox.iids};
-
+        createAndAssignNewSid();
         if (sandbox.analysis && sandbox.analysis.scriptEnter) {
             sandbox.analysis.scriptEnter(iid, val, origFileName);
         }
@@ -368,7 +398,7 @@ if (typeof J$ === 'undefined') {
                 isBacktrack = aret.isBacktrack;
             }
         }
-//        sandbox.sid = sidStack.pop();
+        rollBackSid();
         if (exceptionVal !== undefined) {
             tmp = exceptionVal;
             exceptionVal = undefined;

@@ -31,25 +31,25 @@
 
         this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod){
             if (result !== result) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.sid+":"+iid] = (info[sandbox.sid+":"+iid]|0) + 1;
             }
         };
 
         this.getField = function(iid, base, offset, val){
             if (val !== val) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.sid+":"+iid] = (info[sandbox.sid+":"+iid]|0) + 1;
             }
         };
 
         this.binary = function(iid, op, left, right, result){
             if (result !== result) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.sid+":"+iid] = (info[sandbox.sid+":"+iid]|0) + 1;
             }
         };
 
         this.unary = function(iid, op, left, result){
             if (result !== result) {
-                info[iid] = (info[iid]|0) + 1;
+                info[sandbox.sid+":"+iid] = (info[sandbox.sid+":"+iid]|0) + 1;
             }
         };
 
