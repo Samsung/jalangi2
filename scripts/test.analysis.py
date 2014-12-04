@@ -32,3 +32,12 @@ with open('tests/sunspider1/unitTests.txt') as fp:
         else:
             rest = ''
         test('../tests/sunspider1/',args[0], rest)
+
+with open('tests/octane/unitTests.txt') as fp:
+    for line in fp:
+        args = line.split()
+        if len(args) == 2:
+            rest = args[1]
+        else:
+            rest = ''
+        test('../tests/octane/',args[0], rest)

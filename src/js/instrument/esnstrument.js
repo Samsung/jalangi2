@@ -912,13 +912,13 @@ if (typeof J$ === 'undefined') {
             }
             if (ast.name === JALANGI_VAR) {
                 return ast;
-            } else { //if (scope.hasVar(ast.name)) {
+            } else if (scope.hasVar(ast.name)) {
                 ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, false, scope.isGlobal(ast.name));
                 return ret;
-            } //else {
-            //ret = wrapReadWithUndefinedCheck(ast, ast.name);
-            //return ret;
-            //}
+            } else {
+                ret = wrapReadWithUndefinedCheck(ast, ast.name);
+                return ret;
+            }
         } else if (ast.type === 'MemberExpression') {
             return wrapGetField(ast, ast.object, getPropertyAsAst(ast), ast.computed);
         } else {

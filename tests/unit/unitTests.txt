@@ -54,3 +54,4 @@ issue78
 issue78b
 catch1
 scope
+typeofUndef
