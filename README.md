@@ -53,4 +53,38 @@ If Installation succeeds, you should see the following message:
 
 ### Usage
 
+**Analysis in node.js with explicit one-file-at-a-time offline instrumentation**
+
+An analysis can be performed on a JavaScript file in node.js by issuing the following commands:
+
+    node src/js/commands/esnstrument_cli.js --inlineIID --inlineSource tests/octane/deltablue.js
+	node src/js/commands/direct.js --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue_jalangi_.js
+
+In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js*.
+
+**Analysis in a browser using offline instrumentation**
+
+An analysis can be performed on an web app using the Chrome browser by issuing the following commands:
+
+    node src/js/commands/instrument.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js --outputDir /tmp tests/tizen/annex
+    open file:///tmp/annex/index.html
+
+While performing analysis in a browser, one needs to press Alt-Shift-T to end the analysis and to print the analysis results in the console.
+
+**Analysis in a browser using a proxy**
+
+You can also setup a proxy to instrument JavaScript files on-the-fly.  To do so, you need to install [mitmproxy](http://mitmproxy.org/)
+and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Edit scripts/proxy.py file to set the full path of JALANGI_HOME and the full paths of
+all ANALYSES files.  Then you can run the Jalangi instrumentation proxy by giving the following
+commands:
+
+    mkdir tmp
+    cd tmp
+    mitmdump -q --anticache -s ../scripts/proxy.py
+
+In your browser, the http and https proxy should be set to 127.0.0.1:8080.  Now if you load a website in your browser, all JavaScript files associated with
+the website will get instrumented on-the-fly.
+
+### Developing an analysis in Jalangi2
+
 Refer to [docs/analysis.md](docs/analysis.md) and [docs/commands.md](docs/commands.md) for further information.
