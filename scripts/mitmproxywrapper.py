@@ -5,6 +5,7 @@
 # Get usage information with:
 #
 # mitmproxywrapper.py -h
+# adopted from https://raw.githubusercontent.com/mitmproxy/mitmproxy/master/examples/mitmproxywrapper.py
 #
 
 import subprocess
@@ -131,10 +132,6 @@ class Wrapper(object):
         
         if args.toggle:
             wrapper.toggle_proxy()
-#         elif args.honeyproxy:
-#             wrapper.wrap_honeyproxy()
-        else:
-            wrapper.wrap_mitmproxy()
 
 
 if __name__ == '__main__':
