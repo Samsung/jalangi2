@@ -82,6 +82,7 @@ if (typeof J$ === 'undefined') {
     var logReturnAggrFunName = JALANGI_VAR + ".Ra";
     var logUncaughtExceptionFunName = JALANGI_VAR + ".Ex";
     var logLastComputedFunName = JALANGI_VAR + ".L";
+    var logTmpVarName = JALANGI_VAR + ".tmp";
 
     var logBinaryOpFunName = JALANGI_VAR + ".B";
     var logUnaryOpFunName = JALANGI_VAR + ".U";
@@ -286,7 +287,7 @@ if (typeof J$ === 'undefined') {
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logPutFieldFunName +
-                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4,"+(isComputed?"true":"false")+")",
+                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isComputed ? "true" : "false") + ")",
                 getIid(),
                 base,
                 offset,
@@ -303,7 +304,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4,"+(isComputed?"true":"false")+")(" + RP + "5)",
+                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (isComputed ? "true" : "false") + ")(" + RP + "5)",
                 getIid(),
                 base,
                 offset,
@@ -321,7 +322,7 @@ if (typeof J$ === 'undefined') {
         printIidToLoc(node);
         printSpecialIidToLoc(node.callee);
         var ret = replaceInExpr(
-            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (isCtor ? "true" : "false") + ","+ (isComputed ? "true" : "false") + ")",
+            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (isCtor ? "true" : "false") + "," + (isComputed ? "true" : "false") + ")",
             getIid(),
             base,
             offset
@@ -345,7 +346,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_GETFIELD || Config.INSTR_GETFIELD(node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3,"+(isComputed?"true":"false")+")",
+                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (isComputed ? "true" : "false") + ")",
                 getIid(),
                 base,
                 offset
@@ -734,6 +735,38 @@ if (typeof J$ === 'undefined') {
 
     var labelCounter = 0;
 
+    function wrapForIn(node, left, right, body) {
+        printIidToLoc(node);
+        var tmp, extra, isDeclaration = (left.type === 'VariableDeclaration');
+        if (isDeclaration) {
+            var name = node.left.declarations[0].id.name;
+            tmp = replaceInExpr(name + " = " + logTmpVarName);
+        } else {
+            tmp = replaceInExpr(RP + "1 = " + logTmpVarName, left);
+        }
+        transferLoc(tmp, node);
+        extra = instrumentStore(tmp, isDeclaration);
+
+        var ret;
+
+        if (body.type === 'BlockExpression') {
+            body = body.body;
+        } else {
+            body = [body];
+        }
+        if (isDeclaration) {
+            ret = replaceInStatement(
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {var "+name+" = " + RP + "2;\n {" + RP + "3}}}", right, extra.right, body);
+        } else {
+            ret = replaceInStatement(
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {" + RP + "2;\n {" + RP + "3}}}", right, extra, body);
+        }
+        ret = ret[0].body.body[0];
+        transferLoc(ret, node);
+        return ret;
+    }
+
+
     function wrapForInBody(node, body, name) {
         printIidToLoc(node);
         var ret = replaceInStatement(
@@ -883,11 +916,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function instrumentStore(node) {
+    function instrumentStore(node, isDeclaration) {
         var ret;
         if (node.left.type === 'Identifier') {
             if (scope.hasVar(node.left.name)) {
-                ret = wrapWrite(node.right, createLiteralAst(node.left.name), node.right, node.left, false, scope.isGlobal(node.left.name), false);
+                ret = wrapWrite(node.right, createLiteralAst(node.left.name), node.right, node.left, false, scope.isGlobal(node.left.name), isDeclaration);
             } else {
                 ret = wrapWriteWithUndefinedCheck(node.right, createLiteralAst(node.left.name), node.right, node.left);
 
@@ -1057,7 +1090,7 @@ if (typeof J$ === 'undefined') {
         "AssignmentExpression": function (node) {
             var ret1;
             if (node.operator === "=") {
-                ret1 = instrumentStore(node);
+                ret1 = instrumentStore(node, false);
             } else {
                 ret1 = instrumentLoadModStore(node);
             }
@@ -1119,13 +1152,15 @@ if (typeof J$ === 'undefined') {
         "ForInStatement": function (node) {
             var ret = wrapHash(node.right, node.right);
             node.right = ret;
-            var name;
-            if (node.left.type === 'VariableDeclaration') {
-                name = node.left.declarations[0].id.name;
-            } else {
-                name = node.left.name;
-            }
-            node.body = wrapForInBody(node, node.body, name);
+
+            node = wrapForIn(node, node.left, node.right, node.body);
+            //var name;
+            //if (node.left.type === 'VariableDeclaration') {
+            //    name = node.left.declarations[0].id.name;
+            //} else {
+            //    name = node.left.name;
+            //}
+            //node.body = wrapForInBody(node, node.body, name);
             return node;
         },
         "CatchClause": function (node) {

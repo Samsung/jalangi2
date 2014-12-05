@@ -20,6 +20,12 @@ field_inc
 field_read
 for_and_seq
 for_in
+forin1
+forin2
+forin3
+forin4
+forin5
+forin6
 fun_call
 gettersetter
 gettersetter2
