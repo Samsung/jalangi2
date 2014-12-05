@@ -74,16 +74,24 @@ While performing analysis in a browser, one needs to press Alt-Shift-T to end th
 **Analysis in a browser using a proxy**
 
 You can also setup a proxy to instrument JavaScript files on-the-fly.  To do so, you need to install [mitmproxy](http://mitmproxy.org/)
-and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Edit scripts/proxy.py file to set the full path of JALANGI_HOME and the full paths of
-all ANALYSES files.  Then you can run the Jalangi instrumentation proxy by giving the following
+and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Then you can run the Jalangi instrumentation proxy by giving the following
 commands:
 
     mkdir tmp
     cd tmp
-    mitmdump -q --anticache -s ../scripts/proxy.py
+    mitmdump -q --anticache -s "../scripts/proxy.py ../src/js/sample_analyses/ChainedAnalyses.js.. /src/js/runtime/analysisCallbackTemplate.js"
 
 In your browser, the http and https proxy should be set to 127.0.0.1:8080.  Now if you load a website in your browser, all JavaScript files associated with
 the website will get instrumented on-the-fly.
+
+On a mac, proxy can be set and launched automatically by giving the following commands:
+
+    mkdir tmp
+    cd tmp
+    ../scripts/mitmproxywrapper.py -t -q --anticache -s .."/scripts/proxy.py ../src/js/sample_analyses/ChainedAnalyses.js.. /src/js/runtime/analysisCallbackTemplate.js"
+
+The proxy can be disabled by re-executing the last command. The last command enables proxy and starts the mitmproxy if the proxy is not currently enabled.
+If the proxy is currently enabled, the command disables the proxy.
 
 ### Developing an analysis in Jalangi2
 
