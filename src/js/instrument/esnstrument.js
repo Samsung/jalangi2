@@ -1207,9 +1207,10 @@ if (typeof J$ === 'undefined') {
         },
         'UnaryExpression': function (node) {
             var ret;
-            if (node.operator === "void") {
-                return node;
-            } else if (node.operator === "delete") {
+            //if (node.operator === "void") {
+            //    return node;
+            //} else
+            if (node.operator === "delete") {
                 if (node.argument.object) {
                     ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator);
                 } else {

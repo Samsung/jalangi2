@@ -27,6 +27,7 @@ forin4
 forin5
 forin6
 fun_call
+void
 gettersetter
 gettersetter2
 getownpropnames

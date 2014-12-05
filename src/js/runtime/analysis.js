@@ -546,6 +546,9 @@ if (typeof J$ === 'undefined') {
                 case "typeof":
                     result = typeof left;
                     break;
+                case "void":
+                    result = void(left);
+                    break;
                 default:
                     throw new Error(op + " at " + iid + " not found");
                     break;
