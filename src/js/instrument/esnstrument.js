@@ -82,7 +82,7 @@ if (typeof J$ === 'undefined') {
     var logReturnAggrFunName = JALANGI_VAR + ".Ra";
     var logUncaughtExceptionFunName = JALANGI_VAR + ".Ex";
     var logLastComputedFunName = JALANGI_VAR + ".L";
-    var logTmpVarName = JALANGI_VAR + ".tmp";
+    var logTmpVarName = JALANGI_VAR + "._tm_p";
 
     var logBinaryOpFunName = JALANGI_VAR + ".B";
     var logUnaryOpFunName = JALANGI_VAR + ".U";
