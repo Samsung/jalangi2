@@ -326,8 +326,27 @@ if (typeof J$ === 'undefined') {
         exceptionVal = e;
     }
 
+    // Throw statement
+    function Th(iid, val) {
+        var aret;
+        if (sandbox.analysis && sandbox.analysis._throw) {
+            aret = sandbox.analysis._throw(iid, val);
+            if (aret) {
+                val = aret.result;
+            }
+        }
+        return (lastComputedValue = val);
+    }
+
     // Return statement
     function Rt(iid, val) {
+        var aret;
+        if (sandbox.analysis && sandbox.analysis._return) {
+            aret = sandbox.analysis._return(iid, val);
+            if (aret) {
+                val = aret.result;
+            }
+        }
         returnStack.pop();
         returnStack.push(val);
         return (lastComputedValue = val);
@@ -619,6 +638,14 @@ if (typeof J$ === 'undefined') {
         return lastComputedValue;
     }
 
+    function X1(val) {
+        if (sandbox.analysis && sandbox.analysis.endExpression) {
+            sandbox.analysis.endExpression();
+        }
+
+        return (lastComputedValue = val);
+    }
+
     function endExecution() {
         if (sandbox.analysis && sandbox.analysis.endExecution) {
             return sandbox.analysis.endExecution();
@@ -651,9 +678,11 @@ if (typeof J$ === 'undefined') {
     sandbox.Se = Se; // Script enter
     sandbox.Sr = Sr; // Script return
     sandbox.Rt = Rt; // returned value
+    sandbox.Th = Th; // thrown value
     sandbox.Ra = Ra;
     sandbox.Ex = Ex;
     sandbox.L = L;
+    sandbox.X1 = X1; // top level expression
     sandbox.endExecution = endExecution;
 
     sandbox.EVAL_ORG = EVAL_ORG;

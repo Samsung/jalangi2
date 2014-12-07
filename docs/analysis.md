@@ -44,6 +44,10 @@ API compared to analysis.js of Jalangi1.  An analysis in analysis.js can be writ
 
         this.write = function(iid, name, val, lhs, isGlobal, isPseudoGlobal) {return {result:val};};
 
+        this._return = function(iid, val){return {result:val};};
+
+        this._throw = function(iid, val){return {result:val};};
+
         this.functionEnter = function (iid, f, dis, args){};
 
         this.functionExit = function(iid, returnVal, exceptionVal){return {returnVal:returnVal,exceptionVal:exceptionVal,isBacktrack:false};};
@@ -65,6 +69,8 @@ API compared to analysis.js of Jalangi1.  An analysis in analysis.js can be writ
         this.instrumentCodePre = function(iid, code){return {code:code,skip:false};};
 
         this.instrumentCode = function(iid, newCode, newAst){ return {result:newCode};};
+
+        this.endExpression = function() {};
 
         this.endExecution = function() {};
       }

@@ -15,7 +15,9 @@
             "getFieldPre", "getField", "putFieldPre", "putField", "read", "write",
             "functionEnter", "functionExit", "scriptEnter", "scriptExit",
             "binaryPre", "binary", "unaryPre", "unary", "conditional",
-            "instrumentCodePre", "instrumentCode", "endExecution"];
+            "instrumentCodePre", "instrumentCode", "_return", "_throw", "endExpression", "endExecution"];
+
+        this.globals = {};
 
         this.addAnalysis = function (analysis) {
             var self = this, tmp, length = funList.length;

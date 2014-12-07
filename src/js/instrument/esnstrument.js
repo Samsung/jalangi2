@@ -79,6 +79,7 @@ if (typeof J$ === 'undefined') {
     var logLitFunName = JALANGI_VAR + ".T";
     var logInitFunName = JALANGI_VAR + ".N";
     var logReturnFunName = JALANGI_VAR + ".Rt";
+    var logThrowFunName = JALANGI_VAR + ".Th";
     var logReturnAggrFunName = JALANGI_VAR + ".Ra";
     var logUncaughtExceptionFunName = JALANGI_VAR + ".Ex";
     var logLastComputedFunName = JALANGI_VAR + ".L";
@@ -90,6 +91,7 @@ if (typeof J$ === 'undefined') {
     var logSwitchLeftFunName = JALANGI_VAR + ".C1";
     var logSwitchRightFunName = JALANGI_VAR + ".C2";
     var logLastFunName = JALANGI_VAR + "._";
+    var logX1FunName = JALANGI_VAR + ".X1";
 
     var instrumentCodeFunName = JALANGI_VAR + ".instrumentEvalCode";
 
@@ -538,6 +540,25 @@ if (typeof J$ === 'undefined') {
             expr
         );
         transferLoc(ret, lid);
+        return ret;
+    }
+
+    function wrapThrow(node, expr) {
+        printIidToLoc(expr);
+        var ret = replaceInExpr(
+            logThrowFunName + "(" + RP + "1, " + RP + "2)",
+            getIid(),
+            expr
+        );
+        transferLoc(ret, expr);
+        return ret;
+    }
+
+    function wrapWithX1(node, ast) {
+        if (!ast || ast.type.indexOf("Expression")<=0) return ast;
+        var ret = replaceInExpr(
+            logX1FunName + "(" + RP + "1)", ast);
+        transferLoc(ret, node);
         return ret;
     }
 
@@ -1174,12 +1195,20 @@ if (typeof J$ === 'undefined') {
             var ret = wrapReturn(node, node.argument);
             node.argument = ret;
             return node;
+        },
+        "ThrowStatement": function (node) {
+            var ret = wrapThrow(node, node.argument);
+            node.argument = ret;
+            return node;
         }
     };
 
     function funCond(node) {
         var ret = wrapConditional(node.test, node.test);
         node.test = ret;
+        node.test = wrapWithX1(node, node.test);
+        node.init = wrapWithX1(node, node.init);
+        node.update = wrapWithX1(node, node.update);
         return node;
     }
 
@@ -1190,6 +1219,17 @@ if (typeof J$ === 'undefined') {
 //                var ret = prependScriptBody(node, body);
             node.body = body;
 
+            return node;
+        },
+        "VariableDeclaration": function (node) {
+            var declarations = MAP(node.declarations, function (def) {
+                if (def.init !== null) {
+                    var init = wrapWithX1(def.init, def.init);
+                    def.init = init;
+                }
+                return def;
+            });
+            node.declarations = declarations;
             return node;
         },
         'BinaryExpression': function (node) {
@@ -1227,7 +1267,7 @@ if (typeof J$ === 'undefined') {
                 var test;
                 if (acase.test) {
                     test = wrapSwitchTest(acase.test, acase.test);
-                    acase.test = test;
+                    acase.test = wrapWithX1(test, test);
                 }
                 return acase;
             });
@@ -1247,7 +1287,21 @@ if (typeof J$ === 'undefined') {
         "IfStatement": funCond,
         "WhileStatement": funCond,
         "DoWhileStatement": funCond,
-        "ForStatement": funCond
+        "ForStatement": funCond,
+        "ExpressionStatement": function (node) {
+            node.expression = wrapWithX1(node, node.expression);
+            return node;
+        },
+        "ReturnStatement": function (node) {
+            var ret = wrapWithX1(node, node.argument);
+            node.argument = ret;
+            return node;
+        },
+        "ThrowStatement": function (node) {
+            var ret = wrapWithX1(node, node.argument);
+            node.argument = ret;
+            return node;
+        }
     };
 
     function addScopes(ast) {
