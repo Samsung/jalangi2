@@ -44,7 +44,7 @@ If you have a fresh installation of Ubuntu, you can install all the requirements
 If Installation succeeds, you should see the following message:
 
     ---> Installation successful.
-    ---> run 'python scripts/test.analysis.js' to make sure all tests pass
+    ---> run 'npm test' to make sure all tests pass
 
 ### Run tests
 
