@@ -17,6 +17,8 @@
 
 // Author: Koushik Sen
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
 
 // In the following callbacks one can choose to not return anything.
 // If all of the callbacks return nothing, we get a passive analysis where the
@@ -53,9 +55,9 @@
 
         this.putField = function(iid, base, offset, val, isComputed, isOpAssign){return {result:val};};
 
-        this.read = function(iid, name, val, isGlobal, isPseudoGlobal){return {result:val};};
+        this.read = function(iid, name, val, isGlobal, isScriptLocal){return {result:val};};
 
-        this.write = function(iid, name, val, lhs, isGlobal, isPseudoGlobal) {return {result:val};};
+        this.write = function(iid, name, val, lhs, isGlobal, isScriptLocal) {return {result:val};};
 
         this._return = function(iid, val){return {result:val};};
 

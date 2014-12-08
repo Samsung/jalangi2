@@ -1,3 +1,8 @@
+// Author: Koushik Sen
+
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 // probably forgot to call a function before comparison
 (function (sandbox) {
     function MyAnalysis () {

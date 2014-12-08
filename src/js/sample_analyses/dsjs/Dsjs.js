@@ -1,3 +1,8 @@
+// Author: Koushik Sen
+
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 // run the following in the JALANGI_HOME directory
 // python scripts/dsjs.py tests/octane/richards; open jalangi_tmp/index.html
 

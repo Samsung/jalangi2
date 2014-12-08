@@ -16,6 +16,9 @@
 
 // Author: Koushik Sen
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 /*jslint node: true browser: true */
 /*global astUtil acorn escodegen J$ */
 
@@ -360,11 +363,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapRead(node, name, val, isReUseIid, isGlobal, isPseudoGlobal) {
+    function wrapRead(node, name, val, isReUseIid, isGlobal, isScriptLocal) {
         if (!Config.INSTR_READ || Config.INSTR_READ(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (isGlobal ? "true" : "false") + "," + (isPseudoGlobal ? "true" : "false") + ")",
+                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (isGlobal ? "true" : "false") + "," + (isScriptLocal ? "true" : "false") + ")",
                 isReUseIid ? getPrevIidNoInc() : getIid(),
                 name,
                 val
@@ -409,12 +412,12 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
-    function wrapWrite(node, name, val, lhs, isGlobal, isPseudoGlobal, isDeclaration) {
+    function wrapWrite(node, name, val, lhs, isGlobal, isScriptLocal, isDeclaration) {
         if (!Config.INSTR_WRITE || Config.INSTR_WRITE(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isGlobal ? "true" : "false") +
-                "," + (isPseudoGlobal ? "true" : "false") + "," + (isDeclaration ? "true" : "false") + ")",
+                "," + (isScriptLocal ? "true" : "false") + "," + (isDeclaration ? "true" : "false") + ")",
                 getIid(),
                 name,
                 val,

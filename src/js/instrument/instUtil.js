@@ -16,6 +16,9 @@
 
 // Author: Manu Sridharan
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 /*jslint node: true */
 var fs = require('fs');
 var path = require('path');

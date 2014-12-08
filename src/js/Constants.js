@@ -1,3 +1,5 @@
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
 if (typeof J$ === 'undefined') {
     J$ = {};
 }

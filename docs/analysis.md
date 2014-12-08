@@ -40,9 +40,9 @@ API compared to analysis.js of Jalangi1.  An analysis in analysis.js can be writ
 
         this.putField = function(iid, base, offset, val, isComputed, isOpAssign){return {result:val};};
 
-        this.read = function(iid, name, val, isGlobal, isPseudoGlobal){return {result:val};};
+        this.read = function(iid, name, val, isGlobal, isScriptLocal){return {result:val};};
 
-        this.write = function(iid, name, val, lhs, isGlobal, isPseudoGlobal) {return {result:val};};
+        this.write = function(iid, name, val, lhs, isGlobal, isScriptLocal) {return {result:val};};
 
         this._return = function(iid, val){return {result:val};};
 

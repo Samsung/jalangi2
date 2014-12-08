@@ -16,6 +16,9 @@
 
 // Author: Koushik Sen
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 (function (sandbox) {
     function Utils () {
         var Constants = sandbox.Constants;

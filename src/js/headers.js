@@ -1,3 +1,5 @@
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
 module.exports.headerSources = [
     "src/js/Constants.js",
     "src/js/Config.js",

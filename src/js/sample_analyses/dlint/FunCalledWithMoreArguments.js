@@ -17,6 +17,8 @@
 
 // Author: Koushik Sen
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
 
 // In the following callbacks one can choose to not return anything.
 // If all of the callbacks return nothing, we get a passive analysis where the

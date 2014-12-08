@@ -16,6 +16,9 @@
 
 // Author: Koushik Sen
 
+// do not remove the following comment
+// JALANGI DO NOT INSTRUMENT
+
 
 // wrap in anonymous function to create local namespace when in browser
 // create / reset J$ global variable to hold analysis runtime
@@ -291,12 +294,12 @@ if (typeof J$ === 'undefined') {
 
     // variable write
     // isGlobal means that the variable is global and not declared as var
-    // isPseudoGlobal means that the variable is global and is declared as var
-    function R(iid, name, val, isGlobal, isPseudoGlobal) {
+    // isScriptLocal means that the variable is global and is declared as var
+    function R(iid, name, val, isGlobal, isScriptLocal) {
         var aret;
 
         if (sandbox.analysis && sandbox.analysis.read) {
-            aret = sandbox.analysis.read(iid, name, val, isGlobal, isPseudoGlobal);
+            aret = sandbox.analysis.read(iid, name, val, isGlobal, isScriptLocal);
             if (aret) {
                 val = aret.result;
             }
@@ -305,10 +308,10 @@ if (typeof J$ === 'undefined') {
     }
 
     // variable write
-    function W(iid, name, val, lhs, isGlobal, isPseudoGlobal, isDeclaration) {
+    function W(iid, name, val, lhs, isGlobal, isScriptLocal, isDeclaration) {
         var aret;
         if (sandbox.analysis && sandbox.analysis.write) {
-            aret = sandbox.analysis.write(iid, name, val, lhs, isGlobal, isPseudoGlobal);
+            aret = sandbox.analysis.write(iid, name, val, lhs, isGlobal, isScriptLocal);
             if (aret) {
                 val = aret.result;
             }
