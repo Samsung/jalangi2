@@ -1,6 +1,8 @@
 import sj
 import sys
 
+status = 0
+
 def test(prefix, file, rest):
     sj.create_and_cd_jalangi_tmp()
     sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
@@ -11,6 +13,7 @@ def test(prefix, file, rest):
         print "{} failed".format(file)
         print normal
         print ana
+        status = 1
     else:
         print "{} passed".format(file)
     sj.cd_parent()
@@ -41,3 +44,5 @@ with open('tests/octane/unitTests.txt') as fp:
         else:
             rest = ''
         test('../tests/octane/',args[0], rest)
+
+exit(status)

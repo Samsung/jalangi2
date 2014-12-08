@@ -1,6 +1,8 @@
 import sj
 import sys
 
+status = 0
+
 analyses = ['../src/js/sample_analyses/ChainedAnalyses.js',
  '../src/js/sample_analyses/dlint/Utils.js',
  '../src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js',
@@ -22,6 +24,7 @@ def testDlint (file, output):
         print out
         print "********** Expected **********"
         print output
+        status 1
     else:
         print "{} passed".format(file)
     sj.cd_parent()
@@ -52,3 +55,5 @@ testDlint('dlint3',out)
 out="""Comparing a function with a number or string or boolean at (../tests/dlint/dlint4.js:4:5:4:37) 1 time(s).
 """
 testDlint('dlint4',out)
+
+exit(status)
