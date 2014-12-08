@@ -38,7 +38,7 @@ if (typeof J$ === 'undefined') {
     // call_in_finally.js)
 
     var returnStack = [];
-    var exceptionVal;
+    var wrappedExceptionVal;
     var lastVal;
     var switchLeft;
     var switchKeyStack = [];
@@ -326,7 +326,7 @@ if (typeof J$ === 'undefined') {
 
     // Uncaught exception
     function Ex(iid, e) {
-        exceptionVal = e;
+        wrappedExceptionVal = {exception:e};
     }
 
     // Throw statement
@@ -360,7 +360,7 @@ if (typeof J$ === 'undefined') {
     // the return value stored by call to Rt()
     function Ra() {
         var returnVal = returnStack.pop();
-        exceptionVal = undefined;
+        wrappedExceptionVal = undefined;
         return returnVal;
     }
 
@@ -368,7 +368,7 @@ if (typeof J$ === 'undefined') {
     function Fe(iid, f, dis /* this */, args) {
         argIndex = 0;
         returnStack.push(undefined);
-        exceptionVal = undefined;
+        wrappedExceptionVal = undefined;
         updateSid(f);
         if (sandbox.analysis && sandbox.analysis.functionEnter) {
             sandbox.analysis.functionEnter(iid, f, dis, args);
@@ -381,10 +381,10 @@ if (typeof J$ === 'undefined') {
 
         returnVal = returnStack.pop();
         if (sandbox.analysis && sandbox.analysis.functionExit) {
-            aret = sandbox.analysis.functionExit(iid, returnVal, exceptionVal);
+            aret = sandbox.analysis.functionExit(iid, returnVal, wrappedExceptionVal);
             if (aret) {
                 returnVal = aret.returnVal;
-                exceptionVal = aret.exceptionVal;
+                wrappedExceptionVal = aret.wrappedExceptionVal;
                 isBacktrack = aret.isBacktrack;
             }
         }
@@ -394,9 +394,9 @@ if (typeof J$ === 'undefined') {
         }
         // if there was an uncaught exception, throw it
         // here, to preserve exceptional control flow
-        if (exceptionVal !== undefined) {
-            tmp = exceptionVal;
-            exceptionVal = undefined;
+        if (wrappedExceptionVal !== undefined) {
+            tmp = wrappedExceptionVal.exception;
+            wrappedExceptionVal = undefined;
             throw tmp;
         }
         return isBacktrack;
@@ -414,16 +414,16 @@ if (typeof J$ === 'undefined') {
     function Sr(iid) {
         var tmp, aret, isBacktrack;
         if (sandbox.analysis && sandbox.analysis.scriptExit) {
-            aret = sandbox.analysis.scriptExit(iid, exceptionVal);
+            aret = sandbox.analysis.scriptExit(iid, wrappedExceptionVal);
             if (aret) {
-                exceptionVal = aret.exceptionVal;
+                wrappedExceptionVal = aret.wrappedExceptionVal;
                 isBacktrack = aret.isBacktrack;
             }
         }
         rollBackSid();
-        if (exceptionVal !== undefined) {
-            tmp = exceptionVal;
-            exceptionVal = undefined;
+        if (wrappedExceptionVal !== undefined) {
+            tmp = wrappedExceptionVal.exception;
+            wrappedExceptionVal = undefined;
             throw tmp;
         }
         return isBacktrack;
@@ -432,8 +432,10 @@ if (typeof J$ === 'undefined') {
 
     // Modify and assign +=, -= ...
     function A(iid, base, offset, op, isComputed) {
-        var oprnd1 = G(iid, base, offset, isComputed, true, false);
+        // avoid iid collision: make sure that iid+2 has the same source map as iid (@todo)
+        var oprnd1 = G(iid+2, base, offset, isComputed, true, false);
         return function (oprnd2) {
+            // still possible to get iid collision with a mem operation
             var val = B(iid, op, oprnd1, oprnd2, true, false);
             return P(iid, base, offset, val, isComputed, true);
         };

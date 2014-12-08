@@ -65,11 +65,11 @@
 
         this.functionEnter = function (iid, f, dis, args){};
 
-        this.functionExit = function(iid, returnVal, exceptionVal){return {returnVal:returnVal,exceptionVal:exceptionVal,isBacktrack:false};};
+        this.functionExit = function(iid, returnVal, wrappedExceptionVal){return {returnVal:returnVal,wrappedExceptionVal:wrappedExceptionVal,isBacktrack:false};};
 
         this.scriptEnter = function(iid, instrumentedFileName, originalFileName){};
 
-        this.scriptExit = function(iid, exceptionVal){return {exceptionVal:exceptionVal,isBacktrack:false};};
+        this.scriptExit = function(iid, wrappedExceptionVal){return {wrappedExceptionVal:wrappedExceptionVal,isBacktrack:false};};
 
         this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison){return {op:op,left:left,right:right,skip:false};};
 

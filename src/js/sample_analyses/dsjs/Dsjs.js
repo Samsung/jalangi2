@@ -299,10 +299,10 @@
             thisStack.push(currThis);
         };
 
-        this.functionExit = function (iid, returnVal, exceptionVal) {
+        this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
             thisStack.pop();
             currThis = thisStack[thisStack.length - 1];
-            return {returnVal: returnVal, exceptionVal: exceptionVal, isBacktrack: false};
+            return {returnVal: returnVal, wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
         this.scriptEnter = function (iid, val) {
