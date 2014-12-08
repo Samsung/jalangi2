@@ -63,7 +63,7 @@ function runAnalysis() {
         newArgs = newArgs.concat(args.script_and_args);
         process.argv = newArgs;
         try {
-            require(script);
+            require('module').Module.runMain(script, null, true);
         } finally {
             J$.endExecution();
         }
