@@ -96,3 +96,8 @@ If the proxy is currently enabled, the command disables the proxy.
 ### Developing an analysis in Jalangi2
 
 Refer to [docs/analysis.md](docs/analysis.md) and [docs/commands.md](docs/commands.md) for further information.
+
+License
+-------
+
+Jalangi2 is distributed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0.html).
