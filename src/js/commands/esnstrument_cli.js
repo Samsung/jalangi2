@@ -172,7 +172,24 @@ if (typeof J$ === 'undefined') {
             fs.writeFileSync(makeSMapFileName(instFileName), instCodeAndData.sourceMapString, "utf8");
             fs.writeFileSync(instFileName, instCodeAndData.code, "utf8");
         } else {
-            instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot()));
+            instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, "");
+            var headerStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            headerStr += instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot());
+            // just inject our header code
+            var headIndex = instCode.indexOf("<head>");
+            if (headIndex === -1) {
+                headIndex = instCode.indexOf("<HEAD>");
+                if (headIndex === -1) {
+                    console.error("WARNING: could not find <head> element in HTML file " + this.filename);
+                    instCode = headerStr + instCode;
+                } else {
+                    instCode = instCode.slice(0, headIndex + 6) + headerStr + instCode.slice(headIndex + 6);
+                }
+            } else {
+                instCode = instCode.slice(0, headIndex + 6) + headerStr + instCode.slice(headIndex + 6);
+            }
+
+
             fs.writeFileSync(instFileName, instCode, "utf8");
         }
     }

@@ -86,6 +86,7 @@ if (typeof J$ === 'undefined') {
         instUtil.setHeaders();
 
         var instrumentInline = options.instrumentInline;
+        var inlineJalangi = options.inlineJalangi;
         var inlineIID = options.inlineIID;
         var inlineSource = options.inlineSource;
 
@@ -166,7 +167,6 @@ if (typeof J$ === 'undefined') {
                     result += "<script src=\"" + fileName + "\"></script>";
                 };
                 instUtil.headerSources.forEach(addScript);
-                result += "<script src=\"jalangi_sourcemap.js\"></script>";
                 if (analyses) {
                     analyses.forEach(addScript);
                 }
@@ -174,10 +174,19 @@ if (typeof J$ === 'undefined') {
             }
 
 
+            var newHTML;
+            var headerLibs;
+            var metaStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n';
+
             if (instrumentInline) {
-                this.push(proxy.rewriteHTML(this.data, "http://foo.com", rewriteInlineScript, instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot)));
+                newHTML = proxy.rewriteHTML(this.data, "http://foo.com", rewriteInlineScript, "");
             } else {
-                var headerLibs;
+                newHTML = this.data;
+
+            }
+            if (inlineJalangi) {
+                headerLibs = instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
+            } else {
                 if (copyRuntime) {
                     headerLibs = getContainedRuntimeScriptTags();
                 } else {
@@ -190,7 +199,6 @@ if (typeof J$ === 'undefined') {
                     }
 
                     headerLibs = instUtil.getHeaderCodeAsScriptTags(jalangiRoot);
-                    headerLibs += "<script src=\"jalangi_sourcemap.js\"></script>";
                     headerLibs = headerLibs + tmp3;
                 }
                 if (extraAppScripts.length > 0) {
@@ -201,17 +209,23 @@ if (typeof J$ === 'undefined') {
                         headerLibs += "<script src=\"" + scriptSrc + "\"></script>";
                     });
                 }
-                // just inject our header code
-                var headIndex = this.data.indexOf("<head>");
+            }
+            // just inject our header code
+            var headIndex = this.data.indexOf("<head>");
+            if (headIndex === -1) {
+                headIndex = this.data.indexOf("<HEAD>");
                 if (headIndex === -1) {
                     console.error("WARNING: could not find <head> element in HTML file " + this.filename);
                     this.push(this.data);
                 } else {
-                    var newHTML = this.data.slice(0, headIndex + 6) + headerLibs + this.data.slice(headIndex + 6);
+                    newHTML = newHTML.slice(0, headIndex + 6) + metaStr + headerLibs + newHTML.slice(headIndex + 6);
                     this.push(newHTML);
                 }
-
+            } else {
+                newHTML = newHTML.slice(0, headIndex + 6) + metaStr + headerLibs + newHTML.slice(headIndex + 6);
+                this.push(newHTML);
             }
+
             cb();
         };
 
@@ -433,8 +447,18 @@ if (typeof J$ === 'undefined') {
         parser.addArgument(['-x', '--exclude'], {help: "do not instrument any scripts whose file path contains this substring"});
         parser.addArgument(['--only_include'], {help: "list of path prefixes specifying which sub-directories should be instrumented, separated by path.delimiter"});
         parser.addArgument(['-i', '--instrumentInline'], {help: "instrument inline scripts", action: 'storeTrue'});
-        parser.addArgument(['--inlineIID'], {help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file", action: 'storeTrue'});
-        parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
+        parser.addArgument(['--inlineIID'], {
+            help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file",
+            action: 'storeTrue'
+        });
+        parser.addArgument(['--inlineSource'], {
+            help: "Inline original source as string in J$.iids.code in the instrumented file",
+            action: 'storeTrue'
+        });
+        parser.addArgument(['--inlineJalangi'], {
+            help: "Inline Jalangi runtime source code into HTML files",
+            action: 'storeTrue'
+        });
         parser.addArgument(['--analysis'], {
             help: "Analysis script.",
             action: "append"
