@@ -24,7 +24,7 @@ def testDlint (file, output):
         print out
         print "********** Expected **********"
         print output
-        status 1
+        status = 1
     else:
         print "{} passed".format(file)
     sj.cd_parent()
