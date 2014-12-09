@@ -11,4 +11,3 @@ regexp
 richards
 splay
 typescript
-mandreel
