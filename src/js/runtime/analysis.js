@@ -79,6 +79,7 @@ if (typeof J$ === 'undefined') {
     }
 
 
+    // unused
     function isNative(f) {
         return f.toString().indexOf('[native code]') > -1 || f.toString().indexOf('[object ') === 0;
     }
@@ -118,7 +119,7 @@ if (typeof J$ === 'undefined') {
         if (true) {
             ret = callAsNativeConstructor(Constructor, args);
             return ret;
-        } else {
+        } else { // else branch is a more elegant to call a constructor reflectively, but it leads to memory leak in v8.
             var Temp = function () {
             }, inst;
             Temp.prototype = Constructor.prototype;
@@ -207,6 +208,7 @@ if (typeof J$ === 'undefined') {
         return (lastComputedValue = val);
     }
 
+    // wrap object o in for (x in o) { ... }
     function H(iid, val) {
         var aret;
         if (sandbox.analysis && sandbox.analysis.forinObject) {
@@ -218,7 +220,6 @@ if (typeof J$ === 'undefined') {
         return val;
     }
 
-    // variable read
     // variable declaration (Init)
     function N(iid, name, val, isArgument, isLocalSync, isCatchParam) {
         // isLocalSync is only true when we sync variables inside a for-in loop
@@ -609,20 +610,23 @@ if (typeof J$ === 'undefined') {
     }
 
     // case label inside switch
-    function C2(iid, left) {
+    function C2(iid, right) {
         var aret, result;
 
-        result = B(iid, "===", switchLeft, left, false, true);
+        // avoid iid collision; iid may not have a map in the sourcemap
+        result = B(iid+1, "===", switchLeft, right, false, true);
 
         if (sandbox.analysis && sandbox.analysis.conditional) {
             aret = sandbox.analysis.conditional(iid, result);
             if (aret) {
                 if (result && !aret.result) {
-                    left = !left;
+                    right = !right;
+                } else if (result && aret.result) {
+                    right = switchLeft;
                 }
             }
         }
-        return (lastComputedValue = left);
+        return (lastComputedValue = right);
     }
 
     // Expression in conditional
