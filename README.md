@@ -53,6 +53,14 @@ If Installation succeeds, you should see the following message:
 
 ### Usage
 
+**Analysis in node.js with on-the-fly instrumentation**
+
+An analysis can be performed on a JavaScript file in node.js by issuing the following commands:
+
+	node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue.js
+
+In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js*.
+
 **Analysis in node.js with explicit one-file-at-a-time offline instrumentation**
 
 An analysis can be performed on a JavaScript file in node.js by issuing the following commands:
@@ -71,7 +79,7 @@ An analysis can be performed on an web app using the Chrome browser by issuing t
 
 While performing analysis in a browser, one needs to press Alt-Shift-T to end the analysis and to print the analysis results in the console.
 
-**Analysis in a browser using a proxy**
+**Analysis in a browser using a proxy and on-the-fly instrumentation**
 
 You can also setup a proxy to instrument JavaScript files on-the-fly.  To do so, you need to install [mitmproxy](http://mitmproxy.org/)
 and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Then you can run the Jalangi instrumentation proxy by giving the following

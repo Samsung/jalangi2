@@ -1,3 +1,23 @@
+## jalangi.js
+
+Command-line utility to perform Jalangi2's instrumentation and analysis
+
+    node src/js/commands/jalangi.js -h
+    usage: jalangi.js [-h] [--analysis ANALYSIS] [--inlineIID] [--inlineSource]
+                  ...
+
+Positional arguments:
+
+    script_and_args      script to record and CLI arguments for that script
+
+Optional arguments:
+
+    -h, --help           Show this help message and exit.
+    --analysis ANALYSIS  absolute path to analysis file to run
+    --inlineIID          Inline IID to (beginLineNo, beginColNo, endLineNo,
+                       endColNo) in J$.iids in the instrumented file
+    --inlineSource       Inline original source as string in J$.iids.code in
+                       the instrumented file
 ## esnstrument_cli.js
 
 

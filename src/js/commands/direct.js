@@ -24,7 +24,7 @@
 var argparse = require('argparse');
 var parser = new argparse.ArgumentParser({
     addHelp: true,
-    description: "Command-line utility to perform Jalangi light's analysis"
+    description: "Command-line utility to perform Jalangi2's analysis"
 });
 parser.addArgument(['--analysis'], { help: "absolute path to analysis file to run", action:'append'});
 parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
