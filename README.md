@@ -39,12 +39,7 @@ If you have a fresh installation of Ubuntu, you can install all the requirements
 
 ### Installation
 
-    python ./scripts/install.py
-
-If Installation succeeds, you should see the following message:
-
-    ---> Installation successful.
-    ---> run 'npm test' to make sure all tests pass
+    npm install
 
 ### Run tests
 
