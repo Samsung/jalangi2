@@ -3,15 +3,13 @@ Jalangi2
 ### Introduction
 
 Jalangi2 is a framework for writing dynamic analyses for JavaScript.
-Jalangi1 is still available at https://github.com/SRA-SiliconValley/jalangi, but we no longer plan to develop Jalangi1.
+Jalangi1 is still available at https://github.com/SRA-SiliconValley/jalangi, but we no longer plan to develop it.
 Jalangi2 does not support the record/replay feature of Jalangi1.
 In the Jalangi2 distribution you will find several analyses:
 
   * an analysis to [track NaNs](src/js/sample_analyses/dlint/CheckNaN.js),
   * an analysis to [check if an undefined is concatenated to a string](src/js/sample_analyses/dlint/ConcatUndefinedToString.js),
   * and [more ...](src/js/sample_analyses/)
-
-Jalangi1 is available at https://github.com/SRA-SiliconValley/jalangi, but we no longer plan to develop Jalangi1.
 
 ### Requirements
 
@@ -38,6 +36,8 @@ If you have a fresh installation of Ubuntu, you can install all the requirements
     sudo apt-get install chromium-browser
 
 ### Installation
+
+Clone the repository, and then run:
 
     npm install
 
