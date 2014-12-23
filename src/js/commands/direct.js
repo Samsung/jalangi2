@@ -45,7 +45,7 @@ function runAnalysis() {
 
     var path = require('path');
     acorn = require("acorn");
-    escodegen = require("escodegen");
+    esotope = require("esotope");
     require('../headers').headerSources.forEach(function(header){
         require("./../../../"+header);
     });

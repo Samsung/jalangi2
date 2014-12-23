@@ -6,7 +6,7 @@
     "acorn": "0.9.0",
     "argparse": "0.1.16",
     "cover": "0.2.9",
-    "escodegen": "1.4.1",
+    "esotope": "1.4.2",
     "estraverse": "1.9.0",
     "execSync": "1.0.2",
     "mkdirp": "0.5.0",

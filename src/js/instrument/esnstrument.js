@@ -20,7 +20,7 @@
 // JALANGI DO NOT INSTRUMENT
 
 /*jslint node: true browser: true */
-/*global astUtil acorn escodegen J$ */
+/*global astUtil acorn esotope J$ */
 
 //var StatCollector = require('../utils/StatCollector');
 if (typeof J$ === 'undefined') {
@@ -1604,7 +1604,7 @@ if (typeof J$ === 'undefined') {
             // post-process AST to hoist function declarations (required for Firefox)
             var hoistedFcts = [];
             newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-            var newCode = escodegen.generate(newAst);
+            var newCode = esotope.generate(newAst);
             code = newCode + "\n" + noInstr + "\n";
         }
 
@@ -1652,7 +1652,7 @@ if (typeof J$ === 'undefined') {
 // exports J$.instrumentCode
 // exports J$.instrumentEvalCode
 // depends on acorn
-// depends on escodegen
+// depends on esotope
 // depends on J$.Constants
 // depends on J$.Config
 // depends on J$.astUtil

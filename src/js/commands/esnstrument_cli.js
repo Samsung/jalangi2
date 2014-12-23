@@ -17,7 +17,7 @@
 // Author: Koushik Sen
 
 /*jslint node: true browser: true */
-/*global astUtil acorn escodegen J$ */
+/*global astUtil acorn esotope J$ */
 
 //var StatCollector = require('../utils/StatCollector');
 if (typeof J$ === 'undefined') {
@@ -27,7 +27,7 @@ if (typeof J$ === 'undefined') {
 
 (function (sandbox) {
     acorn = require("acorn");
-    escodegen = require("escodegen");
+    esotope = require("esotope");
     require('../headers').headerSources.forEach(function (header) {
         require("./../../../" + header);
     });
