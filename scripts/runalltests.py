@@ -27,6 +27,7 @@ def call_fail(l):
 #call_fail(["python", "scripts/html_unitsv.py"])
 call_fail(["python", "scripts/test.analysis.py"])
 call_fail(["python", "scripts/test.dlint.py"])
+call_fail(["python", "scripts/test.inst.py"])
 #call_fail(["python", "scripts/sym.py"])
 #call_fail(["python", "scripts/testmultiple.py"])
 # call_fail(["python", "scripts/testsp.py"])

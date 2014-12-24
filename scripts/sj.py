@@ -80,7 +80,7 @@ def execute(script, *args):
 def execute_np(script, *args):
     """Execute script and print output"""
     cmd = [find_node()] + script.split()
-    subprocess.call(cmd)
+    return subprocess.call(cmd)
 
 
 WORKING_DIR = os.getcwd()
