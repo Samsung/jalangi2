@@ -91,7 +91,7 @@ On a mac, proxy can be set and launched automatically by giving the following co
 
     mkdir tmp
     cd tmp
-    ../scripts/mitmproxywrapper.py -t -q --anticache -s .."/scripts/proxy.py ../src/js/sample_analyses/ChainedAnalyses.js ../src/js/runtime/analysisCallbackTemplate.js"
+    ../scripts/mitmproxywrapper.py -t -q --anticache -s "../scripts/proxy.py ../src/js/sample_analyses/ChainedAnalyses.js ../src/js/runtime/analysisCallbackTemplate.js"
 
 The proxy can be disabled by re-executing the last command. The last command enables proxy and starts the mitmproxy if the proxy is not currently enabled.
 If the proxy is currently enabled, the command disables the proxy.
