@@ -211,12 +211,12 @@ if (typeof J$ === 'undefined') {
                 }
             }
             // just inject our header code
-            var headIndex = this.data.indexOf("<head>");
+            var headIndex = newHTML.indexOf("<head>");
             if (headIndex === -1) {
-                headIndex = this.data.indexOf("<HEAD>");
+                headIndex = newHTML.indexOf("<HEAD>");
                 if (headIndex === -1) {
                     console.error("WARNING: could not find <head> element in HTML file " + this.filename);
-                    this.push(this.data);
+                    this.push(newHTML);
                 } else {
                     newHTML = newHTML.slice(0, headIndex + 6) + metaStr + headerLibs + newHTML.slice(headIndex + 6);
                     this.push(newHTML);
