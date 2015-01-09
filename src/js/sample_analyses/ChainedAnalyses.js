@@ -24,7 +24,7 @@
         function clientAnalysisException(e) {
             console.error("analysis exception!!!");
             console.error(e.stack);
-            if (typeof process !== 'undefined' && process.exit) {
+            if (typeof process !== 'undefined' && process.exit && !sandbox.Constants.isSingleTestProcess) {
                 process.exit(1);
             } else {
                 throw e;
