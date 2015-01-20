@@ -14,11 +14,15 @@
     "temp": "0.8.1"
   },
   "scripts": {
-    "test": "python scripts/runalltests.py"
+    "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"
   },
   "license":"Apache",
   "repository" : {
     "type" : "git",
     "url" : "https://github.com/Samsung/jalangi2.git"
-  }
+  },
+  "devDependencies": {
+    "mocha": "2.1.0"
+  },
+  "main": "src/js/utils/api.js"
 }

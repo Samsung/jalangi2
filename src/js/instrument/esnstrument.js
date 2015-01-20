@@ -1598,7 +1598,6 @@ if (typeof J$ === 'undefined') {
         }
 
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
-            // this is a call in eval
             iidSourceInfo = {};
             var newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
             // post-process AST to hoist function declarations (required for Firefox)
