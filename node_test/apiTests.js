@@ -23,12 +23,43 @@ var fs = require('fs');
 var assert = require('assert');
 
 describe('api tests', function () {
-    it('should do instrumentation', function () {
+    it('should do basic instrumentation', function () {
         var testCode = "var x = 3;";
         var options = {
-
+            inputFileName: 'input.js',
+            outputFile: 'test.js'
         };
         var instResult = jalangi.instrumentString(testCode, options);
-        console.log(instResult);
+        // couple of random asserts
+        assert.deepEqual(instResult.sourceMapObject['9'],[1,9,1,10]);
+        assert.deepEqual(instResult.sourceMapObject['49'],[1,1,1,11]);
     });
+    it('should inline source map', function () {
+        var testCode = "var x = 3;";
+        var options = {
+            inputFileName: 'input.js',
+            outputFile: 'test.js',
+            inlineSourceMap: true
+        };
+        var instResult = jalangi.instrumentString(testCode, options);
+        // couple of random asserts
+        assert.deepEqual(instResult.sourceMapObject['9'],[1,9,1,10]);
+        assert.deepEqual(instResult.sourceMapObject['49'],[1,1,1,11]);
+        assert(instResult.code.indexOf('J$.iids = {"9":[1,9,1,10],"17":[1,9,1,10]') !== -1);
+    });
+    it('should run ast handler', function () {
+        var testCode = "var x = 3;";
+        var astHandler = function(ast) {
+            return { "itworks": true };
+        }
+        var options = {
+            inputFileName: 'input.js',
+            outputFile: 'test.js',
+            inlineSourceMap: true,
+            astHandler: astHandler
+        };
+        var instResult = jalangi.instrumentString(testCode, options);
+        assert(instResult.code.indexOf('J$.ast_info = {"itworks":true};') === 0);
+    });
+
 });

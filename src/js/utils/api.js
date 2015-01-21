@@ -23,9 +23,11 @@ require('./../Constants.js');
 require('./../Config.js');
 require('./../instrument/astUtil.js');
 require('./../instrument/esnstrument.js');
-// TODO making globals here is kind of gross
+// TODO making globals here is kind of gross, but esnstrument relies on it
 acorn = require('acorn');
 esotope = require('esotope');
+
+var path = require('path');
 var temp = require('temp');
 
 function getInstOutputFile(filePath) {
@@ -82,10 +84,17 @@ function clearConfig() {
  * - outputFile: file name for instrumented code.  note that this
  * method does *not* write the file; this information is just for
  * the source map
+ * - inlineSourceMap: should source map information be embedded in the
+ * instrumented source code?
+ * - inlineSource: should the original source code be embedded in the
+ * instrument source code?
  * - instHandler: An instrumentation handler object, for controlling which
  * constructs get instrumented.  Possible properties are instrRead, instrWrite, instrGetfield,
  * instrPutfield, instrBinary, instrPropBinaryAssignment, instrUnary, instrLiteral, and instrConditional,
  * corresponding to the similarly-named properties documented in Config.js.
+ * - astHandler: a function that takes the instrumented AST as a parameter and returns a JSON
+ * object.  The instrumented code will store the result object in J$.ast_info, so it will be
+ * available to analyses at the scriptEnter() callback.
  *
  * @param code
  */
@@ -94,20 +103,24 @@ function instrumentString(code, options) {
         options = {};
     }
     var outputFileName = getInstOutputFile(options.outputFile);
-    // TODO invoke J$.instrumentCode appropriately
-    //      * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string }} options
-
     var instCodeOptions = {
         code: code,
         origCodeFileName: options.inputFileName,
-        instCodeFileName: outputFileName
-
+        instCodeFileName: outputFileName,
+        inlineSourceMap: options.inlineSourceMap,
+        inlineSource: options.inlineSource
     };
     if (options.instHandler) {
         setupConfig(options.instHandler);
     }
     var result = J$.instrumentCode(instCodeOptions);
     clearConfig();
+    if (options.astHandler) {
+        var info = options.astHandler(result.instAST);
+        if (info) {
+            result.code = J$.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + result.code;
+        }
+    }
     return result;
 }
 
