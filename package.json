@@ -11,7 +11,8 @@
     "mkdirp": "0.5.0",
     "ncp": "0.6.0",
     "rewriting-proxy": "0.4.2",
-    "temp": "0.8.1"
+    "temp": "0.8.1",
+    "q": "1.1.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"

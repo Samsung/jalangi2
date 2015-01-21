@@ -29,6 +29,10 @@ esotope = require('esotope');
 
 var path = require('path');
 var temp = require('temp');
+var Q = require("q");
+var instDir = require('./../commands/instrument');
+
+
 
 function getInstOutputFile(filePath) {
     if (filePath) {
@@ -124,4 +128,31 @@ function instrumentString(code, options) {
     return result;
 }
 
+
+/**
+ * instruments a directory.  see src/js/commands/instrument.js for details.
+ * creates a temporary output directory if none specified.
+ * @param options instrument options.  see src/js/commands/instrument.js
+ * @return promise|Q.promise promise that gets resolved at the end of instrumentation
+ */
+function instrumentDir(options) {
+    if (!options.outputDir) {
+        options.outputDir = temp.mkdirSync();
+    }
+    if (options.instHandler) {
+        setupConfig(options.instHandler);
+    }
+    var deferred = Q.defer();
+    instDir.instrument(options, function (err) {
+        clearConfig();
+        if (err) {
+            deferred.reject(err);
+        } else {
+            deferred.resolve({ outputDir: options.outputDir});
+        }
+    });
+    return deferred.promise;
+}
+
 exports.instrumentString = instrumentString;
+exports.instrumentDir = instrumentDir;

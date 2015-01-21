@@ -57,7 +57,13 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments all .js files found under dir, and re-writes index.html
      * so that inline scripts are instrumented.  Output is written as a full
-     * copy of dir, within outputDir
+     * copy of dir, within outputDir.
+     *
+     * In addition to the command-line options, the options argument can also
+     * include in property astHandler a function that takes the instrumented AST
+     * as a parameter and returns a JSON object.  The instrumented code will store
+     * the result object in J$.ast_info, so it will be available to analyses at the
+     * scriptEnter() callback.
      */
     function instrument(options, cb) {
 
@@ -101,6 +107,18 @@ if (typeof J$ === 'undefined') {
         // analyses to run in browser
         var analyses = options.analysis;
 
+        var astHandler = options.astHandler;
+
+        function applyASTHandler(instResult) {
+            if (astHandler) {
+                var info = astHandler(instResult.instAST);
+                if (info) {
+                    instResult.code = sandbox.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
+                }
+            }
+            return instResult.code;
+        }
+
         /**
          * extra scripts to inject into the application and instrument
          * @type {Array.<String>}
@@ -129,7 +147,7 @@ if (typeof J$ === 'undefined') {
             };
 
             var instResult = sandbox.instrumentCode(options);
-            var instrumentedCode = instResult.code;
+            var instrumentedCode = applyASTHandler(instResult);
             fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
             fs.writeFileSync(path.join(copyDir, origname), src);
             fs.writeFileSync(path.join(copyDir, instname), instrumentedCode);
@@ -285,7 +303,7 @@ if (typeof J$ === 'undefined') {
                 }
             }
             if (instResult) {
-                var instrumentedCode = instResult.code;
+                var instrumentedCode = applyASTHandler(instResult);
                 fs.writeFileSync(this.instScriptName.replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
                 this.push(instrumentedCode);
             }
