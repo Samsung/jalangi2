@@ -107,6 +107,9 @@ if (typeof J$ === 'undefined') {
         // analyses to run in browser
         var analyses = options.analysis;
 
+        // initialization parameters for analysis
+        var initParams = options.initParam;
+
         var astHandler = options.astHandler;
 
         function applyASTHandler(instResult) {
@@ -186,9 +189,24 @@ if (typeof J$ === 'undefined') {
                 };
                 instUtil.headerSources.forEach(addScript);
                 if (analyses) {
+                    result += genInitParamsCode();
                     analyses.forEach(addScript);
                 }
                 return result;
+            }
+
+            function genInitParamsCode() {
+                var initParamsObj = {};
+                if (initParams) {
+                    initParams.forEach(function (keyVal) {
+                        var split = keyVal.split(':');
+                        if (split.length !== 2) {
+                            throw new Error("invalid initParam " + keyVal);
+                        }
+                        initParamsObj[split[0]] = split[1];
+                    });
+                }
+                return "<script>J$.initParams = " + JSON.stringify(initParamsObj) + ";</script>";
             }
 
 
@@ -217,6 +235,7 @@ if (typeof J$ === 'undefined') {
                     }
 
                     headerLibs = instUtil.getHeaderCodeAsScriptTags(jalangiRoot);
+                    headerLibs = headerLibs + genInitParamsCode();
                     headerLibs = headerLibs + tmp3;
                 }
                 if (extraAppScripts.length > 0) {
@@ -481,6 +500,7 @@ if (typeof J$ === 'undefined') {
             help: "Analysis script.",
             action: "append"
         });
+        parser.addArgument(['--initParam'], { help:"initialization parameter for analysis, specified as key:value", action:'append'});
         parser.addArgument(['-d', '--direct_in_output'], {
             help: "Store instrumented app directly in output directory (by default, creates a sub-directory of output directory)",
             action: 'storeTrue'
