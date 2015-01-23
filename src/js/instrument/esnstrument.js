@@ -558,7 +558,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapWithX1(node, ast) {
-        if (!ast || ast.type.indexOf("Expression")<=0) return ast;
+        if (!ast || ast.type.indexOf("Expression")<=0 || ast.type.indexOf("SequenceExpression") >=0) return ast;
         var ret = replaceInExpr(
             logX1FunName + "(" + RP + "1)", ast);
         transferLoc(ret, node);
@@ -1284,6 +1284,13 @@ if (typeof J$ === 'undefined') {
         },
         "FunctionDeclaration": function (node) {
             node.body.body = wrapFunBodyWithTryCatch(node, node.body.body);
+            return node;
+        },
+        "SequenceExpression": function(node) {
+            var i = 0, len = node.expressions.length;
+            for (i=0; i<len; i++) {
+                node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
+            }
             return node;
         },
         "ConditionalExpression": funCond,
