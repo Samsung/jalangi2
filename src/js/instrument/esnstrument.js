@@ -559,8 +559,9 @@ if (typeof J$ === 'undefined') {
 
     function wrapWithX1(node, ast) {
         if (!ast || ast.type.indexOf("Expression")<=0 || ast.type.indexOf("SequenceExpression") >=0) return ast;
+        printIidToLoc(node);
         var ret = replaceInExpr(
-            logX1FunName + "(" + RP + "1)", ast);
+            logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
         transferLoc(ret, node);
         return ret;
     }

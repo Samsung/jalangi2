@@ -647,9 +647,9 @@ if (typeof J$ === 'undefined') {
         return lastComputedValue;
     }
 
-    function X1(val) {
+    function X1(iid, val) {
         if (sandbox.analysis && sandbox.analysis.endExpression) {
-            sandbox.analysis.endExpression();
+            sandbox.analysis.endExpression(iid);
         }
 
         return (lastComputedValue = val);

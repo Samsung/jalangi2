@@ -85,7 +85,7 @@
 
         this.instrumentCode = function(iid, newCode, newAst){ return {result:newCode};};
 
-        this.endExpression = function() {};
+        this.endExpression = function(iid) {};
 
         this.endExecution = function() {};
     }
