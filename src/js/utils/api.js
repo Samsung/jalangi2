@@ -31,7 +31,7 @@ var path = require('path');
 var temp = require('temp');
 var Q = require("q");
 var instDir = require('./../commands/instrument');
-
+var cp = require('child_process');
 
 
 function getInstOutputFile(filePath) {
@@ -154,5 +154,97 @@ function instrumentDir(options) {
     return deferred.promise;
 }
 
+function convertToString(buffer_parts, bufferLength) {
+    var buf = new Buffer(bufferLength);
+    var pos = 0;
+    for (var i = 0; i < buffer_parts.length; i++) {
+        buffer_parts[i].copy(buf, pos, 0, buffer_parts[i].length);
+        pos += buffer_parts[i].length;
+    }
+    return buf.toString();
+}
+
+/**
+ * Runs a process created via the node child_process API and captures its output.
+ *
+ * @param forkedProcess the process
+ * @returns {promise|Q.promise} A promise that, when process execution completes normally, is
+ * resolved with an object with the following properties:
+ *     'stdout': the stdout output of the process
+ *     'stderr': the stderr output of the process
+ *
+ *     If process completes abnormally (with non-zero exit code), the promise is rejected
+ *     with a value similar to above, except that 'exitCode' holds the exit code.
+ *
+ */
+function runChildAndCaptureOutput(forkedProcess) {
+    var stdout_parts = [], stdoutLength = 0, stderr_parts = [], stderrLength = 0,
+        deferred = Q.defer();
+    forkedProcess.stdout.on('data', function (data) {
+        stdout_parts.push(data);
+        stdoutLength += data.length;
+    });
+    forkedProcess.stderr.on('data', function (data) {
+        stderr_parts.push(data);
+        stderrLength += data.length;
+    });
+    forkedProcess.on('close', function (code) {
+        var child_stdout = convertToString(stdout_parts, stdoutLength),
+            child_stderr = convertToString(stderr_parts, stderrLength);
+        var resultVal = {
+            exitCode: code,
+            stdout: child_stdout,
+            stderr: child_stderr,
+            toString: function () {
+                return child_stderr;
+            }
+        };
+        if (code !== 0) {
+            deferred.reject(resultVal);
+        } else {
+            deferred.resolve(resultVal);
+        }
+    });
+    return deferred.promise;
+
+}
+
+/**
+ * direct analysis of an instrumented file using analysis2 engine
+ * @param {string} script the instrumented script to analyze
+ * @param {string[]} clientAnalyses the analyses to run
+ * @param {object} [initParam] parameter to pass to client init() function
+ * @return promise|Q.promise promise that gets resolved at the end of analysis.  The promise
+ * is resolved with an object with properties:
+ *     'exitCode': the exit code from the process doing replay
+ *     'stdout': the stdout of the replay process
+ *     'stderr': the stderr of the replay process
+ *     'result': the result returned by the analysis, if any
+ */
+function analyze(script, clientAnalyses, initParam) {
+    var cliArgs = [path.resolve(__dirname, "../commands/direct.js")];
+    if (!script) {
+        throw new Error("must provide a script to analyze");
+    }
+    if (!clientAnalyses) {
+        throw new Error("must provide an analysis to run");
+    }
+    clientAnalyses.forEach(function (analysis) {
+        cliArgs.push('--analysis');
+        cliArgs.push(analysis);
+    });
+    if (initParam) {
+        Object.keys(initParam).forEach(function (k) {
+            cliArgs.push('--initParam')
+            cliArgs.push(k + ':' + initParam[k]);
+        });
+    }
+    cliArgs.push(script);
+    var proc = cp.spawn('node', cliArgs);
+    return runChildAndCaptureOutput(proc);
+}
+
+
 exports.instrumentString = instrumentString;
 exports.instrumentDir = instrumentDir;
+exports.analyze = analyze;
