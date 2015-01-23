@@ -34,7 +34,7 @@ parser.addArgument(['script_and_args'], {
 });
 var args = parser.parseArgs();
 
-function runAnalysis() {
+function runAnalysis(initParam) {
     if (args.script_and_args.length === 0) {
         console.error("must provide script to record");
         process.exit(1);
@@ -50,6 +50,7 @@ function runAnalysis() {
         require("./../../../"+header);
     });
 
+    J$.initParams = initParam || {};
     if (args.analysis) {
         args.analysis.forEach(function (src) {
             require(path.resolve(src));
@@ -72,5 +73,16 @@ function runAnalysis() {
     startProgram();
 }
 
-runAnalysis();
+var initParam = null;
+if (args.initParam) {
+    initParam = {};
+    args.initParam.forEach(function (keyVal) {
+        var split = keyVal.split(':');
+        if (split.length !== 2) {
+            throw new Error("invalid initParam " + keyVal);
+        }
+        initParam[split[0]] = split[1];
+    });
+}
+runAnalysis(initParam);
 
