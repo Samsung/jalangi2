@@ -558,12 +558,17 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapWithX1(node, ast) {
-        if (!ast || ast.type.indexOf("Expression")<=0 || ast.type.indexOf("SequenceExpression") >=0) return ast;
-        printIidToLoc(node);
-        var ret = replaceInExpr(
-            logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
-        transferLoc(ret, node);
-        return ret;
+        if (!Config.INSTR_END_EXPRESSION || Config.INSTR_END_EXPRESSION(node)) {
+
+            if (!ast || ast.type.indexOf("Expression") <= 0 || ast.type.indexOf("SequenceExpression") >= 0) return ast;
+            printIidToLoc(node);
+            var ret = replaceInExpr(
+                logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
+            transferLoc(ret, node);
+            return ret;
+        } else {
+            return ast;
+        }
     }
 
     function wrapHash(node, ast) {
@@ -811,56 +816,66 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapScriptBodyWithTryCatch(node, body) {
-        printIidToLoc(node);
-        var iid1 = getIid();
-        printIidToLoc(node);
-        var l = labelCounter++;
-        var ret = replaceInStatement(
-            "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
-            "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-            JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
-            "e); } finally { if (" + logScriptExitFunName + "(" +
-            RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
-            iid1,
-            getIid()
-        );
-        //console.log(JSON.stringify(ret));
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            printIidToLoc(node);
+            var iid1 = getIid();
+            printIidToLoc(node);
+            var l = labelCounter++;
+            var ret = replaceInStatement(
+                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
+                JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                "e); } finally { if (" + logScriptExitFunName + "(" +
+                RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
+                iid1,
+                getIid()
+            );
+            //console.log(JSON.stringify(ret));
 
-        ret = ret[0].body.body;
-        transferLoc(ret[0], node);
-        return ret;
+            ret = ret[0].body.body;
+            transferLoc(ret[0], node);
+            return ret;
+        } else {
+            return body;
+        }
     }
 
     function wrapFunBodyWithTryCatch(node, body) {
-        printIidToLoc(node);
-        var iid1 = getIid();
-        printIidToLoc(node);
-        var l = labelCounter++;
-        var ret = replaceInStatement(
-            "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
-            "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-            JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
-            "e); } finally { if (" + logFunctionReturnFunName + "(" +
-            RP + "3)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}", body,
-            iid1,
-            getIid()
-        );
-        //console.log(JSON.stringify(ret));
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            printIidToLoc(node);
+            var iid1 = getIid();
+            printIidToLoc(node);
+            var l = labelCounter++;
+            var ret = replaceInStatement(
+                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
+                JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                "e); } finally { if (" + logFunctionReturnFunName + "(" +
+                RP + "3)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}", body,
+                iid1,
+                getIid()
+            );
+            //console.log(JSON.stringify(ret));
 
-        ret = ret[0].body.body;
-        transferLoc(ret[0], node);
-        return ret;
+            ret = ret[0].body.body;
+            transferLoc(ret[0], node);
+            return ret;
+        } else {
+            return body;
+        }
     }
 
     function syncDefuns(node, scope, isScript) {
         var ret = [], ident;
         if (!isScript) {
-            ident = createIdentifierAst("arguments");
-            ret = ret.concat(createCallInitAsStatement(node,
-                createLiteralAst("arguments"),
-                ident,
-                true,
-                ident, false));
+            if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+                ident = createIdentifierAst("arguments");
+                ret = ret.concat(createCallInitAsStatement(node,
+                    createLiteralAst("arguments"),
+                    ident,
+                    true,
+                    ident, false));
+            }
         }
         if (scope) {
             for (var name in scope.vars) {
@@ -899,8 +914,13 @@ if (typeof J$ === 'undefined') {
 
 
     function instrumentFunctionEntryExit(node, ast) {
-        var body = createCallAsFunEnterStatement(node).
-            concat(syncDefuns(node, scope, false)).concat(ast);
+        var body;
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            body = createCallAsFunEnterStatement(node);
+        } else {
+            body = [];
+        }
+        body = body.concat(syncDefuns(node, scope, false)).concat(ast);
         return body;
     }
 
@@ -914,8 +934,13 @@ if (typeof J$ === 'undefined') {
      *
      */
     function instrumentScriptEntryExit(node, body0) {
-        var body = createCallAsScriptEnterStatement(node).
-            concat(syncDefuns(node, scope, true)).
+        var body;
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            body = createCallAsScriptEnterStatement(node)
+        } else {
+            body = [];
+        }
+        body = body.concat(syncDefuns(node, scope, true)).
             concat(body0);
         return body;
     }
