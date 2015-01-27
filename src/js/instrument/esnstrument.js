@@ -1064,6 +1064,13 @@ if (typeof J$ === 'undefined') {
         scope = node.scope;
     }
 
+    function funCond0(node) {
+        node.test = wrapWithX1(node, node.test);
+        node.init = wrapWithX1(node, node.init);
+        node.update = wrapWithX1(node, node.update);
+        return node;
+    }
+
     var visitorRRPre = {
         'Program': setScope,
         'FunctionDeclaration': setScope,
@@ -1110,6 +1117,7 @@ if (typeof J$ === 'undefined') {
             var declarations = MAP(node.declarations, function (def) {
                 if (def.init !== null) {
                     var init = wrapWrite(def.init, createLiteralAst(def.id.name), def.init, def.id, false, scope.isGlobal(def.id.name), true);
+                    init = wrapWithX1(def.init, init);
                     def.init = init;
                 }
                 return def;
@@ -1199,6 +1207,13 @@ if (typeof J$ === 'undefined') {
                 return node;
             }
         },
+        "SequenceExpression": function(node) {
+            var i = 0, len = node.expressions.length;
+            for (i=0; i<len; i++) {
+                node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
+            }
+            return node;
+        },
         "ForInStatement": function (node) {
             var ret = wrapHash(node.right, node.right);
             node.right = ret;
@@ -1222,12 +1237,17 @@ if (typeof J$ === 'undefined') {
         },
         "ReturnStatement": function (node) {
             var ret = wrapReturn(node, node.argument);
-            node.argument = ret;
+            node.argument = wrapWithX1(node,ret);
             return node;
         },
         "ThrowStatement": function (node) {
             var ret = wrapThrow(node, node.argument);
-            node.argument = ret;
+            node.argument = wrapWithX1(node,ret);
+            return node;
+        },
+
+        "ExpressionStatement": function (node) {
+            node.expression = wrapWithX1(node, node.expression);
             return node;
         }
     };
@@ -1248,17 +1268,6 @@ if (typeof J$ === 'undefined') {
 //                var ret = prependScriptBody(node, body);
             node.body = body;
 
-            return node;
-        },
-        "VariableDeclaration": function (node) {
-            var declarations = MAP(node.declarations, function (def) {
-                if (def.init !== null) {
-                    var init = wrapWithX1(def.init, def.init);
-                    def.init = init;
-                }
-                return def;
-            });
-            node.declarations = declarations;
             return node;
         },
         'BinaryExpression': function (node) {
@@ -1292,11 +1301,12 @@ if (typeof J$ === 'undefined') {
         },
         "SwitchStatement": function (node) {
             var dis = wrapSwitchDiscriminant(node.discriminant, node.discriminant);
+            dis = wrapWithX1(node.discriminant, dis);
             var cases = MAP(node.cases, function (acase) {
                 var test;
                 if (acase.test) {
                     test = wrapSwitchTest(acase.test, acase.test);
-                    acase.test = wrapWithX1(test, test);
+                    acase.test = wrapWithX1(acase.test, test);
                 }
                 return acase;
             });
@@ -1312,32 +1322,11 @@ if (typeof J$ === 'undefined') {
             node.body.body = wrapFunBodyWithTryCatch(node, node.body.body);
             return node;
         },
-        "SequenceExpression": function(node) {
-            var i = 0, len = node.expressions.length;
-            for (i=0; i<len; i++) {
-                node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
-            }
-            return node;
-        },
         "ConditionalExpression": funCond,
         "IfStatement": funCond,
         "WhileStatement": funCond,
         "DoWhileStatement": funCond,
-        "ForStatement": funCond,
-        "ExpressionStatement": function (node) {
-            node.expression = wrapWithX1(node, node.expression);
-            return node;
-        },
-        "ReturnStatement": function (node) {
-            var ret = wrapWithX1(node, node.argument);
-            node.argument = ret;
-            return node;
-        },
-        "ThrowStatement": function (node) {
-            var ret = wrapWithX1(node, node.argument);
-            node.argument = ret;
-            return node;
-        }
+        "ForStatement": funCond
     };
 
     function addScopes(ast) {
