@@ -786,10 +786,10 @@ if (typeof J$ === 'undefined') {
         }
         if (isDeclaration) {
             ret = replaceInStatement(
-                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {var "+name+" = " + RP + "2;\n {" + RP + "3}}}", right, extra.right, body);
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {var "+name+" = " + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node,extra.right), body);
         } else {
             ret = replaceInStatement(
-                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {" + RP + "2;\n {" + RP + "3}}}", right, extra, body);
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {" + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node,extra), body);
         }
         ret = ret[0].body.body[0];
         transferLoc(ret, node);
