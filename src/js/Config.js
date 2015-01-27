@@ -48,4 +48,6 @@ if (typeof J$ === 'undefined') {
 //    Config.INSTR_UNARY = function(operator, ast) { return true; };
 //    Config.INSTR_LITERAL = function(literal, ast) { return true;}; // literal gets some dummy value if the type is object, function, or array
 //    Config.INSTR_CONDITIONAL = function(type, ast) { return true; }; // type could be "&&", "||", "switch", "other"
+//    Config.INSTR_TRY_CATCH_ARGUMENTS = function(ast) {return false; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe
+//    Config.INSTR_END_EXPRESSION = function(ast) {return true; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe
 }(J$));

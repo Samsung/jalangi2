@@ -2,7 +2,7 @@
 
 analysis.js is a new API for performing direct or in browser analysis.  It has a clean, efficient, and less error-prone
 API compared to analysis.js of Jalangi1.  An analysis in analysis.js can be written using the template at
-[src/js/runtime/analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js).
+[src/js/runtime/analysisCallbackTemplate.js](../src/js/runtime/analysisCallbackTemplate.js).
 
 An analysis can access the source map using the global object stored in *J$.smap*.  Jalangi2 assigns an unique id, called *sid*, to each JavaScript
 script loaded on a website.  *J$.smap* maps each *sid* to an object, say *iids*, containing source map information for the script whose id is *sid*.

@@ -57,7 +57,13 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments all .js files found under dir, and re-writes index.html
      * so that inline scripts are instrumented.  Output is written as a full
-     * copy of dir, within outputDir
+     * copy of dir, within outputDir.
+     *
+     * In addition to the command-line options, the options argument can also
+     * include in property astHandler a function that takes the instrumented AST
+     * as a parameter and returns a JSON object.  The instrumented code will store
+     * the result object in J$.ast_info, so it will be available to analyses at the
+     * scriptEnter() callback.
      */
     function instrument(options, cb) {
 
@@ -101,6 +107,21 @@ if (typeof J$ === 'undefined') {
         // analyses to run in browser
         var analyses = options.analysis;
 
+        // initialization parameters for analysis
+        var initParams = options.initParam;
+
+        var astHandler = options.astHandler;
+
+        function applyASTHandler(instResult) {
+            if (astHandler) {
+                var info = astHandler(instResult.instAST);
+                if (info) {
+                    instResult.code = sandbox.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
+                }
+            }
+            return instResult.code;
+        }
+
         /**
          * extra scripts to inject into the application and instrument
          * @type {Array.<String>}
@@ -129,7 +150,7 @@ if (typeof J$ === 'undefined') {
             };
 
             var instResult = sandbox.instrumentCode(options);
-            var instrumentedCode = instResult.code;
+            var instrumentedCode = applyASTHandler(instResult);
             fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
             fs.writeFileSync(path.join(copyDir, origname), src);
             fs.writeFileSync(path.join(copyDir, instname), instrumentedCode);
@@ -168,9 +189,24 @@ if (typeof J$ === 'undefined') {
                 };
                 instUtil.headerSources.forEach(addScript);
                 if (analyses) {
+                    result += genInitParamsCode();
                     analyses.forEach(addScript);
                 }
                 return result;
+            }
+
+            function genInitParamsCode() {
+                var initParamsObj = {};
+                if (initParams) {
+                    initParams.forEach(function (keyVal) {
+                        var split = keyVal.split(':');
+                        if (split.length !== 2) {
+                            throw new Error("invalid initParam " + keyVal);
+                        }
+                        initParamsObj[split[0]] = split[1];
+                    });
+                }
+                return "<script>J$.initParams = " + JSON.stringify(initParamsObj) + ";</script>";
             }
 
 
@@ -199,6 +235,7 @@ if (typeof J$ === 'undefined') {
                     }
 
                     headerLibs = instUtil.getHeaderCodeAsScriptTags(jalangiRoot);
+                    headerLibs = headerLibs + genInitParamsCode();
                     headerLibs = headerLibs + tmp3;
                 }
                 if (extraAppScripts.length > 0) {
@@ -285,7 +322,7 @@ if (typeof J$ === 'undefined') {
                 }
             }
             if (instResult) {
-                var instrumentedCode = instResult.code;
+                var instrumentedCode = applyASTHandler(instResult);
                 fs.writeFileSync(this.instScriptName.replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
                 this.push(instrumentedCode);
             }
@@ -463,6 +500,7 @@ if (typeof J$ === 'undefined') {
             help: "Analysis script.",
             action: "append"
         });
+        parser.addArgument(['--initParam'], { help:"initialization parameter for analysis, specified as key:value", action:'append'});
         parser.addArgument(['-d', '--direct_in_output'], {
             help: "Store instrumented app directly in output directory (by default, creates a sub-directory of output directory)",
             action: 'storeTrue'

@@ -558,11 +558,17 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapWithX1(node, ast) {
-        if (!ast || ast.type.indexOf("Expression")<=0) return ast;
-        var ret = replaceInExpr(
-            logX1FunName + "(" + RP + "1)", ast);
-        transferLoc(ret, node);
-        return ret;
+        if (!Config.INSTR_END_EXPRESSION || Config.INSTR_END_EXPRESSION(node)) {
+
+            if (!ast || ast.type.indexOf("Expression") <= 0 || ast.type.indexOf("SequenceExpression") >= 0) return ast;
+            printIidToLoc(node);
+            var ret = replaceInExpr(
+                logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
+            transferLoc(ret, node);
+            return ret;
+        } else {
+            return ast;
+        }
     }
 
     function wrapHash(node, ast) {
@@ -810,56 +816,66 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapScriptBodyWithTryCatch(node, body) {
-        printIidToLoc(node);
-        var iid1 = getIid();
-        printIidToLoc(node);
-        var l = labelCounter++;
-        var ret = replaceInStatement(
-            "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
-            "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-            JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
-            "e); } finally { if (" + logScriptExitFunName + "(" +
-            RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
-            iid1,
-            getIid()
-        );
-        //console.log(JSON.stringify(ret));
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            printIidToLoc(node);
+            var iid1 = getIid();
+            printIidToLoc(node);
+            var l = labelCounter++;
+            var ret = replaceInStatement(
+                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
+                JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                "e); } finally { if (" + logScriptExitFunName + "(" +
+                RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
+                iid1,
+                getIid()
+            );
+            //console.log(JSON.stringify(ret));
 
-        ret = ret[0].body.body;
-        transferLoc(ret[0], node);
-        return ret;
+            ret = ret[0].body.body;
+            transferLoc(ret[0], node);
+            return ret;
+        } else {
+            return body;
+        }
     }
 
     function wrapFunBodyWithTryCatch(node, body) {
-        printIidToLoc(node);
-        var iid1 = getIid();
-        printIidToLoc(node);
-        var l = labelCounter++;
-        var ret = replaceInStatement(
-            "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
-            "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-            JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
-            "e); } finally { if (" + logFunctionReturnFunName + "(" +
-            RP + "3)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}", body,
-            iid1,
-            getIid()
-        );
-        //console.log(JSON.stringify(ret));
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            printIidToLoc(node);
+            var iid1 = getIid();
+            printIidToLoc(node);
+            var l = labelCounter++;
+            var ret = replaceInStatement(
+                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
+                JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                "e); } finally { if (" + logFunctionReturnFunName + "(" +
+                RP + "3)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}", body,
+                iid1,
+                getIid()
+            );
+            //console.log(JSON.stringify(ret));
 
-        ret = ret[0].body.body;
-        transferLoc(ret[0], node);
-        return ret;
+            ret = ret[0].body.body;
+            transferLoc(ret[0], node);
+            return ret;
+        } else {
+            return body;
+        }
     }
 
     function syncDefuns(node, scope, isScript) {
         var ret = [], ident;
         if (!isScript) {
-            ident = createIdentifierAst("arguments");
-            ret = ret.concat(createCallInitAsStatement(node,
-                createLiteralAst("arguments"),
-                ident,
-                true,
-                ident, false));
+            if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+                ident = createIdentifierAst("arguments");
+                ret = ret.concat(createCallInitAsStatement(node,
+                    createLiteralAst("arguments"),
+                    ident,
+                    true,
+                    ident, false));
+            }
         }
         if (scope) {
             for (var name in scope.vars) {
@@ -898,8 +914,13 @@ if (typeof J$ === 'undefined') {
 
 
     function instrumentFunctionEntryExit(node, ast) {
-        var body = createCallAsFunEnterStatement(node).
-            concat(syncDefuns(node, scope, false)).concat(ast);
+        var body;
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            body = createCallAsFunEnterStatement(node);
+        } else {
+            body = [];
+        }
+        body = body.concat(syncDefuns(node, scope, false)).concat(ast);
         return body;
     }
 
@@ -913,8 +934,13 @@ if (typeof J$ === 'undefined') {
      *
      */
     function instrumentScriptEntryExit(node, body0) {
-        var body = createCallAsScriptEnterStatement(node).
-            concat(syncDefuns(node, scope, true)).
+        var body;
+        if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            body = createCallAsScriptEnterStatement(node)
+        } else {
+            body = [];
+        }
+        body = body.concat(syncDefuns(node, scope, true)).
             concat(body0);
         return body;
     }
@@ -1038,6 +1064,13 @@ if (typeof J$ === 'undefined') {
         scope = node.scope;
     }
 
+    function funCond0(node) {
+        node.test = wrapWithX1(node, node.test);
+        node.init = wrapWithX1(node, node.init);
+        node.update = wrapWithX1(node, node.update);
+        return node;
+    }
+
     var visitorRRPre = {
         'Program': setScope,
         'FunctionDeclaration': setScope,
@@ -1084,6 +1117,7 @@ if (typeof J$ === 'undefined') {
             var declarations = MAP(node.declarations, function (def) {
                 if (def.init !== null) {
                     var init = wrapWrite(def.init, createLiteralAst(def.id.name), def.init, def.id, false, scope.isGlobal(def.id.name), true);
+                    init = wrapWithX1(def.init, init);
                     def.init = init;
                 }
                 return def;
@@ -1173,6 +1207,13 @@ if (typeof J$ === 'undefined') {
                 return node;
             }
         },
+        "SequenceExpression": function(node) {
+            var i = 0, len = node.expressions.length;
+            for (i=0; i<len; i++) {
+                node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
+            }
+            return node;
+        },
         "ForInStatement": function (node) {
             var ret = wrapHash(node.right, node.right);
             node.right = ret;
@@ -1196,12 +1237,17 @@ if (typeof J$ === 'undefined') {
         },
         "ReturnStatement": function (node) {
             var ret = wrapReturn(node, node.argument);
-            node.argument = ret;
+            node.argument = wrapWithX1(node,ret);
             return node;
         },
         "ThrowStatement": function (node) {
             var ret = wrapThrow(node, node.argument);
-            node.argument = ret;
+            node.argument = wrapWithX1(node,ret);
+            return node;
+        },
+
+        "ExpressionStatement": function (node) {
+            node.expression = wrapWithX1(node, node.expression);
             return node;
         }
     };
@@ -1222,17 +1268,6 @@ if (typeof J$ === 'undefined') {
 //                var ret = prependScriptBody(node, body);
             node.body = body;
 
-            return node;
-        },
-        "VariableDeclaration": function (node) {
-            var declarations = MAP(node.declarations, function (def) {
-                if (def.init !== null) {
-                    var init = wrapWithX1(def.init, def.init);
-                    def.init = init;
-                }
-                return def;
-            });
-            node.declarations = declarations;
             return node;
         },
         'BinaryExpression': function (node) {
@@ -1266,11 +1301,12 @@ if (typeof J$ === 'undefined') {
         },
         "SwitchStatement": function (node) {
             var dis = wrapSwitchDiscriminant(node.discriminant, node.discriminant);
+            dis = wrapWithX1(node.discriminant, dis);
             var cases = MAP(node.cases, function (acase) {
                 var test;
                 if (acase.test) {
                     test = wrapSwitchTest(acase.test, acase.test);
-                    acase.test = wrapWithX1(test, test);
+                    acase.test = wrapWithX1(acase.test, test);
                 }
                 return acase;
             });
@@ -1290,21 +1326,7 @@ if (typeof J$ === 'undefined') {
         "IfStatement": funCond,
         "WhileStatement": funCond,
         "DoWhileStatement": funCond,
-        "ForStatement": funCond,
-        "ExpressionStatement": function (node) {
-            node.expression = wrapWithX1(node, node.expression);
-            return node;
-        },
-        "ReturnStatement": function (node) {
-            var ret = wrapWithX1(node, node.argument);
-            node.argument = ret;
-            return node;
-        },
-        "ThrowStatement": function (node) {
-            var ret = wrapWithX1(node, node.argument);
-            node.argument = ret;
-            return node;
-        }
+        "ForStatement": funCond
     };
 
     function addScopes(ast) {
@@ -1598,7 +1620,6 @@ if (typeof J$ === 'undefined') {
         }
 
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
-            // this is a call in eval
             iidSourceInfo = {};
             var newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
             // post-process AST to hoist function declarations (required for Firefox)
