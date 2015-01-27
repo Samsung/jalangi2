@@ -32,7 +32,7 @@ describe('api tests', function () {
         var instResult = jalangi.instrumentString(testCode, options);
         // couple of random asserts
         assert.deepEqual(instResult.sourceMapObject['9'],[1,9,1,10]);
-        assert.deepEqual(instResult.sourceMapObject['49'],[1,1,1,11]);
+        assert.deepEqual(instResult.sourceMapObject['25'],[1,1,1,11]);
     });
     it('should inline source map', function () {
         var testCode = "var x = 3;";
@@ -44,7 +44,7 @@ describe('api tests', function () {
         var instResult = jalangi.instrumentString(testCode, options);
         // couple of random asserts
         assert.deepEqual(instResult.sourceMapObject['9'],[1,9,1,10]);
-        assert.deepEqual(instResult.sourceMapObject['49'],[1,1,1,11]);
+        assert.deepEqual(instResult.sourceMapObject['25'],[1,1,1,11]);
         assert(instResult.code.indexOf('J$.iids = {"9":[1,9,1,10],"17":[1,9,1,10]') !== -1);
     });
     it('should run ast handler', function () {
