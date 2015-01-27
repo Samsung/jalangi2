@@ -222,8 +222,8 @@ function runChildAndCaptureOutput(forkedProcess) {
  *     'result': the result returned by the analysis, if any
  */
 function analyze(script, clientAnalyses, initParam) {
-    // TODO allow for configuration of whether --harmony flag is used
-    var cliArgs = ['--harmony', path.resolve(__dirname, "../commands/direct.js")];
+    var directJSScript = path.resolve(__dirname, "../commands/direct.js");
+    var cliArgs = [];
     if (!script) {
         throw new Error("must provide a script to analyze");
     }
@@ -241,7 +241,7 @@ function analyze(script, clientAnalyses, initParam) {
         });
     }
     cliArgs.push(script);
-    var proc = cp.spawn('node', cliArgs);
+    var proc = cp.fork(directJSScript, cliArgs);
     return runChildAndCaptureOutput(proc);
 }
 
