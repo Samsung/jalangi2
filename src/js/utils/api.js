@@ -241,7 +241,7 @@ function analyze(script, clientAnalyses, initParam) {
         });
     }
     cliArgs.push(script);
-    var proc = cp.fork(directJSScript, cliArgs);
+    var proc = cp.fork(directJSScript, cliArgs, { silent: true });
     return runChildAndCaptureOutput(proc);
 }
 
