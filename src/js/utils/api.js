@@ -222,7 +222,8 @@ function runChildAndCaptureOutput(forkedProcess) {
  *     'result': the result returned by the analysis, if any
  */
 function analyze(script, clientAnalyses, initParam) {
-    var cliArgs = [path.resolve(__dirname, "../commands/direct.js")];
+    // TODO allow for configuration of whether --harmony flag is used
+    var cliArgs = ['--harmony', path.resolve(__dirname, "../commands/direct.js")];
     if (!script) {
         throw new Error("must provide a script to analyze");
     }
