@@ -86,13 +86,21 @@ Module._extensions['.js'] = function (module, filename) {
     module._compile(instCodeAndData.code, filename);
 };
 
-// hack process.argv for the child script
-script = path.resolve(script);
-var newArgs = [process.argv[0], script];
-newArgs = newArgs.concat(args.script_and_args);
-process.argv = newArgs;
-try {
-    Module.Module.runMain(script, null, true);
-} finally {
-    J$.endExecution();
+function startProgram() {
+    // hack process.argv for the child script
+    script = path.resolve(script);
+    var newArgs = [process.argv[0], script];
+    newArgs = newArgs.concat(args.script_and_args);
+    process.argv = newArgs;
+    try {
+        Module.Module.runMain(script, null, true);
+    } finally {
+        J$.endExecution();
+    }
+}
+
+if (J$.analysis && J$.analysis.onReady) {
+    J$.analysis.onReady(startProgram);
+} else {
+    startProgram();
 }
