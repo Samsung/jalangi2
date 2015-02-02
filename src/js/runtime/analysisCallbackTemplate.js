@@ -71,9 +71,9 @@
 
         this.scriptExit = function(iid, wrappedExceptionVal){return {wrappedExceptionVal:wrappedExceptionVal,isBacktrack:false};};
 
-        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison){return {op:op,left:left,right:right,skip:false};};
+        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison, isComputed){return {op:op,left:left,right:right,skip:false};};
 
-        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison){return {result:result};};
+        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison, isComputed){return {result:result};};
 
         this.unaryPre = function(iid, op, left) {return {op:op,left:left,skip:false};};
 

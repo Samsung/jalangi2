@@ -609,11 +609,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapBinaryOp(node, left, right, operator) {
+    function wrapBinaryOp(node, left, right, operator, isComputed) {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4)",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4,"+(isComputed?"true":"false")+")",
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
@@ -1290,7 +1290,7 @@ if (typeof J$ === 'undefined') {
             } else
             if (node.operator === "delete") {
                 if (node.argument.object) {
-                    ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator);
+                    ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator, node.argument.computed);
                 } else {
                     return node;
                 }
