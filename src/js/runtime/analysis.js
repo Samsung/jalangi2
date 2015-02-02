@@ -195,10 +195,22 @@ if (typeof J$ === 'undefined') {
         return val;
     }
 
+    var hasGetOwnPropertyDescriptor = typeof Object.getOwnPropertyDescriptor === 'function';
     // object/function/regexp/array Literal
     function T(iid, val, type, hasGetterSetter) {
         var aret;
         associateSidWithFunction(val);
+        if (hasGetterSetter) {
+            for (var offset in val) {
+                if (hasGetOwnPropertyDescriptor && val.hasOwnProperty(offset)) {
+                    var desc = Object.getOwnPropertyDescriptor(val, offset);
+                    if (desc !== undefined) {
+                        associateSidWithFunction(desc.get);
+                        associateSidWithFunction(desc.set);
+                    }
+                }
+            }
+        }
         if (sandbox.analysis && sandbox.analysis.literal) {
             aret = sandbox.analysis.literal(iid, val, hasGetterSetter);
             if (aret) {
