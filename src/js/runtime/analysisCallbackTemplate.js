@@ -71,9 +71,9 @@
 
         this.scriptExit = function(iid, wrappedExceptionVal){return {wrappedExceptionVal:wrappedExceptionVal,isBacktrack:false};};
 
-        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison){return {op:op,left:left,right:right,skip:false};};
+        this.binaryPre = function(iid, op, left, right, isOpAssign, isSwitchCaseComparison, isComputed){return {op:op,left:left,right:right,skip:false};};
 
-        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison){return {result:result};};
+        this.binary = function(iid, op, left, right, result, isOpAssign, isSwitchCaseComparison, isComputed){return {result:result};};
 
         this.unaryPre = function(iid, op, left) {return {op:op,left:left,skip:false};};
 
@@ -88,6 +88,18 @@
         this.endExpression = function(iid) {};
 
         this.endExecution = function() {};
+
+        /**
+         * onReady is useful if your analysis is running on node.js (i.e., via the direct.js or jalangi.js commands)
+         * and needs to complete some asynchronous initialization before the instrumented program starts.  In such a
+         * case, once the initialization is complete, invoke the cb function to start execution of the instrumented
+         * program.
+         *
+         * Note that this callback is not useful in the browser, as Jalangi has no control over when the
+         * instrumented program runs there.
+         * @param cb
+         */
+        this.onReady = function(cb) { cb(); };
     }
     sandbox.analysis = new MyAnalysis();
 })(J$);

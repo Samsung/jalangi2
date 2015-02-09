@@ -560,7 +560,7 @@ if (typeof J$ === 'undefined') {
     function wrapWithX1(node, ast) {
         if (!Config.INSTR_END_EXPRESSION || Config.INSTR_END_EXPRESSION(node)) {
 
-            if (!ast || ast.type.indexOf("Expression") <= 0 || ast.type.indexOf("SequenceExpression") >= 0) return ast;
+            if (!ast || ast.type.indexOf("Expression") <= 0) return ast;
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
@@ -609,11 +609,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapBinaryOp(node, left, right, operator) {
+    function wrapBinaryOp(node, left, right, operator, isComputed) {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4)",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4,"+(isComputed?"true":"false")+")",
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
@@ -1209,7 +1209,7 @@ if (typeof J$ === 'undefined') {
         },
         "SequenceExpression": function(node) {
             var i = 0, len = node.expressions.length;
-            for (i=0; i<len; i++) {
+            for (i=0; i<len - 1 /* the last expression is the result, do not wrap that */; i++) {
                 node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
             }
             return node;
@@ -1290,7 +1290,7 @@ if (typeof J$ === 'undefined') {
             } else
             if (node.operator === "delete") {
                 if (node.argument.object) {
-                    ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator);
+                    ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator, node.argument.computed);
                 } else {
                     return node;
                 }

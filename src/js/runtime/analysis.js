@@ -449,17 +449,17 @@ if (typeof J$ === 'undefined') {
         var oprnd1 = G(iid+2, base, offset, isComputed, true, false);
         return function (oprnd2) {
             // still possible to get iid collision with a mem operation
-            var val = B(iid, op, oprnd1, oprnd2, true, false);
+            var val = B(iid, op, oprnd1, oprnd2, false, true, false);
             return P(iid, base, offset, val, isComputed, true);
         };
     }
 
     // Binary operation
-    function B(iid, op, left, right, isOpAssign, isSwitchCaseComparison) {
+    function B(iid, op, left, right, isComputed, isOpAssign, isSwitchCaseComparison) {
         var result, aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.binaryPre) {
-            aret = sandbox.analysis.binaryPre(iid, op, left, right, !!isOpAssign, !!isSwitchCaseComparison);
+            aret = sandbox.analysis.binaryPre(iid, op, left, right, !!isOpAssign, !!isSwitchCaseComparison, !!isComputed);
             if (aret) {
                 op = aret.op;
                 left = aret.left;
@@ -544,7 +544,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (sandbox.analysis && sandbox.analysis.binary) {
-            aret = sandbox.analysis.binary(iid, op, left, right, result, !!isOpAssign, !!isSwitchCaseComparison);
+            aret = sandbox.analysis.binary(iid, op, left, right, result, !!isOpAssign, !!isSwitchCaseComparison, !!isComputed);
             if (aret) {
                 result = aret.result;
             }
@@ -626,7 +626,7 @@ if (typeof J$ === 'undefined') {
         var aret, result;
 
         // avoid iid collision; iid may not have a map in the sourcemap
-        result = B(iid+1, "===", switchLeft, right, false, true);
+        result = B(iid+1, "===", switchLeft, right, false, false, true);
 
         if (sandbox.analysis && sandbox.analysis.conditional) {
             aret = sandbox.analysis.conditional(iid, result);

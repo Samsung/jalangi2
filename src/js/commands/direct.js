@@ -70,7 +70,11 @@ function runAnalysis(initParam) {
         }
     }
 
-    startProgram();
+    if (J$.analysis && J$.analysis.onReady) {
+        J$.analysis.onReady(startProgram);
+    } else {
+        startProgram();
+    }
 }
 
 var initParam = null;
