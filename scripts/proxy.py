@@ -34,6 +34,8 @@ def processFile (content, ext):
 		return content
 
 def start(context, argv):
+	global ANALYSES
+	global analysis
 	if len(argv) > 1:
 		ANALYSES = [os.path.abspath(os.path.join(WORKING_DIR,x)) for x in argv[1:]]
 		analysis = ' --analysis '.join([' ']+ANALYSES)
