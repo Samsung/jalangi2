@@ -1,4 +1,4 @@
-### Wrting a Jalangi2 analysis ###
+### Writing a Jalangi2 analysis ###
 
 analysis.js is a new API for performing direct or in browser analysis.  It has a clean, efficient, and less error-prone
 API compared to analysis.js of Jalangi1.  An analysis in analysis.js can be written using the template at
