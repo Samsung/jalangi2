@@ -161,7 +161,7 @@ if (typeof J$ === 'undefined') {
          * shared between HTMLRewriteStream and InstrumentJSStream
          */
         function accumulateData(chunk, enc, cb) {
-            this.data += chunk;
+            this.data = this.data == null ? chunk : Buffer.concat([this.data,chunk]);;
             cb();
         }
 
@@ -169,7 +169,7 @@ if (typeof J$ === 'undefined') {
 
         function HTMLRewriteStream(options, filename) {
             Transform.call(this, options);
-            this.data = "";
+            this.data = null;
             this.filename = filename;
         }
 
@@ -215,9 +215,9 @@ if (typeof J$ === 'undefined') {
             var metaStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n';
 
             if (instrumentInline) {
-                newHTML = proxy.rewriteHTML(this.data, "http://foo.com", rewriteInlineScript, "");
+                newHTML = proxy.rewriteHTML(String(this.data), "http://foo.com", rewriteInlineScript, "");
             } else {
-                newHTML = this.data;
+                newHTML = String(this.data);
 
             }
             if (inlineJalangi) {
@@ -274,7 +274,7 @@ if (typeof J$ === 'undefined') {
             Transform.call(this, options);
             this.origScriptName = origScriptName;
             this.instScriptName = instScriptName;
-            this.data = "";
+            this.data = null;
         }
 
         util.inherits(InstrumentJSStream, Transform);
@@ -302,7 +302,7 @@ if (typeof J$ === 'undefined') {
                 console.log("instrumenting " + this.origScriptName);
             }
             var options = {
-                code: this.data,
+                code: String(this.data),
                 isEval: false,
                 origCodeFileName: this.origScriptName,
                 instCodeFileName: this.instScriptName,
@@ -316,6 +316,7 @@ if (typeof J$ === 'undefined') {
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     // just output the same file
+                    console.log("WARNING: syntax error when instrumenting " + this.origScriptName);
                     this.push(this.data);
                 } else {
                     throw e;
