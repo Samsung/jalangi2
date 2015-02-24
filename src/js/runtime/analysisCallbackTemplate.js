@@ -89,6 +89,9 @@
 
         this.endExecution = function() {};
 
+        this.runInstrumentedFunctionBody = function(iid) {return true;}; // callback called only when instrumented with Config.ENABLE_SAMPLE = true
+                                                                         // if returns true, instrumented function body is executed, else uninstrumented function body is executed
+
         /**
          * onReady is useful if your analysis is running on node.js (i.e., via the direct.js or jalangi.js commands)
          * and needs to complete some asynchronous initialization before the instrumented program starts.  In such a

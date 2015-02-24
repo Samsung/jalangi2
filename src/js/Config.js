@@ -39,6 +39,7 @@ if (typeof J$ === 'undefined') {
     // In the following functions
     // return true in a function, if you want the ast node (passed as the second argument) to be instrumented
     // ast node gets instrumented if you do not define the corresponding function
+    // Config.ENABLE_SAMPLING = true;
 //    Config.INSTR_READ = function(name, ast) { return false; };
 //    Config.INSTR_WRITE = function(name, ast) { return true; };
 //    Config.INSTR_GETFIELD = function(offset, ast) { return true; }; // offset is null if the property is computed

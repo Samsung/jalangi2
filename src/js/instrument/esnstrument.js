@@ -87,6 +87,7 @@ if (typeof J$ === 'undefined') {
     var logUncaughtExceptionFunName = JALANGI_VAR + ".Ex";
     var logLastComputedFunName = JALANGI_VAR + ".L";
     var logTmpVarName = JALANGI_VAR + "._tm_p";
+    var logSampleFunName = JALANGI_VAR + ".S";
 
     var logBinaryOpFunName = JALANGI_VAR + ".B";
     var logUnaryOpFunName = JALANGI_VAR + ".U";
@@ -1071,6 +1072,36 @@ if (typeof J$ === 'undefined') {
         return node;
     }
 
+    function mergeBodies(node) {
+        printIidToLoc(node);
+        var ret = replaceInStatement(
+            "function n() { if ("+logSampleFunName+"("+RP+"1)){" + RP + "2} else {"+RP+"3}}",
+            getIid(),
+            node.body.body,
+            node.bodyOrig.body
+        );
+
+        node.body.body = ret[0].body.body;
+        delete node.bodyOrig;
+        return node;
+    }
+
+    var visitorCloneBodyPre = {
+        "FunctionExpression": function (node) {
+            node.bodyOrig = JSON.parse(JSON.stringify(node.body));
+            return node;
+        },
+        "FunctionDeclaration": function (node) {
+            node.bodyOrig = JSON.parse(JSON.stringify(node.body));
+            return node;
+        }
+    };
+
+    var visitorMergeBodyPre = {
+        "FunctionExpression": mergeBodies,
+        "FunctionDeclaration": mergeBodies
+    };
+
     var visitorRRPre = {
         'Program': setScope,
         'FunctionDeclaration': setScope,
@@ -1621,8 +1652,13 @@ if (typeof J$ === 'undefined') {
 
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
             iidSourceInfo = {};
-            var newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
-            // post-process AST to hoist function declarations (required for Firefox)
+            var newAst;
+            if (Config.ENABLE_SAMPLING) {
+                newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
+            } else {
+                newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+            }
+                        // post-process AST to hoist function declarations (required for Firefox)
             var hoistedFcts = [];
             newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
             var newCode = esotope.generate(newAst);

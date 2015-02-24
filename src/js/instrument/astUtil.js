@@ -137,8 +137,9 @@ if (typeof J$ === 'undefined') {
                     } else {
                             newContext = CONTEXT.RHS;
                     }
-                    object[key] = transformAst(child, visitorPost, visitorPre, newContext, noIgnore);
-
+                    if (key !== 'bodyOrig') {
+                        object[key] = transformAst(child, visitorPost, visitorPre, newContext, noIgnore);
+                    }
                 }
 //            }
         }

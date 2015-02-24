@@ -655,9 +655,17 @@ if (typeof J$ === 'undefined') {
         return (lastComputedValue = left);
     }
 
+    function S(iid) {
+        if (sandbox.analysis && sandbox.analysis.runInstrumentedFunctionBody) {
+            return sandbox.analysis.runInstrumentedFunctionBody(iid);
+        }
+        return true;
+    }
+
     function L() {
         return lastComputedValue;
     }
+
 
     function X1(iid, val) {
         if (sandbox.analysis && sandbox.analysis.endExpression) {
@@ -705,6 +713,8 @@ if (typeof J$ === 'undefined') {
     sandbox.L = L;
     sandbox.X1 = X1; // top level expression
     sandbox.endExecution = endExecution;
+
+    sandbox.S = S;
 
     sandbox.EVAL_ORG = EVAL_ORG;
 })(J$);
