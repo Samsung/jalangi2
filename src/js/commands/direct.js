@@ -66,7 +66,8 @@ function runAnalysis(initParam) {
         // this assumes that the endExecution() callback of the analysis
         // does not make any asynchronous calls
         process.on('exit', function () { J$.endExecution(); });
-        require('module').Module.runMain(script, null, true);
+        var mod = require('module').Module;
+        mod.runMain(script, null, true);
     }
 
     if (J$.analysis && J$.analysis.onReady) {

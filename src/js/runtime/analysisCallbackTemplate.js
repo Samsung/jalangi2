@@ -89,7 +89,7 @@
 
         this.endExecution = function() {};
 
-        this.runInstrumentedFunctionBody = function(iid) {return true;}; // callback called only when instrumented with Config.ENABLE_SAMPLING = true
+        this.runInstrumentedFunctionBody = function(iid) {return false;}; // callback called only when instrumented with Config.ENABLE_SAMPLING = true
                                                                          // if returns true, instrumented function body is executed, else uninstrumented function body is executed
 
         /**
