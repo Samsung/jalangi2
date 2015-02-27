@@ -1086,6 +1086,40 @@ if (typeof J$ === 'undefined') {
         return node;
     }
 
+    RegExp.prototype.toJSON = function() {
+        var str = this.source;
+        var glb = this.global;
+        var ignoreCase = this.ignoreCase;
+        var multiline = this.multiline;
+        var obj = {
+            type: 'J$.AST.REGEXP',
+            value: str,
+            glb : glb,
+            ignoreCase: ignoreCase,
+            multiline: multiline
+        }
+        return obj;
+    }
+
+    function JSONParseHandler(key, value) {
+        var ret = value, flags = '';
+        if (typeof value === 'object' && value && value.type === 'J$.AST.REGEXP') {
+            if (value.glb) 
+                flags += 'g';
+            if (value.ignoreCase)
+                flags += 'i';
+            if (value.multiline)
+                flags += 'm';
+            ret = RegExp(value.value, flags);
+        }
+        return ret;
+    }
+
+    function clone(src) {
+        return JSON.parse(JSON.stringify(src), JSONParseHandler);
+    }
+
+/*
     function constructEmptyObject(o) {
         function F() {}
         F.prototype = o;
@@ -1149,7 +1183,7 @@ if (typeof J$ === 'undefined') {
         return mixin(r, src, clone);
 
     }
-
+*/
     var visitorCloneBodyPre = {
         "FunctionExpression": function (node) {
             node.bodyOrig = clone(node.body);
