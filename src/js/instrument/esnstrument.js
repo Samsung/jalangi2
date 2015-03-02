@@ -881,7 +881,7 @@ if (typeof J$ === 'undefined') {
         if (scope) {
             for (var name in scope.vars) {
                 if (HOP(scope.vars, name)) {
-                    if (scope.vars[name] === "defun") {
+                    if (scope.vars[name] === "defun" || scope.vars[name] === "lambda") {
                         ident = createIdentifierAst(name);
                         ident.loc = scope.funLocs[name];
                         ret = ret.concat(createCallInitAsStatement(node,
