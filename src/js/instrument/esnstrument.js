@@ -887,7 +887,7 @@ if (typeof J$ === 'undefined') {
                         ret = ret.concat(createCallInitAsStatement(node,
                             createLiteralAst(name),
                             wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
-                            true,
+                            false,
                             ident, false));
                     }
                     if (scope.vars[name] === "lambda") {
@@ -895,7 +895,7 @@ if (typeof J$ === 'undefined') {
                         ident.loc = scope.funLocs[name];
                         ret = ret.concat(createCallInitAsStatement(node,
                             createLiteralAst(name),ident,
-                            true,
+                            false,
                             ident, false));
                     }
                     if (scope.vars[name] === "arg") {
