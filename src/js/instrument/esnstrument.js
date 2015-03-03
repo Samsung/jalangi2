@@ -881,12 +881,20 @@ if (typeof J$ === 'undefined') {
         if (scope) {
             for (var name in scope.vars) {
                 if (HOP(scope.vars, name)) {
-                    if (scope.vars[name] === "defun" || scope.vars[name] === "lambda") {
+                    if (scope.vars[name] === "defun") {
                         ident = createIdentifierAst(name);
                         ident.loc = scope.funLocs[name];
                         ret = ret.concat(createCallInitAsStatement(node,
                             createLiteralAst(name),
                             wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
+                            true,
+                            ident, false));
+                    }
+                    if (scope.vars[name] === "lambda") {
+                        ident = createIdentifierAst(name);
+                        ident.loc = scope.funLocs[name];
+                        ret = ret.concat(createCallInitAsStatement(node,
+                            createLiteralAst(name),ident,
                             true,
                             ident, false));
                     }
