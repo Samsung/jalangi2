@@ -721,11 +721,11 @@ if (typeof J$ === 'undefined') {
 //        return ret;
 //    }
 
-    function createCallInitAsStatement(node, name, val, isArgumentSync, lhs, isCatchParam) {
+    function createCallInitAsStatement(node, name, val, isArgumentSync, lhs, isCatchParam, isAssign) {
         printIidToLoc(node);
         var ret;
 
-        if (isArgumentSync)
+        if (isAssign)
             ret = replaceInStatement(
                 RP + "1 = " + logInitFunName + "(" + RP + "2, " + RP + "3, " + RP + "4, " + isArgumentSync + ", false," + isCatchParam + ")",
                 lhs,
@@ -813,7 +813,7 @@ if (typeof J$ === 'undefined') {
         body.unshift(createCallInitAsStatement(node,
             createLiteralAst(name),
             createIdentifierAst(name),
-            false, undefined, true)[0]);
+            false, undefined, true, false)[0]);
     }
 
     function wrapScriptBodyWithTryCatch(node, body) {
@@ -875,7 +875,7 @@ if (typeof J$ === 'undefined') {
                     createLiteralAst("arguments"),
                     ident,
                     true,
-                    ident, false));
+                    ident, false, true));
             }
         }
         if (scope) {
@@ -888,7 +888,7 @@ if (typeof J$ === 'undefined') {
                             createLiteralAst(name),
                             wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
                             false,
-                            ident, false));
+                            ident, false, true));
                     }
                     if (scope.vars[name] === "lambda") {
                         ident = createIdentifierAst(name);
@@ -896,7 +896,7 @@ if (typeof J$ === 'undefined') {
                         ret = ret.concat(createCallInitAsStatement(node,
                             createLiteralAst(name),ident,
                             false,
-                            ident, false));
+                            ident, false, true));
                     }
                     if (scope.vars[name] === "arg") {
                         ident = createIdentifierAst(name);
@@ -904,13 +904,13 @@ if (typeof J$ === 'undefined') {
                             createLiteralAst(name),
                             ident,
                             true,
-                            ident, false));
+                            ident, false, true));
                     }
                     if (scope.vars[name] === "var") {
                         ret = ret.concat(createCallInitAsStatement(node,
                             createLiteralAst(name),
                             createIdentifierAst(name),
-                            false, undefined, false));
+                            false, undefined, false, false));
                     }
                 }
             }
