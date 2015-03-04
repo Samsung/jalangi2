@@ -1085,8 +1085,8 @@ if (typeof J$ === 'undefined') {
         var ret = replaceInStatement(
             "function n() { if ("+logSampleFunName+"("+RP+"1)){" + RP + "2} else {"+RP+"3}}",
             getIid(),
-            node.body.body,
-            node.bodyOrig.body
+            node.bodyOrig.body,
+            node.body.body
         );
 
         node.body.body = ret[0].body.body;
