@@ -67,7 +67,7 @@ In the above analysis, we chained several analyses by including *--analysis src/
 
 **Analysis in a browser using offline instrumentation**
 
-An analysis can be performed on an web app using the Chrome browser by issuing the following commands:
+An analysis can be performed on a web app using the Chrome browser by issuing the following commands:
 
     node src/js/commands/instrument.js --inlineIID --inlineSource -i --inlineJalangi --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js --outputDir /tmp tests/tizen/annex
     open file:///tmp/annex/index.html
