@@ -1,6 +1,6 @@
 {
   "name":"jalangi2",
-  "version":"0.1.0",
+  "version":"0.1.1",
   "description":"dynamic analysis framework for JavaScript",
   "dependencies":{
     "acorn": "0.9.0",
@@ -14,6 +14,7 @@
     "temp": "0.8.1",
     "q": "1.1.2"
   },
+  "bundledDependencies": ["acorn","esotope"],
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"
   },
