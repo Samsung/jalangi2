@@ -337,6 +337,16 @@ if (typeof J$ === 'undefined') {
         }
     }
 
+    function Wi(iid, val) {
+        if (sandbox.analysis && sandbox.analysis._with) {
+            aret = sandbox.analysis._with(iid, val);
+            if (aret) {
+                val = aret.result;
+            }
+        }
+        return val;
+    }
+
     // Uncaught exception
     function Ex(iid, e) {
         wrappedExceptionVal = {exception:e};
@@ -712,6 +722,7 @@ if (typeof J$ === 'undefined') {
     sandbox.Ex = Ex;
     sandbox.L = L;
     sandbox.X1 = X1; // top level expression
+    sandbox.Wi = Wi; // with statement
     sandbox.endExecution = endExecution;
 
     sandbox.S = S;

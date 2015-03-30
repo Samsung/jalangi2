@@ -89,6 +89,7 @@ if (typeof J$ === 'undefined') {
     var logTmpVarName = JALANGI_VAR + "._tm_p";
     var logSampleFunName = JALANGI_VAR + ".S";
 
+    var logWithFunName = JALANGI_VAR + ".Wi";
     var logBinaryOpFunName = JALANGI_VAR + ".B";
     var logUnaryOpFunName = JALANGI_VAR + ".U";
     var logConditionalFunName = JALANGI_VAR + ".C";
@@ -681,6 +682,21 @@ if (typeof J$ === 'undefined') {
                 logSwitchRightFunName + "(" + RP + "1, " + RP + "2)",
                 getCondIid(),
                 test
+            );
+            transferLoc(ret, node);
+            return ret;
+        } else {
+            return node;
+        }
+    }
+
+    function wrapWith(node) {
+        if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("with", node)) {
+            printIidToLoc(node);
+            var ret = replaceInExpr(
+                logWithFunName + "(" + RP + "1, " + RP + "2)",
+                getIid(),
+                node
             );
             transferLoc(ret, node);
             return ret;
@@ -1457,6 +1473,10 @@ if (typeof J$ === 'undefined') {
         },
         "FunctionDeclaration": function (node) {
             node.body.body = wrapFunBodyWithTryCatch(node, node.body.body);
+            return node;
+        },
+        "WithStatement": function (node) {
+            node.object = wrapWith(node.object);
             return node;
         },
         "ConditionalExpression": funCond,
