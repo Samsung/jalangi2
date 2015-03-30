@@ -46,6 +46,7 @@ if (typeof J$ === 'undefined') {
     var EVAL_ORG = eval;
     var lastComputedValue;
     var SPECIAL_PROP_SID = sandbox.Constants.SPECIAL_PROP_SID;
+    var SPECIAL_PROP_IID = sandbox.Constants.SPECIAL_PROP_IID;
 
 
     var sidStack = [], sidCounter = 0;
@@ -61,15 +62,20 @@ if (typeof J$ === 'undefined') {
         sandbox.sid = sidStack.pop();
     }
 
-    function associateSidWithFunction(f) {
+    function associateSidWithFunction(f, iid) {
         if (typeof f === 'function') {
             if (Object && Object.defineProperty && typeof Object.defineProperty === 'function') {
                 Object.defineProperty(f, SPECIAL_PROP_SID, {
                     enumerable:false,
                     writable:true
                 });
+                Object.defineProperty(f, SPECIAL_PROP_IID, {
+                    enumerable:false,
+                    writable:true
+                });
             }
             f[SPECIAL_PROP_SID] = sandbox.sid;
+            f[SPECIAL_PROP_IID] = iid;
         }
     }
 
@@ -197,16 +203,16 @@ if (typeof J$ === 'undefined') {
 
     var hasGetOwnPropertyDescriptor = typeof Object.getOwnPropertyDescriptor === 'function';
     // object/function/regexp/array Literal
-    function T(iid, val, type, hasGetterSetter) {
+    function T(iid, val, type, hasGetterSetter, internalIid) {
         var aret;
-        associateSidWithFunction(val);
+        associateSidWithFunction(val, internalIid);
         if (hasGetterSetter) {
             for (var offset in val) {
                 if (hasGetOwnPropertyDescriptor && val.hasOwnProperty(offset)) {
                     var desc = Object.getOwnPropertyDescriptor(val, offset);
                     if (desc !== undefined) {
-                        associateSidWithFunction(desc.get);
-                        associateSidWithFunction(desc.set);
+                        associateSidWithFunction(desc.get, internalIid);
+                        associateSidWithFunction(desc.set, internalIid);
                     }
                 }
             }

@@ -44,6 +44,7 @@ if (typeof J$ === 'undefined') {
     Constants.SPECIAL_PROP3 = "*" + PREFIX1 + "C*";
     Constants.SPECIAL_PROP4 = "*" + PREFIX1 + "W*";
     Constants.SPECIAL_PROP_SID = "*" + PREFIX1 + "SID*";
+    Constants.SPECIAL_PROP_IID = "*" + PREFIX1 + "IID*";
 
     Constants.UNKNOWN = -1;
 
