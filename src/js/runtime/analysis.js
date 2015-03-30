@@ -133,12 +133,26 @@ if (typeof J$ === 'undefined') {
         return f(sandbox.instrumentEvalCode(args[0], iid));
     }
 
+    function invokeFunctionDecl(base, f, args, iid) {
+        var newArgs = [];
+        for (var i = 0; i < args.length-1; i++) {
+            newArgs[i] = args[i];
+        }
+        var code = '(function(' + newArgs.join(', ') + ') { ' + args[args.length-1] + ' })';
+        var code = sandbox.instrumentEvalCode(code, iid);
+        // Using EVAL_ORG instead of eval() is important as it preserves the scoping semantics of Function()
+        var out = EVAL_ORG(code);
+        return out;
+    }
+
     function callFun(f, base, args, isConstructor, iid) {
         var result;
         pushSwitchKey();
         try {
             if (f === EVAL_ORG) {
                 result = invokeEval(base, f, args, iid);
+            } else if (f === Function) {
+                result = invokeFunctionDecl(base, f, args, iid);
             } else if (isConstructor) {
                 result = callAsConstructor(f, args);
             } else {
