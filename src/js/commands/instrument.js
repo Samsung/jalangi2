@@ -151,7 +151,7 @@ if (typeof J$ === 'undefined') {
 
             var instResult = sandbox.instrumentCode(options);
             var instrumentedCode = applyASTHandler(instResult);
-            fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
+            fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, "_jalangi_.json"), instResult.sourceMapString, "utf8");
             fs.writeFileSync(path.join(copyDir, origname), src);
             fs.writeFileSync(path.join(copyDir, instname), instrumentedCode);
             return instrumentedCode;
@@ -324,7 +324,7 @@ if (typeof J$ === 'undefined') {
             }
             if (instResult) {
                 var instrumentedCode = applyASTHandler(instResult);
-                fs.writeFileSync(this.instScriptName.replace(/.js$/, ".json"), instResult.sourceMapString, "utf8");
+                fs.writeFileSync(this.instScriptName.replace(/.js$/, "_jalangi_.json"), instResult.sourceMapString, "utf8");
                 this.push(instrumentedCode);
             }
             cb();
