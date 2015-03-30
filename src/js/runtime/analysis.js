@@ -37,6 +37,8 @@ if (typeof J$ === 'undefined') {
     // have another function call in a finally block (see test
     // call_in_finally.js)
 
+    var global = this;
+    var Function = global.Function;
     var returnStack = [];
     var wrappedExceptionVal;
     var lastVal;
