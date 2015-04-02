@@ -63,6 +63,8 @@
 
         this._throw = function(iid, val){return {result:val};};
 
+        this._with = function(iid, val){return {result:val};};
+
         this.functionEnter = function (iid, f, dis, args){};
 
         this.functionExit = function(iid, returnVal, wrappedExceptionVal){return {returnVal:returnVal,wrappedExceptionVal:wrappedExceptionVal,isBacktrack:false};};
