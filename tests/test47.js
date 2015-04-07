@@ -15,3 +15,13 @@ console.log(f());
 var f = makeF();
 console.log(f());
 
+var exceptionCaught = false;
+try {
+  Function('},{');
+} catch (e) {
+  exceptionCaught = true;
+}
+if (!exceptionCaught) {
+  throw new Error("Should have thrown an exception");
+}
+

@@ -134,6 +134,9 @@ if (typeof J$ === 'undefined') {
     }
 
     function invokeFunctionDecl(base, f, args, iid) {
+        // Invoke with the original parameters to preserve exceptional behavior if input is invalid
+        f.apply(base, args);
+        // Otherwise input is valid, so instrument and invoke via eval
         var newArgs = [];
         for (var i = 0; i < args.length-1; i++) {
             newArgs[i] = args[i];
