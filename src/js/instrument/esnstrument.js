@@ -32,6 +32,10 @@ if (typeof J$ === 'undefined') {
     if (typeof sandbox.instrumentCode !== 'undefined') {
         return;
     }
+
+    var global = this;
+    var JSON = { parse: global.JSON.parse, stringify: global.JSON.stringify };
+
     var astUtil = sandbox.astUtil;
 
     var Config = sandbox.Config;
