@@ -179,7 +179,7 @@ if (typeof J$ === 'undefined') {
         var aret, skip = false, result;
 
         if (sandbox.analysis && sandbox.analysis.invokeFunPre) {
-            aret = sandbox.analysis.invokeFunPre(iid, f, base, args, isConstructor, isMethod);
+            aret = sandbox.analysis.invokeFunPre(iid, f, base, args, isConstructor, isMethod, f[SPECIAL_PROP_IID]);
             if (aret) {
                 f = aret.f;
                 base = aret.base;
@@ -191,7 +191,7 @@ if (typeof J$ === 'undefined') {
             result = callFun(f, base, args, isConstructor, iid);
         }
         if (sandbox.analysis && sandbox.analysis.invokeFun) {
-            aret = sandbox.analysis.invokeFun(iid, f, base, args, result, isConstructor, isMethod);
+            aret = sandbox.analysis.invokeFun(iid, f, base, args, result, isConstructor, isMethod, f[SPECIAL_PROP_IID]);
             if (aret) {
                 result = aret.result;
             }
@@ -362,6 +362,7 @@ if (typeof J$ === 'undefined') {
         }
     }
 
+    // with statement
     function Wi(iid, val) {
         if (sandbox.analysis && sandbox.analysis._with) {
             aret = sandbox.analysis._with(iid, val);

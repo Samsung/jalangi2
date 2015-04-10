@@ -37,9 +37,9 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        this.invokeFunPre = function(iid, f, base, args, isConstructor, isMethod){return {f:f,base:base,args:args,skip:false};};
+        this.invokeFunPre = function(iid, f, base, args, isConstructor, isMethod, internalIid){return {f:f,base:base,args:args,skip:false};};
 
-        this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod){return {result:result};};
+        this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod, internalIid){return {result:result};};
 
         this.literal = function(iid, val, hasGetterSetter) {return {result:val};};
 
