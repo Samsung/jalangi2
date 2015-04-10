@@ -520,16 +520,46 @@ if (typeof J$ === 'undefined') {
         throw new Error(funId + " not known");
     }
 
+    function getFnIdFromAst(ast) {
+        var entryExpr = ast.body.body[0];
+        if (entryExpr.type != 'ExpressionStatement') { console.log(JSON.stringify(entryExpr)); throw new Error("IllegalStateException"); }
+        entryExpr = entryExpr.expression;
+        if (entryExpr.type != 'CallExpression') { throw new Error("IllegalStateException"); }
+        if (entryExpr.callee.type != 'MemberExpression') { throw new Error("IllegalStateException"); }
+        if (entryExpr.callee.object.name != JALANGI_VAR) { throw new Error("IllegalStateException"); }
+        if (entryExpr.callee.property.name != 'Fe') { throw new Error("IllegalStateException"); }
+        return entryExpr['arguments'][0].value;
+    }
+
     function wrapLiteral(node, ast, funId) {
         if (!Config.INSTR_LITERAL || Config.INSTR_LITERAL(getLiteralValue(funId, node), node)) {
             printIidToLoc(node);
             var hasGetterSetter = ifObjectExpressionHasGetterSetter(node);
-            var ret = replaceInExpr(
-                logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
-                getIid(),
-                ast,
-                createLiteralAst(funId)
-            );
+
+            var ret;
+            if (funId == N_LOG_FUNCTION_LIT) {
+                var internalFunId = null;
+                if (node.type == 'FunctionExpression') {
+                    internalFunId = getFnIdFromAst(node);
+                } else {
+                    if (node.type != 'Identifier') { throw new Error("IllegalStateException"); }
+                    internalFunId = getFnIdFromAst(scope.funNodes[node.name]);
+                }
+                ret = replaceInExpr(
+                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ", " + internalFunId + ")",
+                    getIid(),
+                    ast,
+                    createLiteralAst(funId),
+                    internalFunId
+                );
+            } else {
+                ret = replaceInExpr(
+                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
+                    getIid(),
+                    ast,
+                    createLiteralAst(funId)
+                );
+            }
             transferLoc(ret, node);
             return ret;
         } else {
@@ -1495,13 +1525,14 @@ if (typeof J$ === 'undefined') {
         function Scope(parent, isCatch) {
             this.vars = {};
             this.funLocs = {};
+            this.funNodes = {};
             this.hasEval = false;
             this.hasArguments = false;
             this.parent = parent;
             this.isCatch = isCatch;
         }
 
-        Scope.prototype.addVar = function (name, type, loc) {
+        Scope.prototype.addVar = function (name, type, loc, node) {
             var tmpScope = this;
             if (this.isCatch && type !== 'catch') {
                 tmpScope = this.parent;
@@ -1512,6 +1543,7 @@ if (typeof J$ === 'undefined') {
             }
             if (type === 'defun') {
                 tmpScope.funLocs[name] = loc;
+                tmpScope.funNodes[name] = node;
             }
         };
 
@@ -1579,7 +1611,7 @@ if (typeof J$ === 'undefined') {
             currentScope = new Scope(currentScope);
             node.scope = currentScope;
             if (node.type === 'FunctionDeclaration') {
-                oldScope.addVar(node.id.name, "defun", node.loc);
+                oldScope.addVar(node.id.name, "defun", node.loc, node);
                 MAP(node.params, function (param) {
                     if (param.name === fromName) {         // rename arguments to J$_arguments
                         param.name = toName;
@@ -1791,7 +1823,7 @@ if (typeof J$ === 'undefined') {
                         // post-process AST to hoist function declarations (required for Firefox)
             var hoistedFcts = [];
             newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-            var newCode = esotope.generate(newAst);
+            var newCode = esotope.generate(newAst, {comment: true});
             code = newCode + "\n" + noInstr + "\n";
         }
 
