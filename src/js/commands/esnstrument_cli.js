@@ -104,6 +104,35 @@ if (typeof J$ === 'undefined') {
     }
 
 
+    function insertStringAfterBeforeTag(originalCode, injectedCode, lowerCaseTag, upperCaseTag, isAppend) {
+        var headIndex = originalCode.indexOf(lowerCaseTag);
+        if (headIndex === -1) {
+            headIndex = originalCode.indexOf(upperCaseTag);
+            if (headIndex === -1) {
+                if (isAppend) {
+                    console.error("WARNING: could not find "+lowerCaseTag+" element in HTML file " + this.filename);
+                    originalCode = originalCode + injectedCode;
+                } else {
+                    console.error("WARNING: could not find " + lowerCaseTag + " element in HTML file " + this.filename);
+                    originalCode = injectedCode + originalCode;
+                }
+            } else {
+                if (isAppend) {
+                    originalCode = originalCode.slice(0, headIndex) + injectedCode + originalCode.slice(headIndex);
+                } else {
+                    originalCode = originalCode.slice(0, headIndex + upperCaseTag.length) + injectedCode + originalCode.slice(headIndex + upperCaseTag.length);
+                }
+            }
+        } else {
+            if (isAppend) {
+                originalCode = originalCode.slice(0, headIndex) + injectedCode + originalCode.slice(headIndex);
+            } else {
+                originalCode = originalCode.slice(0, headIndex + lowerCaseTag.length) + injectedCode + originalCode.slice(headIndex + lowerCaseTag.length);
+            }
+        }
+        return originalCode;
+    }
+
     function instrumentFile() {
         var argparse = require('argparse');
         var parser = new argparse.ArgumentParser({
@@ -172,23 +201,20 @@ if (typeof J$ === 'undefined') {
             fs.writeFileSync(makeSMapFileName(instFileName), instCodeAndData.sourceMapString, "utf8");
             fs.writeFileSync(instFileName, instCodeAndData.code, "utf8");
         } else {
+            var jalangiRoot = getJalangiRoot();
             instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, "");
-            var headerStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-            headerStr += instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, getJalangiRoot());
-            // just inject our header code
-            var headIndex = instCode.indexOf("<head>");
-            if (headIndex === -1) {
-                headIndex = instCode.indexOf("<HEAD>");
-                if (headIndex === -1) {
-                    console.error("WARNING: could not find <head> element in HTML file " + this.filename);
-                    instCode = headerStr + instCode;
-                } else {
-                    instCode = instCode.slice(0, headIndex + 6) + headerStr + instCode.slice(headIndex + 6);
-                }
-            } else {
-                instCode = instCode.slice(0, headIndex + 6) + headerStr + instCode.slice(headIndex + 6);
-            }
 
+            var headerStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            headerStr += instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
+            // just inject our header code
+            instCode = insertStringAfterBeforeTag(instCode, headerStr, "<head>", "<HEAD>", false);
+
+            var extraHtmlSrc = "src/js/injected.html";
+            if (jalangiRoot) {
+                extraHtmlSrc = path.join(jalangiRoot, extraHtmlSrc);
+            }
+            var extraHtmlString = fs.readFileSync(extraHtmlSrc);
+            instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
 
             fs.writeFileSync(instFileName, instCode, "utf8");
         }
