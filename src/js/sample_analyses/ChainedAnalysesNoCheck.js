@@ -25,7 +25,7 @@
             "getFieldPre", "getField", "putFieldPre", "putField", "read", "write",
             "functionEnter", "functionExit", "scriptEnter", "scriptExit",
             "binaryPre", "binary", "unaryPre", "unary", "conditional",
-            "instrumentCodePre", "instrumentCode", "_return", "_throw", "endExpression", "endExecution", "runInstrumentedFunctionBody"];
+            "instrumentCodePre", "instrumentCode", "_return", "_throw", "_with", "endExpression", "endExecution", "runInstrumentedFunctionBody"];
 
         this.globals = {};
 

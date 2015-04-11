@@ -72,6 +72,30 @@ function getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangi
     return headerCode;
 }
 
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+};
+
+function getFooterString(jalangiRoot) {
+    var footerSources = require("../footers").footerSources;
+    var footerCode = "";
+    footerSources.forEach(function (src) {
+        if (jalangiRoot) {
+            src = path.join(jalangiRoot, src);
+        }
+        if (endsWith(src, ".js")) {
+            footerCode += "<script type=\"text/javascript\">";
+            footerCode += fs.readFileSync(src);
+            footerCode += "</script>";
+        } else {
+            footerCode += fs.readFileSync(src);
+        }
+    });
+
+    return footerCode;
+}
+
+
 function headerCodeInit(root) {
     headerSources.forEach(function (src) {
         if (root) {
@@ -134,3 +158,4 @@ exports.isInlineScript = isInlineScript;
 exports.headerSources = headerSources;
 exports.createFilenameForScript = createFilenameForScript;
 exports.getInlinedScripts = getInlinedScripts;
+exports.getFooterString = getFooterString;

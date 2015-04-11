@@ -82,17 +82,22 @@ if (typeof J$ === 'undefined') {
         var origname = md5(src)+".js";
         var instname = makeInstCodeFileName(origname);
 
-        var instCodeAndData = instrumentCode(
-            {
-                code: src,
-                isEval: false,
-                origCodeFileName: sanitizePath(origname),
-                instCodeFileName: sanitizePath(instname),
-                inlineSourceMap: inlineIID,
-                inlineSource: inlineSource,
-                url:url
-            });
+        try {
+            var instCodeAndData = instrumentCode(
+                {
+                    code: src,
+                    isEval: false,
+                    origCodeFileName: sanitizePath(origname),
+                    instCodeFileName: sanitizePath(instname),
+                    inlineSourceMap: inlineIID,
+                    inlineSource: inlineSource,
+                    url: url
+                });
 
+        } catch (e) {
+            console.log(src);
+            throw e;
+        }
         fs.writeFileSync(path.join(outDir, origname), src, "utf8");
         fs.writeFileSync(makeSMapFileName(path.join(outDir, instname)), instCodeAndData.sourceMapString, "utf8");
         fs.writeFileSync(path.join(outDir, instname), instCodeAndData.code, "utf8");
@@ -105,9 +110,19 @@ if (typeof J$ === 'undefined') {
 
 
     function insertStringAfterBeforeTag(originalCode, injectedCode, lowerCaseTag, upperCaseTag, isAppend) {
-        var headIndex = originalCode.indexOf(lowerCaseTag);
+        var headIndex;
+
+        if (isAppend) {
+            headIndex = originalCode.lastIndexOf(lowerCaseTag);
+        } else {
+            headIndex = originalCode.indexOf(lowerCaseTag);
+        }
         if (headIndex === -1) {
-            headIndex = originalCode.indexOf(upperCaseTag);
+            if (isAppend) {
+                headIndex = originalCode.lastIndexOf(upperCaseTag);
+            } else {
+                headIndex = originalCode.indexOf(upperCaseTag);
+            }
             if (headIndex === -1) {
                 if (isAppend) {
                     console.error("WARNING: could not find "+lowerCaseTag+" element in HTML file " + this.filename);
@@ -213,7 +228,7 @@ if (typeof J$ === 'undefined') {
             if (jalangiRoot) {
                 extraHtmlSrc = path.join(jalangiRoot, extraHtmlSrc);
             }
-            var extraHtmlString = fs.readFileSync(extraHtmlSrc);
+            var extraHtmlString = instUtil.getFooterString(jalangiRoot);
             instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
 
             fs.writeFileSync(instFileName, instCode, "utf8");

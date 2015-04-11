@@ -29,7 +29,7 @@ def processFile (content, ext):
 			data = text_file.read()
 		return data
 	except:
-		print "Execption in proxy.py"
+		print "Exception in proxy.py"
 		print sys.exc_info()
 		return content
 
