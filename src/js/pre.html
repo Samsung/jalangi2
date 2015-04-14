@@ -19,12 +19,11 @@
         float: left;
         display: none;
         position: absolute;
-        top: 3%;
-        left: 3%;
-        width: 90%;
-        height: 90%;
-        padding: 2px;
-        border: 2px solid orange;
+        top: 4%;
+        left: 4%;
+        width: 92%;
+        height: 92%;
+        border: 2px solid lightblue;
         background-color: white;
         z-index:10002;
         overflow: auto;
@@ -37,27 +36,45 @@
         width: 50px;
         height: 20px;
         background-color: white;
-        z-index:10001;
+        z-index:10003;
         -moz-opacity: 0.8;
         opacity:.80;
         filter: alpha(opacity=80);
     }
 </style>
 
-<div id="jalangi_results_light" class="jalangi_results_white_content">
-    <a href = "javascript:void(0)" onclick = "document.getElementById('jalangi_results_light').style.display='none';
-    document.getElementById('jalangi_results_fade').style.display='none'">Close</a>
-    <div id="jalangi_results_window">
-        print results here.
-    </div>
-</div>
-<div id="jalangi_results_fade" class="jalangi_results_black_overlay"></div>
+<script type="text/javascript">
+    J$.Results = {"isHidden":true};
+    J$.Results.showHideResults = function () {
+        var light = document.getElementById('jalangi_results_light');
+        var fade = document.getElementById('jalangi_results_fade');
+        if (light.style.display !== 'block') {
+            J$.endExecution();
+            light.style.display = 'block';
+            fade.style.display = 'block';
+            J$.Results.isHidden = false;
+        } else {
+            light.style.display = 'none';
+            fade.style.display = 'none';
+            J$.Results.isHidden = true;
+        }
+    }
+
+</script>
+
 <div id="jalangi_results_show_button" class="jalangi_results_button_overlay">
     <button type="button" style="font-style:normal; font-size:18px; background-color:lightblue;"
             href = "javascript:void(0)"
-            onclick = "J$.endExecution();
-            console.log('click');document.getElementById('jalangi_results_light').style.display='block';
-            document.getElementById('jalangi_results_fade').style.display='block'">
+            onclick = "J$.Results.showHideResults()">
         Jalangi
     </button>
 </div>
+<div id="jalangi_results_fade" class="jalangi_results_black_overlay"></div>
+<div id="jalangi_results_light" class="jalangi_results_white_content">
+    <a style="float:right;vertical-align: top;" href = "javascript:void(0)" onclick = "document.getElementById('jalangi_results_light').style.display='none';
+    document.getElementById('jalangi_results_fade').style.display='none'">[X]</a>
+    <div id="jalangi_results_window">
+        Results appear here.
+    </div>
+</div>
+

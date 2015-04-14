@@ -9,6 +9,7 @@ In the Jalangi2 distribution you will find several analyses:
 
   * an analysis to [track NaNs](src/js/sample_analyses/dlint/CheckNaN.js),
   * an analysis to [check if an undefined is concatenated to a string](src/js/sample_analyses/dlint/ConcatUndefinedToString.js),
+  * [Memory analysis](https://github.com/Samsung/meminsight),
   * and [more ...](src/js/sample_analyses/)
 
 ### Requirements

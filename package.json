@@ -12,7 +12,8 @@
     "ncp": "0.6.0",
     "rewriting-proxy": "0.4.2",
     "temp": "0.8.1",
-    "q": "1.1.2"
+    "q": "1.1.2",
+    "codemirror": "5.1.0"
   },
   "bundledDependencies": ["acorn","esotope"],
   "scripts": {
