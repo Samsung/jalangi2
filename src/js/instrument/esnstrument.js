@@ -432,7 +432,7 @@ if (typeof J$ === 'undefined') {
             transferLoc(ret, node);
             return ret;
         } else {
-            return node;
+            return val;
         }
     }
 
@@ -454,7 +454,7 @@ if (typeof J$ === 'undefined') {
             transferLoc(ret, node);
             return ret;
         } else {
-            return node;
+            return val;
         }
     }
 
