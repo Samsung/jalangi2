@@ -1159,6 +1159,14 @@ if (typeof J$ === 'undefined') {
         return obj;
     }
 
+    function JSONStringifyHandler(key, value) {
+        if (key === 'scope') {
+            return undefined;
+        } else {
+            return value;
+        }
+    }
+
     function JSONParseHandler(key, value) {
         var ret = value, flags = '';
         if (typeof value === 'object' && value && value.type === 'J$.AST.REGEXP') {
@@ -1174,7 +1182,8 @@ if (typeof J$ === 'undefined') {
     }
 
     function clone(src) {
-        return JSON.parse(JSON.stringify(src), JSONParseHandler);
+        var ret = JSON.parse(JSON.stringify(src, JSONStringifyHandler), JSONParseHandler);
+        return ret;
     }
 
 /*
