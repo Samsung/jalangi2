@@ -34,7 +34,7 @@ if (typeof J$ === 'undefined') {
     }
 
     var global = this;
-    var JSON = { parse: global.JSON.parse, stringify: global.JSON.stringify };
+    var JSON = {parse: global.JSON.parse, stringify: global.JSON.stringify};
 
     var astUtil = sandbox.astUtil;
 
@@ -522,12 +522,23 @@ if (typeof J$ === 'undefined') {
 
     function getFnIdFromAst(ast) {
         var entryExpr = ast.body.body[0];
-        if (entryExpr.type != 'ExpressionStatement') { console.log(JSON.stringify(entryExpr)); throw new Error("IllegalStateException"); }
+        if (entryExpr.type != 'ExpressionStatement') {
+            console.log(JSON.stringify(entryExpr));
+            throw new Error("IllegalStateException");
+        }
         entryExpr = entryExpr.expression;
-        if (entryExpr.type != 'CallExpression') { throw new Error("IllegalStateException"); }
-        if (entryExpr.callee.type != 'MemberExpression') { throw new Error("IllegalStateException"); }
-        if (entryExpr.callee.object.name != JALANGI_VAR) { throw new Error("IllegalStateException"); }
-        if (entryExpr.callee.property.name != 'Fe') { throw new Error("IllegalStateException"); }
+        if (entryExpr.type != 'CallExpression') {
+            throw new Error("IllegalStateException");
+        }
+        if (entryExpr.callee.type != 'MemberExpression') {
+            throw new Error("IllegalStateException");
+        }
+        if (entryExpr.callee.object.name != JALANGI_VAR) {
+            throw new Error("IllegalStateException");
+        }
+        if (entryExpr.callee.property.name != 'Fe') {
+            throw new Error("IllegalStateException");
+        }
         return entryExpr['arguments'][0].value;
     }
 
@@ -542,7 +553,9 @@ if (typeof J$ === 'undefined') {
                 if (node.type == 'FunctionExpression') {
                     internalFunId = getFnIdFromAst(node);
                 } else {
-                    if (node.type != 'Identifier') { throw new Error("IllegalStateException"); }
+                    if (node.type != 'Identifier') {
+                        throw new Error("IllegalStateException");
+                    }
                     internalFunId = getFnIdFromAst(scope.funNodes[node.name]);
                 }
                 ret = replaceInExpr(
@@ -649,7 +662,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4,"+(isComputed?"true":"false")+")",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isComputed ? "true" : "false") + ")",
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
@@ -837,10 +850,10 @@ if (typeof J$ === 'undefined') {
         }
         if (isDeclaration) {
             ret = replaceInStatement(
-                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {var "+name+" = " + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node,extra.right), body);
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {var " + name + " = " + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node, extra.right), body);
         } else {
             ret = replaceInStatement(
-                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {" + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node,extra), body);
+                "function n() {  for(" + logTmpVarName + " in " + RP + "1) {" + RP + "2;\n {" + RP + "3}}}", right, wrapWithX1(node, extra), body);
         }
         ret = ret[0].body.body[0];
         transferLoc(ret, node);
@@ -860,10 +873,12 @@ if (typeof J$ === 'undefined') {
 
     function wrapCatchClause(node, body, name) {
         var ret;
-        body.unshift(createCallInitAsStatement(node,
-            createLiteralAst(name),
-            createIdentifierAst(name),
-            false, undefined, true, false)[0]);
+        if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+            body.unshift(createCallInitAsStatement(node,
+                createLiteralAst(name),
+                createIdentifierAst(name),
+                false, undefined, true, false)[0]);
+        }
     }
 
     function wrapScriptBodyWithTryCatch(node, body) {
@@ -920,47 +935,51 @@ if (typeof J$ === 'undefined') {
         var ret = [], ident;
         if (!isScript) {
             if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
-                ident = createIdentifierAst("arguments");
-                ret = ret.concat(createCallInitAsStatement(node,
-                    createLiteralAst("arguments"),
-                    ident,
-                    true,
-                    ident, false, true));
+                if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                    ident = createIdentifierAst("arguments");
+                    ret = ret.concat(createCallInitAsStatement(node,
+                        createLiteralAst("arguments"),
+                        ident,
+                        true,
+                        ident, false, true));
+                }
             }
         }
         if (scope) {
-            for (var name in scope.vars) {
-                if (HOP(scope.vars, name)) {
-                    if (scope.vars[name] === "defun") {
-                        ident = createIdentifierAst(name);
-                        ident.loc = scope.funLocs[name];
-                        ret = ret.concat(createCallInitAsStatement(node,
-                            createLiteralAst(name),
-                            wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
-                            false,
-                            ident, false, true));
-                    }
-                    if (scope.vars[name] === "lambda") {
-                        ident = createIdentifierAst(name);
-                        ident.loc = scope.funLocs[name];
-                        ret = ret.concat(createCallInitAsStatement(node,
-                            createLiteralAst(name),ident,
-                            false,
-                            ident, false, true));
-                    }
-                    if (scope.vars[name] === "arg") {
-                        ident = createIdentifierAst(name);
-                        ret = ret.concat(createCallInitAsStatement(node,
-                            createLiteralAst(name),
-                            ident,
-                            true,
-                            ident, false, true));
-                    }
-                    if (scope.vars[name] === "var") {
-                        ret = ret.concat(createCallInitAsStatement(node,
-                            createLiteralAst(name),
-                            createIdentifierAst(name),
-                            false, undefined, false, false));
+            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                for (var name in scope.vars) {
+                    if (HOP(scope.vars, name)) {
+                        if (scope.vars[name] === "defun") {
+                            ident = createIdentifierAst(name);
+                            ident.loc = scope.funLocs[name];
+                            ret = ret.concat(createCallInitAsStatement(node,
+                                createLiteralAst(name),
+                                wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
+                                false,
+                                ident, false, true));
+                        }
+                        if (scope.vars[name] === "lambda") {
+                            ident = createIdentifierAst(name);
+                            ident.loc = scope.funLocs[name];
+                            ret = ret.concat(createCallInitAsStatement(node,
+                                createLiteralAst(name), ident,
+                                false,
+                                ident, false, true));
+                        }
+                        if (scope.vars[name] === "arg") {
+                            ident = createIdentifierAst(name);
+                            ret = ret.concat(createCallInitAsStatement(node,
+                                createLiteralAst(name),
+                                ident,
+                                true,
+                                ident, false, true));
+                        }
+                        if (scope.vars[name] === "var") {
+                            ret = ret.concat(createCallInitAsStatement(node,
+                                createLiteralAst(name),
+                                createIdentifierAst(name),
+                                false, undefined, false, false));
+                        }
                     }
                 }
             }
@@ -1133,7 +1152,7 @@ if (typeof J$ === 'undefined') {
     function mergeBodies(node) {
         printIidToLoc(node);
         var ret = replaceInStatement(
-            "function n() { if (!"+logSampleFunName+"("+RP+"1)){" + RP + "2} else {"+RP+"3}}",
+            "function n() { if (!" + logSampleFunName + "(" + RP + "1)){" + RP + "2} else {" + RP + "3}}",
             getIid(),
             node.bodyOrig.body,
             node.body.body
@@ -1144,7 +1163,7 @@ if (typeof J$ === 'undefined') {
         return node;
     }
 
-    RegExp.prototype.toJSON = function() {
+    RegExp.prototype.toJSON = function () {
         var str = this.source;
         var glb = this.global;
         var ignoreCase = this.ignoreCase;
@@ -1152,7 +1171,7 @@ if (typeof J$ === 'undefined') {
         var obj = {
             type: 'J$.AST.REGEXP',
             value: str,
-            glb : glb,
+            glb: glb,
             ignoreCase: ignoreCase,
             multiline: multiline
         }
@@ -1170,7 +1189,7 @@ if (typeof J$ === 'undefined') {
     function JSONParseHandler(key, value) {
         var ret = value, flags = '';
         if (typeof value === 'object' && value && value.type === 'J$.AST.REGEXP') {
-            if (value.glb) 
+            if (value.glb)
                 flags += 'g';
             if (value.ignoreCase)
                 flags += 'i';
@@ -1186,71 +1205,71 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
-/*
-    function constructEmptyObject(o) {
-        function F() {}
-        F.prototype = o;
-        return new F();
-    }
+    /*
+     function constructEmptyObject(o) {
+     function F() {}
+     F.prototype = o;
+     return new F();
+     }
 
-    function clone(src) { // from http://davidwalsh.name/javascript-clone
-        function mixin(dest, source, copyFunc) {
-            var name, s, i, empty = {};
-            for(name in source){
-                // the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
-                // inherited from Object.prototype.	 For example, if dest has a custom toString() method,
-                // don't overwrite it with the toString() method that source inherited from Object.prototype
-                s = source[name];
-                if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
-                    dest[name] = copyFunc ? copyFunc(s) : s;
-                }
-            }
-            return dest;
-        }
+     function clone(src) { // from http://davidwalsh.name/javascript-clone
+     function mixin(dest, source, copyFunc) {
+     var name, s, i, empty = {};
+     for(name in source){
+     // the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
+     // inherited from Object.prototype.	 For example, if dest has a custom toString() method,
+     // don't overwrite it with the toString() method that source inherited from Object.prototype
+     s = source[name];
+     if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
+     dest[name] = copyFunc ? copyFunc(s) : s;
+     }
+     }
+     return dest;
+     }
 
-        if(!src || typeof src != "object" || Object.prototype.toString.call(src) === "[object Function]"){
-            // null, undefined, any non-object, or function
-            return src;	// anything
-        }
-        if(src.nodeType && "cloneNode" in src){
-            // DOM Node
-            return src.cloneNode(true); // Node
-        }
-        if(src instanceof Date){
-            // Date
-            return new Date(src.getTime());	// Date
-        }
-        if(src instanceof RegExp){
-            // RegExp
-            return new RegExp(src);   // RegExp
-        }
-        var r, i, l;
-        if(src instanceof Array){
-            // array
-            r = [];
-            for(i = 0, l = src.length; i < l; ++i){
-                if(i in src){
-                    r.push(clone(src[i]));
-                }
-            }
-            // we don't clone functions for performance reasons
-            //		}else if(d.isFunction(src)){
-            //			// function
-            //			r = function(){ return src.apply(this, arguments); };
-        }else{
-            // generic objects
-            try {
-                r = constructEmptyObject(src);
-//                r = src.constructor ? new src.constructor() : {};
-            } catch (e) {
-                console.log(src);
-                throw e;
-            }
-        }
-        return mixin(r, src, clone);
+     if(!src || typeof src != "object" || Object.prototype.toString.call(src) === "[object Function]"){
+     // null, undefined, any non-object, or function
+     return src;	// anything
+     }
+     if(src.nodeType && "cloneNode" in src){
+     // DOM Node
+     return src.cloneNode(true); // Node
+     }
+     if(src instanceof Date){
+     // Date
+     return new Date(src.getTime());	// Date
+     }
+     if(src instanceof RegExp){
+     // RegExp
+     return new RegExp(src);   // RegExp
+     }
+     var r, i, l;
+     if(src instanceof Array){
+     // array
+     r = [];
+     for(i = 0, l = src.length; i < l; ++i){
+     if(i in src){
+     r.push(clone(src[i]));
+     }
+     }
+     // we don't clone functions for performance reasons
+     //		}else if(d.isFunction(src)){
+     //			// function
+     //			r = function(){ return src.apply(this, arguments); };
+     }else{
+     // generic objects
+     try {
+     r = constructEmptyObject(src);
+     //                r = src.constructor ? new src.constructor() : {};
+     } catch (e) {
+     console.log(src);
+     throw e;
+     }
+     }
+     return mixin(r, src, clone);
 
-    }
-*/
+     }
+     */
     var visitorCloneBodyPre = {
         "FunctionExpression": function (node) {
             node.bodyOrig = clone(node.body);
@@ -1403,10 +1422,10 @@ if (typeof J$ === 'undefined') {
                 return node;
             }
         },
-        "SequenceExpression": function(node) {
+        "SequenceExpression": function (node) {
             var i = 0, len = node.expressions.length;
-            for (i=0; i<len - 1 /* the last expression is the result, do not wrap that */; i++) {
-                node.expressions[i] = wrapWithX1(node.expressions[i],node.expressions[i]);
+            for (i = 0; i < len - 1 /* the last expression is the result, do not wrap that */; i++) {
+                node.expressions[i] = wrapWithX1(node.expressions[i], node.expressions[i]);
             }
             return node;
         },
@@ -1433,12 +1452,12 @@ if (typeof J$ === 'undefined') {
         },
         "ReturnStatement": function (node) {
             var ret = wrapReturn(node, node.argument);
-            node.argument = wrapWithX1(node,ret);
+            node.argument = wrapWithX1(node, ret);
             return node;
         },
         "ThrowStatement": function (node) {
             var ret = wrapThrow(node, node.argument);
-            node.argument = wrapWithX1(node,ret);
+            node.argument = wrapWithX1(node, ret);
             return node;
         },
 
@@ -1483,8 +1502,7 @@ if (typeof J$ === 'undefined') {
             var ret;
             if (node.operator === "void") {
                 return node;
-            } else
-            if (node.operator === "delete") {
+            } else if (node.operator === "delete") {
                 if (node.argument.object) {
                     ret = wrapBinaryOp(node, node.argument.object, getPropertyAsAst(node.argument), node.operator, node.argument.computed);
                 } else {
@@ -1829,7 +1847,7 @@ if (typeof J$ === 'undefined') {
             } else {
                 newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
             }
-                        // post-process AST to hoist function declarations (required for Firefox)
+            // post-process AST to hoist function declarations (required for Firefox)
             var hoistedFcts = [];
             newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
             var newCode = esotope.generate(newAst, {comment: true});

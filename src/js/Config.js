@@ -40,6 +40,7 @@ if (typeof J$ === 'undefined') {
     // return true in a function, if you want the ast node (passed as the second argument) to be instrumented
     // ast node gets instrumented if you do not define the corresponding function
     Config.ENABLE_SAMPLING = false;
+//    Config.INSTR_INIT = function(name, ast) { return false; };
 //    Config.INSTR_READ = function(name, ast) { return false; };
 //    Config.INSTR_WRITE = function(name, ast) { return true; };
 //    Config.INSTR_GETFIELD = function(offset, ast) { return true; }; // offset is null if the property is computed
@@ -49,6 +50,6 @@ if (typeof J$ === 'undefined') {
 //    Config.INSTR_UNARY = function(operator, ast) { return true; };
 //    Config.INSTR_LITERAL = function(literal, ast) { return true;}; // literal gets some dummy value if the type is object, function, or array
 //    Config.INSTR_CONDITIONAL = function(type, ast) { return true; }; // type could be "&&", "||", "switch", "other"
-//    Config.INSTR_TRY_CATCH_ARGUMENTS = function(ast) {return false; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe
-    Config.INSTR_END_EXPRESSION = function(ast) {return true; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe
+//    Config.INSTR_TRY_CATCH_ARGUMENTS = function(ast) {return false; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe.  DO NOT USE THIS.
+//    Config.INSTR_END_EXPRESSION = function(ast) {return true; }; // top-level expression marker
 }(J$));
