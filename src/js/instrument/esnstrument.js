@@ -1830,7 +1830,7 @@ if (typeof J$ === 'undefined') {
     function instrumentCode(options) {
         var aret, skip = false;
         var isEval = options.isEval,
-            code = removeShebang(options.code), thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
+            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
@@ -1847,6 +1847,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
+            code = removeShebang(code);
             iidSourceInfo = {};
             var newAst;
             if (Config.ENABLE_SAMPLING) {
