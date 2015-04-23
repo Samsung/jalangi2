@@ -1,6 +1,12 @@
 <html>
 <style type="text/css">
     //[_[
+    (function() { return fileExpand("../../node_modules/datatables/media/css/jquery.dataTables.min.css")})
+    //]_]
+</style>
+
+<style type="text/css">
+    //[_[
     (function() { return fileExpand("../../node_modules/codemirror/lib/codemirror.css")})
     //]_]
 </style>
@@ -12,7 +18,7 @@
     }
 
     .styled-background {
-        background-color: #ff7;
+        background-color: #f99;
     }
 </style>
 <script type="text/javascript">
@@ -21,9 +27,14 @@
     //]_]
 </script>
 <script type="text/javascript">
-//[_[
-(function() { return fileExpand("../../node_modules/codemirror/lib/codemirror.js")})
-//]_]
+    //[_[
+    (function() { return fileExpand("../../node_modules/datatables/media/js/jquery.dataTables.min.js")})
+    //]_]
+</script>
+<script type="text/javascript">
+    //[_[
+    (function() { return fileExpand("../../node_modules/codemirror/lib/codemirror.js")})
+    //]_]
 </script>
 
 <body>
@@ -33,8 +44,8 @@
     [X]
 </a>
 <div id="jalangi_results_window"
-     style="width: 50%; height: 100%; float:left; border-style: solid; overflow: scroll;">
-    Results appear here.
+     style="width: 50%; height: 100%; float:left; border-style: solid; border-width:1px; overflow: scroll;">
+    <h4>Results</h4>
 </div>
 <textarea id="code" name="code" style="width: 48%; height: 100%; float:right; border-style: solid;"></textarea>
 
@@ -47,7 +58,11 @@
     });
 
     parent.J$.Results.log = function(str) {
-        $('#jalangi_results_window').append("<p>"+str+"</p>");
+        $('#jalangi_results_window').append(str+"<br>");
+    };
+
+    parent.J$.Results.execute = function(f) {
+        f($('#jalangi_results_window'), $, editor);
     };
 
     function iidToDisplayCodeLocation(gid) {
@@ -63,7 +78,8 @@
                     arr = ret[iid];
                     if (arr) {
                         editor.markText({line: arr[0]-1, ch: arr[1]-1}, {line: arr[2]-1, ch: arr[3]-1}, {className: "styled-background"});
-                        editor.setCursor({line: arr[0]-1, ch: arr[1]-1});
+                        editor.setCursor({line: arr[2]-1, ch: arr[3]-1});
+                        editor.scrollIntoView();
 
                     }
                 }

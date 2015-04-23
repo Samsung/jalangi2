@@ -39,6 +39,7 @@
         J$.Results.showHideResults = function () {
             if (iframe.style.display !== 'block') {
                 iframe.style.display = 'block';
+                J$.Results.execute(function(div, jquery, editor){div.empty();});
                 if (typeof J$.endExecution === 'function') J$.endExecution();
             } else {
                 iframe.style.display = 'none';

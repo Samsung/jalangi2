@@ -719,8 +719,10 @@ if (typeof J$ === 'undefined') {
 
 
     function log(str) {
-        if (sandbox.Results && sandbox.Results.log) {
-            sandbox.Results.log(str);
+        if (sandbox.Results && sandbox.Results.execute) {
+            sandbox.Results.execute(function(div, jquery, editor){
+                div.append(str+"<br>");
+            });
         } else {
             console.log(str);
         }
