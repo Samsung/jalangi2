@@ -26,8 +26,14 @@
     (function() {
         if (typeof J$ === 'undefined') J$ = {};
         var iframe = document.getElementById('jalangi_results_frame');
+        //[_[
+        (function() {
+            var content = fileExpand("frame.html");
+            return "var frameHtml = " + JSON.stringify(content).replace(/</g, "\x5Cx3c") + ";\n";
+        })
+        //]_]
         iframe.contentWindow.document.open();
-        iframe.contentWindow.document.write(J$.frameHtml);
+        iframe.contentWindow.document.write(frameHtml);
         iframe.contentWindow.document.close();
         J$.Results = {};
         J$.Results.showHideResults = function () {

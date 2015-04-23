@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+cd ..; node src/js/commands/macroexpand.js src/js/pre.html src/js/mid.html; cd tmp; rm -f *.*
+../scripts/mitmproxywrapper.py -t -q --anticache -s "../scripts/proxy.py ../src/js/sample_analyses/ChainedAnalyses.js ../src/js/sample_analyses/dlint/Utils.js ../src/js/sample_analyses/dlint/CheckNaN.js ../src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js ../src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js ../src/js/sample_analyses/dlint/ShadowProtoProperty.js ../src/js/sample_analyses/dlint/ConcatUndefinedToString.js ../src/js/sample_analyses/dlint/UndefinedOffset.js"

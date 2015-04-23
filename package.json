@@ -13,7 +13,8 @@
     "rewriting-proxy": "0.4.2",
     "temp": "0.8.1",
     "q": "1.1.2",
-    "codemirror": "5.1.0"
+    "codemirror": "5.1.0",
+    "jquery": "2.1.3"
   },
   "bundledDependencies": ["acorn","esotope"],
   "scripts": {
