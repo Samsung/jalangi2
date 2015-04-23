@@ -1,3 +1,4 @@
+shebang
 cli_args fff
 instrument-test
 array_length

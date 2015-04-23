@@ -1813,6 +1813,13 @@ if (typeof J$ === 'undefined') {
         }).code;
     }
 
+    function removeShebang(code) {
+        if (code.indexOf("#!")==0) {
+            return code.substring(code.indexOf("\n")+1);
+        }
+        return code;
+    }
+
     /**
      * Instruments the provided code.
      *
@@ -1823,7 +1830,7 @@ if (typeof J$ === 'undefined') {
     function instrumentCode(options) {
         var aret, skip = false;
         var isEval = options.isEval,
-            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
+            code = removeShebang(options.code), thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
