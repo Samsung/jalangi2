@@ -691,9 +691,9 @@ if (typeof J$ === 'undefined') {
         return (lastComputedValue = left);
     }
 
-    function S(iid) {
+    function S(iid, f) {
         if (sandbox.analysis && sandbox.analysis.runInstrumentedFunctionBody) {
-            return sandbox.analysis.runInstrumentedFunctionBody(iid);
+            return sandbox.analysis.runInstrumentedFunctionBody(iid, f, f[SPECIAL_PROP_IID]);
         }
         return true;
     }

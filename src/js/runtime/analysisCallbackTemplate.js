@@ -39,7 +39,7 @@
     function MyAnalysis () {
         this.invokeFunPre = function(iid, f, base, args, isConstructor, isMethod, internalIid){return {f:f,base:base,args:args,skip:false};};
 
-        this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod, internalIid){return {result:result};};
+        this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod, functionIid){return {result:result};};
 
         this.literal = function(iid, val, hasGetterSetter) {return {result:val};};
 
@@ -91,7 +91,7 @@
 
         this.endExecution = function() {};
 
-        this.runInstrumentedFunctionBody = function(iid) {return false;}; // callback called only when instrumented with Config.ENABLE_SAMPLING = true
+        this.runInstrumentedFunctionBody = function(iid, f, functionIid) {return false;}; // callback called only when instrumented with Config.ENABLE_SAMPLING = true
                                                                          // if returns true, instrumented function body is executed, else uninstrumented function body is executed
 
         /**

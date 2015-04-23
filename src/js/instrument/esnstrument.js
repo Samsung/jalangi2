@@ -1152,7 +1152,7 @@ if (typeof J$ === 'undefined') {
     function mergeBodies(node) {
         printIidToLoc(node);
         var ret = replaceInStatement(
-            "function n() { if (!" + logSampleFunName + "(" + RP + "1)){" + RP + "2} else {" + RP + "3}}",
+            "function n() { if (!" + logSampleFunName + "(" + RP + "1, arguments.callee)){" + RP + "2} else {" + RP + "3}}",
             getIid(),
             node.bodyOrig.body,
             node.body.body

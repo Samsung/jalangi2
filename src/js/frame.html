@@ -37,6 +37,12 @@
     //]_]
 </script>
 
+<script type="text/javascript">
+    //[_[
+    (function() { return fileExpand("../../node_modules/codemirror/mode/javascript/javascript.js")})
+    //]_]
+</script>
+
 <body>
 <a style="float:right;vertical-align: top;"
    href = "javascript:void(0)"
@@ -54,7 +60,8 @@
         mode: 'javascript',
         lineNumbers: true,
         lineWrapping: true,
-        theme: "default"
+        theme: "default",
+        readOnly: true
     });
 
     parent.J$.Results.log = function(str) {
