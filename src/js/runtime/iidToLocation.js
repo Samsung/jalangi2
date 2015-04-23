@@ -27,7 +27,7 @@ if (typeof J$ === 'undefined') {
         return;
     }
     sandbox.iidToLocation = function (sid, iid) {
-        var ret, arr;
+        var ret, arr, gid=sid;
         if (sandbox.smap) {
             if (typeof sid === 'string' && sid.indexOf(':')>=0) {
                 sid = sid.split(':');
@@ -41,7 +41,11 @@ if (typeof J$ === 'undefined') {
                 }
                 arr = ret[iid];
                 if (arr) {
-                    return "(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")";
+                    if (sandbox.Results) {
+                        return "<a href=\"javascript:iidToDisplayCodeLocation('"+gid+"');\">(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")</a>";
+                    } else {
+                        return "(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")";
+                    }
                 } else {
                     return "(" + fname + ":iid" + iid + ")";
                 }
@@ -49,31 +53,6 @@ if (typeof J$ === 'undefined') {
         }
         return sid+"";
     };
-
-    sandbox.iidToJS = function (gid) {
-        var ret, arr, sid, iid;
-        if (sandbox.smap) {
-            if (typeof gid === 'string' && gid.indexOf(':')>=0) {
-                sid = gid.split(':');
-                iid = parseInt(sid[1]);
-                sid = parseInt(sid[0]);
-                if ((ret = sandbox.smap[sid])) {
-                    var fname = ret.originalCodeFileName;
-                    if (ret.evalSid !== undefined) {
-                        fname = fname + sandbox.iidToLocation(ret.evalSid, ret.evalIid);
-                    }
-                    arr = ret[iid];
-                    if (arr) {
-                        return "<a href=\"javascript:iidToDisplayCodeLocation('"+gid+"');\">(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")</a>";
-                    } else {
-                        return "(" + fname + ":iid" + iid + ")";
-                    }
-                }
-            }
-        }
-        return gid+"";
-    };
-
 
     sandbox.getGlobalIID = function(iid) {
         return sandbox.sid +":"+iid;

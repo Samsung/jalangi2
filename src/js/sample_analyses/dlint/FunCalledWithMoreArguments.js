@@ -37,7 +37,7 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToJS = sandbox.iidToJS;
+        var iidToLocation = sandbox.iidToLocation;
 
         function isNative(f) {
             return f.toString().indexOf('[native code]') > -1 || f.toString().indexOf('[object ') === 0;
@@ -55,7 +55,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                sandbox.log("Function at "+iidToJS(x.iid)+" called "+ x.count+" time(s) with more arguments that expected.");
+                sandbox.log("Function at "+iidToLocation(x.iid)+" called "+ x.count+" time(s) with more arguments that expected.");
 
             });
         };

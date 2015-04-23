@@ -37,7 +37,7 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToJS = sandbox.iidToJS;
+        var iidToLocation = sandbox.iidToLocation;
         var Constants = sandbox.Constants;
         var HOP = Constants.HOP;
         var sort = Array.prototype.sort;
@@ -78,7 +78,7 @@
             for (var x in tmp) {
                 if (HOP(tmp, x)) {
                     x = tmp[x];
-                    sandbox.log("Written property "+ x.offset+" at "+iidToJS(x.iid)+" "+ x.count+" time(s) and it shadows the property in its prototype.");
+                    sandbox.log("Written property "+ x.offset+" at "+iidToLocation(x.iid)+" "+ x.count+" time(s) and it shadows the property in its prototype.");
 
                 }
             }

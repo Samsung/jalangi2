@@ -24,7 +24,7 @@
 (function (sandbox) {
 
     function MyAnalysis () {
-        var iidToJS = sandbox.iidToJS;
+        var iidToLocation = sandbox.iidToLocation;
 
         var info = {};
 
@@ -41,7 +41,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                sandbox.log("Accessed property 'undefined' at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
+                sandbox.log("Accessed property 'undefined' at "+iidToLocation(x.iid)+" "+ x.count+" time(s).");
 
             });
         };

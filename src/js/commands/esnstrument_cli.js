@@ -224,10 +224,6 @@ if (typeof J$ === 'undefined') {
             // just inject our header code
             instCode = insertStringAfterBeforeTag(instCode, headerStr, "<head>", "<HEAD>", false);
 
-            var extraHtmlSrc = "src/js/injected.html";
-            if (jalangiRoot) {
-                extraHtmlSrc = path.join(jalangiRoot, extraHtmlSrc);
-            }
             var extraHtmlString = instUtil.getFooterString(jalangiRoot);
             instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
 

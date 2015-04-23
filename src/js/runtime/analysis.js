@@ -720,7 +720,7 @@ if (typeof J$ === 'undefined') {
 
     function log(str) {
         if (sandbox.Results && sandbox.Results.log) {
-            sandbox.Results.log("<p>"+str+"</p>\n");
+            sandbox.Results.log(str);
         } else {
             console.log(str);
         }

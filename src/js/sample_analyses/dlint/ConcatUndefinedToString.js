@@ -21,7 +21,7 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToJS = sandbox.iidToJS;
+        var iidToLocation = sandbox.iidToLocation;
         var Constants = sandbox.Constants;
         var HOP = Constants.HOP;
         var sort = Array.prototype.sort;
@@ -36,7 +36,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x){
-                sandbox.log("Concatenated undefined to a string at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
+                sandbox.log("Concatenated undefined to a string at "+iidToLocation(x.iid)+" "+ x.count+" time(s).");
 
             });
         };
