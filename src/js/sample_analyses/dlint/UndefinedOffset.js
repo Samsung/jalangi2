@@ -24,9 +24,19 @@
 (function (sandbox) {
 
     function MyAnalysis () {
-        var iidToLocation = sandbox.iidToLocation;
+        var iidToJS = sandbox.iidToJS;
 
         var info = {};
+
+        var resultStr = "";
+        function printString(str) {
+            resultStr += "<p>"+str+"</p>\n";
+        }
+
+        function printToDOM() {
+            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
+        }
+
 
         this.getFieldPre = function(iid, base, offset){
             if (offset === undefined)
@@ -41,7 +51,9 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                console.log("Accessed property 'undefined' at "+iidToLocation(x.iid)+" "+ x.count+" time(s).");
+                printString("Accessed property 'undefined' at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
+                printToDOM();
+
             });
         };
     }

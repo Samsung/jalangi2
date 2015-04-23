@@ -16,6 +16,6 @@
 // do not remove the following comment
 // JALANGI DO NOT INSTRUMENT
 module.exports.footerSources = [
-    "src/js/pre.html",
-    "src/js/post.html"
+    "src/js/mid.html",
+    "src/js/pre.html"
 ];

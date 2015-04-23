@@ -37,11 +37,20 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToLocation = sandbox.iidToLocation;
+        var iidToJS = sandbox.iidToJS;
         var Constants = sandbox.Constants;
         var HOP = Constants.HOP;
         var sort = Array.prototype.sort;
         var info = {};
+
+        var resultStr = "";
+        function printString(str) {
+            resultStr += "<p>"+str+"</p>\n";
+        }
+
+        function printToDOM() {
+            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
+        }
 
         this.putFieldPre = function(iid, base, offset, val){
             if (typeof val !== 'function' && base && !HOP(base, offset)) {
@@ -77,7 +86,9 @@
             for (var x in tmp) {
                 if (HOP(tmp, x)) {
                     x = tmp[x];
-                    console.log("Written property "+ x.offset+" at "+iidToLocation(x.iid)+" "+ x.count+" time(s) and it shadows the property in its prototype.");
+                    printString("Written property "+ x.offset+" at "+iidToJS(x.iid)+" "+ x.count+" time(s) and it shadows the property in its prototype.");
+                    printToDOM();
+
                 }
             }
 

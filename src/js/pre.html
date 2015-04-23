@@ -1,80 +1,46 @@
-
 <!-- pre.html nothing for now -->
-<style>
-    .jalangi_results_black_overlay{
-        float: left;
-        display: none;
-        position: absolute;
-        top: 0%;
-        left: 0%;
-        width: 100%;
-        height: 100%;
-        background-color: black;
-        z-index:10001;
-        -moz-opacity: 0.8;
-        opacity:.80;
-        filter: alpha(opacity=80);
-    }
-    .jalangi_results_white_content {
-        float: left;
-        display: none;
-        position: absolute;
-        top: 4%;
-        left: 4%;
-        width: 92%;
-        height: 92%;
-        border: 2px solid lightblue;
-        background-color: white;
-        z-index:10002;
-        overflow: auto;
-    }
-    .jalangi_results_button_overlay{
-        float: left;
+<div id="jalangi_results_show_button"
+     style="float: left;
         position: absolute;
         top: 0%;
         left: 0%;
         width: 50px;
         height: 20px;
         background-color: white;
-        z-index:10003;
+        z-index: 10003;
         -moz-opacity: 0.8;
-        opacity:.80;
-        filter: alpha(opacity=80);
-    }
-</style>
-
-<script type="text/javascript">
-    J$.Results = {"isHidden":true};
-    J$.Results.showHideResults = function () {
-        var light = document.getElementById('jalangi_results_light');
-        var fade = document.getElementById('jalangi_results_fade');
-        if (light.style.display !== 'block') {
-            J$.endExecution();
-            light.style.display = 'block';
-            fade.style.display = 'block';
-            J$.Results.isHidden = false;
-        } else {
-            light.style.display = 'none';
-            fade.style.display = 'none';
-            J$.Results.isHidden = true;
-        }
-    }
-
-</script>
-
-<div id="jalangi_results_show_button" class="jalangi_results_button_overlay">
+        opacity: .80;
+        filter: alpha(opacity=80);">
     <button type="button" style="font-style:normal; font-size:18px; background-color:lightblue;"
-            href = "javascript:void(0)"
-            onclick = "J$.Results.showHideResults()">
+            href="javascript:void(0)"
+            onclick="J$.Results.showHideResults()">
         Jalangi
     </button>
 </div>
-<div id="jalangi_results_fade" class="jalangi_results_black_overlay"></div>
-<div id="jalangi_results_light" class="jalangi_results_white_content">
-    <a style="float:right;vertical-align: top;" href = "javascript:void(0)" onclick = "document.getElementById('jalangi_results_light').style.display='none';
-    document.getElementById('jalangi_results_fade').style.display='none'">[X]</a>
-    <div id="jalangi_results_window">
-        Results appear here.
-    </div>
-</div>
+
+<iframe id="jalangi_results_frame"
+     style="background-color: white; position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:10005; display: none;">
+</iframe>
+
+<script type="text/javascript">
+    (function() {
+        if (typeof J$ === 'undefined') J$ = {};
+        var iframe = document.getElementById('jalangi_results_frame');
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(J$.frameHtml);
+        iframe.contentWindow.document.close();
+        J$.Results = {};
+        J$.Results.showHideResults = function () {
+            if (iframe.style.display !== 'block') {
+                iframe.style.display = 'block';
+                if (typeof J$.endExecution === 'function') J$.endExecution();
+            } else {
+                iframe.style.display = 'none';
+            }
+        };
+        J$.Results.div = iframe.contentWindow.document.getElementById('jalangi_results_window');
+    }());
+</script>
+
+
 

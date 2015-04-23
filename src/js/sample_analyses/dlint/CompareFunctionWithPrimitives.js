@@ -21,9 +21,18 @@
 // probably forgot to call a function before comparison
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToLocation = sandbox.iidToLocation;
+        var iidToJS = sandbox.iidToJS;
 
         var info = {};
+
+        var resultStr = "";
+        function printString(str) {
+            resultStr += "<p>"+str+"</p>\n";
+        }
+
+        function printToDOM() {
+            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
+        }
 
         this.binary = function(iid, op, left, right, result){
             var type1 = typeof left;
@@ -45,7 +54,9 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x){
-                console.log("Comparing a function with a number or string or boolean at "+iidToLocation(x.iid)+" "+ x.count+" time(s).");
+                printString("Comparing a function with a number or string or boolean at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
+                printToDOM();
+
             });
         };
     }

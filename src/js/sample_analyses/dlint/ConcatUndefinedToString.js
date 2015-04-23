@@ -21,12 +21,21 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        var iidToLocation = sandbox.iidToLocation;
+        var iidToJS = sandbox.iidToJS;
         var Constants = sandbox.Constants;
         var HOP = Constants.HOP;
         var sort = Array.prototype.sort;
 
         var info = {};
+
+        var resultStr = "";
+        function printString(str) {
+            resultStr += "<p>"+str+"</p>\n";
+        }
+
+        function printToDOM() {
+            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
+        }
 
         this.binary = function(iid, op, left, right, result){
             if (op === '+' && typeof result==='string' && (left===undefined || right===undefined)) {
@@ -36,7 +45,9 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x){
-                console.log("Concatenated undefined to a string at "+iidToLocation(x.iid)+" "+ x.count+" time(s).");
+                printString("Concatenated undefined to a string at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
+                printToDOM();
+
             });
         };
     }
