@@ -25,15 +25,6 @@
 
         var info = {};
 
-        var resultStr = "";
-        function printString(str) {
-            resultStr += "<p>"+str+"</p>\n";
-        }
-
-        function printToDOM() {
-            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
-        }
-
         this.binary = function(iid, op, left, right, result){
             var type1 = typeof left;
             var type2 = typeof right;
@@ -54,8 +45,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x){
-                printString("Comparing a function with a number or string or boolean at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
-                printToDOM();
+                sandbox.log("Comparing a function with a number or string or boolean at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
 
             });
         };

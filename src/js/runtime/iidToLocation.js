@@ -64,7 +64,7 @@ if (typeof J$ === 'undefined') {
                     }
                     arr = ret[iid];
                     if (arr) {
-                        return "<a href=\"javascript:parent.J$.iidToDisplayCodeLocation('"+gid+"');\">(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")</a>";
+                        return "<a href=\"javascript:iidToDisplayCodeLocation('"+gid+"');\">(" + fname + ":" + arr[0] + ":" + arr[1] + ":" + arr[2] + ":" + arr[3] + ")</a>";
                     } else {
                         return "(" + fname + ":iid" + iid + ")";
                     }

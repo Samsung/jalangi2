@@ -16,6 +16,11 @@
     }
 </style>
 <script type="text/javascript">
+    //[_[
+    (function() { return fileExpand("../../node_modules/jquery/dist/jquery.min.js")})
+    //]_]
+</script>
+<script type="text/javascript">
 //[_[
 (function() { return fileExpand("../../node_modules/codemirror/lib/codemirror.js")})
 //]_]
@@ -41,7 +46,11 @@
         theme: "default"
     });
 
-    parent.J$.iidToDisplayCodeLocation = function(gid) {
+    parent.J$.Results.log = function(str) {
+        $('#jalangi_results_window').append(str);
+    };
+
+    function iidToDisplayCodeLocation(gid) {
         var ret, arr, sid, iid;
         if (parent.J$.smap) {
             if (typeof gid === 'string' && gid.indexOf(':') >= 0) {

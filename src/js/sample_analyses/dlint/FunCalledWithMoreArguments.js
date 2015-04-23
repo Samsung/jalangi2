@@ -43,14 +43,6 @@
             return f.toString().indexOf('[native code]') > -1 || f.toString().indexOf('[object ') === 0;
         }
 
-        var resultStr = "";
-        function printString(str) {
-            resultStr += "<p>"+str+"</p>\n";
-        }
-
-        function printToDOM() {
-            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
-        }
 
         var info = {};
 
@@ -63,8 +55,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                printString("Function at "+iidToJS(x.iid)+" called "+ x.count+" time(s) with more arguments that expected.");
-                printToDOM();
+                sandbox.log("Function at "+iidToJS(x.iid)+" called "+ x.count+" time(s) with more arguments that expected.");
 
             });
         };

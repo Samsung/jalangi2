@@ -31,15 +31,6 @@
 
         var info = {};
 
-        var resultStr = "";
-        function printString(str) {
-            resultStr += "<p>"+str+"</p>\n";
-        }
-
-        function printToDOM() {
-            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
-        }
-
         this.invokeFun = function(iid, f, base, args, result, isConstructor, isMethod){
             if (result !== result) {
                 info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
@@ -66,8 +57,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                printString("Observed NaN at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
-                printToDOM();
+                sandbox.log("Observed NaN at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
             });
         };
     }

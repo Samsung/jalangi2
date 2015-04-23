@@ -718,6 +718,15 @@ if (typeof J$ === 'undefined') {
     }
 
 
+    function log(str) {
+        if (sandbox.Results && sandbox.Results.log) {
+            sandbox.Results.log("<p>"+str+"</p>\n");
+        } else {
+            console.log(str);
+        }
+    }
+
+
     //----------------------------------- End Jalangi Library backend ---------------------------------
 
     sandbox.U = U; // Unary operation
@@ -754,5 +763,6 @@ if (typeof J$ === 'undefined') {
     sandbox.S = S;
 
     sandbox.EVAL_ORG = EVAL_ORG;
+    sandbox.log = log;
 })(J$);
 

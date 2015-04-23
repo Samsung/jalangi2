@@ -28,16 +28,6 @@
 
         var info = {};
 
-        var resultStr = "";
-        function printString(str) {
-            resultStr += "<p>"+str+"</p>\n";
-        }
-
-        function printToDOM() {
-            sandbox.Results.div.innerHTML = sandbox.Results.div.innerHTML + resultStr;
-        }
-
-
         this.getFieldPre = function(iid, base, offset){
             if (offset === undefined)
                 info[sandbox.getGlobalIID(iid)] = (info[sandbox.getGlobalIID(iid)]|0) + 1;
@@ -51,8 +41,7 @@
 
         this.endExecution = function() {
             sandbox.Utils.printInfo(info, function(x) {
-                printString("Accessed property 'undefined' at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
-                printToDOM();
+                sandbox.log("Accessed property 'undefined' at "+iidToJS(x.iid)+" "+ x.count+" time(s).");
 
             });
         };

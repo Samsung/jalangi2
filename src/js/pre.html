@@ -25,6 +25,7 @@
 <script type="text/javascript">
     (function() {
         if (typeof J$ === 'undefined') J$ = {};
+        J$.Results = {};
         var iframe = document.getElementById('jalangi_results_frame');
         //[_[
         (function() {
@@ -35,7 +36,6 @@
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(frameHtml);
         iframe.contentWindow.document.close();
-        J$.Results = {};
         J$.Results.showHideResults = function () {
             if (iframe.style.display !== 'block') {
                 iframe.style.display = 'block';
@@ -44,7 +44,6 @@
                 iframe.style.display = 'none';
             }
         };
-        J$.Results.div = iframe.contentWindow.document.getElementById('jalangi_results_window');
     }());
 </script>
 
