@@ -784,6 +784,15 @@ if (typeof J$ === 'undefined') {
 //        return ret;
 //    }
 
+    function createExpressionStatement(lhs, node) {
+        var ret;
+        ret = replaceInStatement(
+            RP + "1 = " + RP + "2", lhs, node
+        );
+        transferLoc(ret[0].expression, node);
+        return ret;
+    }
+
     function createCallInitAsStatement(node, name, val, isArgumentSync, lhs, isCatchParam, isAssign) {
         printIidToLoc(node);
         var ret;
@@ -946,43 +955,55 @@ if (typeof J$ === 'undefined') {
             }
         }
         if (scope) {
-            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
                 for (var name in scope.vars) {
                     if (HOP(scope.vars, name)) {
                         if (scope.vars[name] === "defun") {
-                            ident = createIdentifierAst(name);
-                            ident.loc = scope.funLocs[name];
-                            ret = ret.concat(createCallInitAsStatement(node,
-                                createLiteralAst(name),
-                                wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
-                                false,
-                                ident, false, true));
+                            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                                ident = createIdentifierAst(name);
+                                ident.loc = scope.funLocs[name];
+                                ret = ret.concat(createCallInitAsStatement(node,
+                                    createLiteralAst(name),
+                                    wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT),
+                                    false,
+                                    ident, false, true));
+                            } else {
+                                ident = createIdentifierAst(name);
+                                ident.loc = scope.funLocs[name];
+                                ret = ret.concat(
+                                    createExpressionStatement(ident,
+                                        wrapLiteral(ident, ident, N_LOG_FUNCTION_LIT)));
+                            }
                         }
                         if (scope.vars[name] === "lambda") {
-                            ident = createIdentifierAst(name);
-                            ident.loc = scope.funLocs[name];
-                            ret = ret.concat(createCallInitAsStatement(node,
-                                createLiteralAst(name), ident,
-                                false,
-                                ident, false, true));
+                            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                                ident = createIdentifierAst(name);
+                                ident.loc = scope.funLocs[name];
+                                ret = ret.concat(createCallInitAsStatement(node,
+                                    createLiteralAst(name), ident,
+                                    false,
+                                    ident, false, true));
+                            }
                         }
                         if (scope.vars[name] === "arg") {
-                            ident = createIdentifierAst(name);
-                            ret = ret.concat(createCallInitAsStatement(node,
-                                createLiteralAst(name),
-                                ident,
-                                true,
-                                ident, false, true));
+                            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                                ident = createIdentifierAst(name);
+                                ret = ret.concat(createCallInitAsStatement(node,
+                                    createLiteralAst(name),
+                                    ident,
+                                    true,
+                                    ident, false, true));
+                            }
                         }
                         if (scope.vars[name] === "var") {
-                            ret = ret.concat(createCallInitAsStatement(node,
-                                createLiteralAst(name),
-                                createIdentifierAst(name),
-                                false, undefined, false, false));
+                            if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
+                                ret = ret.concat(createCallInitAsStatement(node,
+                                    createLiteralAst(name),
+                                    createIdentifierAst(name),
+                                    false, undefined, false, false));
+                            }
                         }
                     }
                 }
-            }
         }
         return ret;
     }
@@ -1814,8 +1835,8 @@ if (typeof J$ === 'undefined') {
     }
 
     function removeShebang(code) {
-        if (code.indexOf("#!")==0) {
-            return code.substring(code.indexOf("\n")+1);
+        if (code.indexOf("#!") == 0) {
+            return code.substring(code.indexOf("\n") + 1);
         }
         return code;
     }
