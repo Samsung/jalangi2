@@ -1868,19 +1868,23 @@ if (typeof J$ === 'undefined') {
         }
 
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
-            code = removeShebang(code);
-            iidSourceInfo = {};
-            var newAst;
-            if (Config.ENABLE_SAMPLING) {
-                newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
-            } else {
-                newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+            try {
+                code = removeShebang(code);
+                iidSourceInfo = {};
+                var newAst;
+                if (Config.ENABLE_SAMPLING) {
+                    newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
+                } else {
+                    newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+                }
+                // post-process AST to hoist function declarations (required for Firefox)
+                var hoistedFcts = [];
+                newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
+                var newCode = esotope.generate(newAst, {comment: true});
+                code = newCode + "\n" + noInstr + "\n";
+            } catch(ex) {
+                console.log("Failed to instrument "+code);
             }
-            // post-process AST to hoist function declarations (required for Firefox)
-            var hoistedFcts = [];
-            newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-            var newCode = esotope.generate(newAst, {comment: true});
-            code = newCode + "\n" + noInstr + "\n";
         }
 
         var tmp = {};
