@@ -12,7 +12,7 @@ In the Jalangi2 distribution you will find several analyses:
   * [Memory analysis](https://github.com/Samsung/meminsight): a memory-profiler for JavaScript and HTML5.
   * [DLint](https://github.com/ksen007/jalangi2analyses): a a dynamic checker for JavaScript bad coding practices.
   * [JITProf](https://github.com/ksen007/jalangi2analyses): a dynamic JIT-unfriendly code snippet detection tool.
-  * [src/js/runtime/analysisCallbackTemplate.js]: a template for writing a dynamic analysis.
+  * [analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js): a template for writing a dynamic analysis.
   * and [more ...](src/js/sample_analyses/)
 
 ### Requirements
