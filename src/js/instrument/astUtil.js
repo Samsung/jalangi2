@@ -137,7 +137,7 @@ if (typeof J$ === 'undefined') {
                     } else {
                             newContext = CONTEXT.RHS;
                     }
-                    if (key !== 'bodyOrig') {
+                    if (key !== 'bodyOrig' && key !== 'declaredFunNodes') {
                         object[key] = transformAst(child, visitorPost, visitorPre, newContext, noIgnore);
                     }
                 }

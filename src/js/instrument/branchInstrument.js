@@ -46,19 +46,17 @@ if (typeof J$ === 'undefined') {
 
     var logFunctionEnterFunName = JALANGI_VAR + ".Fe";
     var logFunctionReturnFunName = JALANGI_VAR + ".Fr";
-    var logFunCallFunName = JALANGI_VAR + ".F";
     var logLitFunName = JALANGI_VAR + ".T";
-    var logMethodCallFunName = JALANGI_VAR + ".M";
     var logScriptEntryFunName = JALANGI_VAR + ".Se";
     var logScriptExitFunName = JALANGI_VAR + ".Sr";
-    var logTmpVarName = JALANGI_VAR + "._tm_p";
     var logConditionalFunName = JALANGI_VAR + ".C";
     var logSwitchLeftFunName = JALANGI_VAR + ".C1";
     var logSwitchRightFunName = JALANGI_VAR + ".C2";
     var logLastFunName = JALANGI_VAR + "._";
-    var logCtrVarName = JALANGI_VAR + "ctr";
+    var logCtrVarName = JALANGI_VAR + "cntr";
+    var logSwitchVarName = JALANGI_VAR + "switch";
+    var logSampleFunName = JALANGI_VAR + ".S";
 
-    var instrumentCodeFunName = JALANGI_VAR + ".instrumentEvalCode";
 
 
     var Syntax = {
@@ -147,7 +145,7 @@ if (typeof J$ === 'undefined') {
     function pushFunctionNode(node) {
         functionNodeStack.push(node);
         currentFunctionNode = node;
-        node.declaredFunNames = [];
+        node.declaredFunNodes = [];
         node.funId = ++funCounter;
 
     }
@@ -378,14 +376,36 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
+    function wrapLiteral(node, funId) {
+        var id = getIid();
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logLitFunName)) {
+            printCondIidToLoc(node);
+            var hasGetterSetter = ifObjectExpressionHasGetterSetter(node);
+
+            var ret;
+            if (funId || hasGetterSetter) {
+                ret = replaceInExpr(
+                    logLitFunName + "(" + RP + "1," + currentFunctionNode.funId + ", " + logCtrVarName + ", " + funId + "," + RP + "2)",
+                    createLiteralAst(id),
+                    node
+                );
+                transferLoc(ret, node);
+                return ret;
+            }
+        }
+        return node;
+    }
+
     function syncDefuns(node) {
-        var ret = [], ident, declaredFunNames = currentFunctionNode.declaredFunNames, len = declaredFunNames.length;
+        var ret = [], ident, declaredFunNodes = currentFunctionNode.declaredFunNodes, len = declaredFunNodes.length;
         for (var i = 0; i < len; i++) {
-            var name = declaredFunNames[i];
+            var name = declaredFunNodes[i].id.name;
+            var id = declaredFunNodes[i].funId;
             ident = createIdentifierAst(name);
             ret = ret.concat(
-                createExpressionStatement(wrapLiteral(ident, currentFunctionNode.funId)));
+                createExpressionStatement(wrapLiteral(ident, id)));
         }
+        delete currentFunctionNode.declaredFunNodes;
         return ret;
     }
 
@@ -421,26 +441,6 @@ if (typeof J$ === 'undefined') {
         return body;
     }
 
-    function wrapLiteral(node, funId) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logLitFunName)) {
-            printCondIidToLoc(node);
-            var hasGetterSetter = ifObjectExpressionHasGetterSetter(node);
-
-            var ret;
-            if (funId || hasGetterSetter) {
-                ret = replaceInExpr(
-                    logLitFunName + "(" + RP + "1," + currentFunctionNode.funId + ", " + logCtrVarName + ", " + funId + "," + RP + "2)",
-                    createLiteralAst(id),
-                    node
-                );
-                transferLoc(ret, node);
-                return ret;
-            }
-        }
-        return node;
-    }
-
     var visitorRRPre = {
         'Program': pushFunctionNode,
         'FunctionDeclaration': pushFunctionNode,
@@ -470,7 +470,7 @@ if (typeof J$ === 'undefined') {
         "FunctionDeclaration": function (node) {
             node.body.body = instrumentFunctionEntryExit(node, node.body.body);
             popFunctionNode();
-            currentFunctionNode.declaredFunNames.push(node.id.name);
+            currentFunctionNode.declaredFunNodes.push(node);
             return node; //@todo: need to add wrapLiteral for FunctionDeclaration
         },
         "ReturnStatement": function (node) {
@@ -510,135 +510,138 @@ if (typeof J$ === 'undefined') {
     };
 
 
-    //function mergeBodies(node) {
-    //    printIidToLoc(node);
-    //    var ret = replaceInStatement(
-    //        "function n() { if (!" + logSampleFunName + "(" + RP + "1, arguments.callee)){" + RP + "2} else {" + RP + "3}}",
-    //        getIid(),
-    //        node.bodyOrig.body,
-    //        node.body.body
-    //    );
-    //
-    //    node.body.body = ret[0].body.body;
-    //    delete node.bodyOrig;
-    //    return node;
-    //}
-    //
-    //RegExp.prototype.toJSON = function () {
-    //    var str = this.source;
-    //    var glb = this.global;
-    //    var ignoreCase = this.ignoreCase;
-    //    var multiline = this.multiline;
-    //    var obj = {
-    //        type: 'J$.AST.REGEXP',
-    //        value: str,
-    //        glb: glb,
-    //        ignoreCase: ignoreCase,
-    //        multiline: multiline
-    //    }
-    //    return obj;
-    //}
-    //
-    //function JSONStringifyHandler(key, value) {
-    //    if (key === 'scope') {
-    //        return undefined;
-    //    } else {
-    //        return value;
-    //    }
-    //}
-    //
-    //function JSONParseHandler(key, value) {
-    //    var ret = value, flags = '';
-    //    if (typeof value === 'object' && value && value.type === 'J$.AST.REGEXP') {
-    //        if (value.glb)
-    //            flags += 'g';
-    //        if (value.ignoreCase)
-    //            flags += 'i';
-    //        if (value.multiline)
-    //            flags += 'm';
-    //        ret = RegExp(value.value, flags);
-    //    }
-    //    return ret;
-    //}
-    //
-    //function clone(src) {
-    //    var ret = JSON.parse(JSON.stringify(src, JSONStringifyHandler), JSONParseHandler);
-    //    return ret;
-    //}
-    //
-    //var visitorCloneBodyPre = {
-    //    "FunctionExpression": function (node) {
-    //        node.bodyOrig = clone(node.body);
-    //        return node;
-    //    },
-    //    "FunctionDeclaration": function (node) {
-    //        node.bodyOrig = clone(node.body);
-    //        return node;
-    //    }
-    //};
-    //
-    //var visitorMergeBodyPre = {
-    //    "FunctionExpression": mergeBodies,
-    //    "FunctionDeclaration": mergeBodies
-    //};
+    function mergeBodies(node) {
+        var id = getIid();
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logSampleFunName)) {
+            printCondIidToLoc(node);
+            var ret = replaceInStatement(
+                "function n() { if (!" + logSampleFunName + "(" + RP + "1, " + node.funId + ")){" + RP + "2} else {" + RP + "3}}",
+                createLiteralAst(id),
+                node.bodyOrig.body,
+                node.body.body
+            );
+
+            node.body.body = ret[0].body.body;
+            delete node.bodyOrig;
+        }
+        return node;
+    }
+
+    RegExp.prototype.toJSON = function () {
+        var str = this.source;
+        var glb = this.global;
+        var ignoreCase = this.ignoreCase;
+        var multiline = this.multiline;
+        var obj = {
+            type: 'J$.AST.REGEXP',
+            value: str,
+            glb: glb,
+            ignoreCase: ignoreCase,
+            multiline: multiline
+        };
+        return obj;
+    };
+
+    function JSONStringifyHandler(key, value) {
+        if (key === 'scope' || key === 'funId' || key === 'declaredFunNodes') {
+            return undefined;
+        } else {
+            return value;
+        }
+    }
+
+    function JSONParseHandler(key, value) {
+        var ret = value, flags = '';
+        if (typeof value === 'object' && value && value.type === 'J$.AST.REGEXP') {
+            if (value.glb)
+                flags += 'g';
+            if (value.ignoreCase)
+                flags += 'i';
+            if (value.multiline)
+                flags += 'm';
+            ret = RegExp(value.value, flags);
+        }
+        return ret;
+    }
+
+    function clone(src) {
+        var ret = JSON.parse(JSON.stringify(src, JSONStringifyHandler), JSONParseHandler);
+        return ret;
+    }
+
+    var visitorCloneBodyPost = {
+        "FunctionExpression": function (node) {
+            node.bodyOrig = clone(node.body);
+            return node;
+        },
+        "FunctionDeclaration": function (node) {
+            node.bodyOrig = clone(node.body);
+            return node;
+        }
+    };
+
+    var visitorMergeBodyPost = {
+        "FunctionExpression": mergeBodies,
+        "FunctionDeclaration": mergeBodies
+    };
 
 
-    //function hoistFunctionDeclaration(ast, hoisteredFunctions) {
-    //    var key, child, startIndex = 0;
-    //    if (ast.body) {
-    //        var newBody = [];
-    //        if (ast.body.length > 0) { // do not hoister function declaration before J$.Fe or J$.Se
-    //            if (ast.body[0].type === 'ExpressionStatement') {
-    //                if (ast.body[0].expression.type === 'CallExpression') {
-    //                    if (ast.body[0].expression.callee.object &&
-    //                        ast.body[0].expression.callee.object.name === 'J$'
-    //                        && ast.body[0].expression.callee.property
-    //                        &&
-    //                        (ast.body[0].expression.callee.property.name === 'Se' || ast.body[0].
-    //                            expression.callee.property.name === 'Fe')) {
-    //
-    //                        newBody.push(ast.body[0]);
-    //                        startIndex = 1;
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        for (var i = startIndex; i < ast.body.length; i++) {
-    //
-    //            if (ast.body[i].type === 'FunctionDeclaration') {
-    //                newBody.push(ast.body[i]);
-    //                if (newBody.length !== i + 1) {
-    //                    hoisteredFunctions.push(ast.body[i].id.name);
-    //                }
-    //            }
-    //        }
-    //        for (var i = startIndex; i < ast.body.length; i++) {
-    //            if (ast.body[i].type !== 'FunctionDeclaration') {
-    //                newBody.push(ast.body[i]);
-    //            }
-    //        }
-    //        while (ast.body.length > 0) {
-    //            ast.body.pop();
-    //        }
-    //        for (var i = 0; i < newBody.length; i++) {
-    //            ast.body.push(newBody[i]);
-    //        }
-    //    } else {
-    //        //console.log(typeof ast.body);
-    //    }
-    //    for (key in ast) {
-    //        if (ast.hasOwnProperty(key)) {
-    //            child = ast[key];
-    //            if (typeof child === 'object' && child !== null && key !==
-    //                "scope") {
-    //                hoistFunctionDeclaration(child, hoisteredFunctions);
-    //            }
-    //
-    //        }
-    //    }
-    //
-    //    return ast;
-    //}
+    function hoistFunctionDeclaration(ast, hoisteredFunctions) {
+        var key, child, startIndex = 0;
+        if (ast.body) {
+            var newBody = [];
+            if (ast.body.length > 0) { // do not hoister function declaration before J$.Fe or J$.Se
+                if (ast.body[0].type === 'ExpressionStatement') {
+                    if (ast.body[0].expression.type === 'CallExpression') {
+                        if (ast.body[0].expression.callee.object &&
+                            ast.body[0].expression.callee.object.name === 'J$'
+                            && ast.body[0].expression.callee.property
+                            &&
+                            (ast.body[0].expression.callee.property.name === 'Se' || ast.body[0].
+                                expression.callee.property.name === 'Fe')) {
+
+                            newBody.push(ast.body[0]);
+                            startIndex = 1;
+                        }
+                    }
+                }
+            }
+            for (var i = startIndex; i < ast.body.length; i++) {
+
+                if (ast.body[i].type === 'FunctionDeclaration') {
+                    newBody.push(ast.body[i]);
+                    if (newBody.length !== i + 1) {
+                        hoisteredFunctions.push(ast.body[i].id.name);
+                    }
+                }
+            }
+            for (var i = startIndex; i < ast.body.length; i++) {
+                if (ast.body[i].type !== 'FunctionDeclaration') {
+                    newBody.push(ast.body[i]);
+                }
+            }
+            while (ast.body.length > 0) {
+                ast.body.pop();
+            }
+            for (var i = 0; i < newBody.length; i++) {
+                ast.body.push(newBody[i]);
+            }
+        } else {
+            //console.log(typeof ast.body);
+        }
+        for (key in ast) {
+            if (ast.hasOwnProperty(key)) {
+                child = ast[key];
+                if (typeof child === 'object' && child !== null && key !==
+                    "scope") {
+                    hoistFunctionDeclaration(child, hoisteredFunctions);
+                }
+
+            }
+        }
+
+        return ast;
+    }
 
 
     function transformString(code, visitorsPost, visitorsPre) {
@@ -708,7 +711,7 @@ if (typeof J$ === 'undefined') {
                 code = removeShebang(code);
                 iidSourceInfo = {};
                 var newAst;
-                newAst = transformString(code, [visitorRRPost], [visitorRRPre]);
+                newAst = transformString(code, [visitorCloneBodyPost, visitorRRPost, visitorMergeBodyPost], [undefined, visitorRRPre, undefined]);
 //                console.log(JSON.stringify(newAst, null, '\t'));
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
