@@ -235,7 +235,7 @@ if (typeof J$ === 'undefined') {
             expr = createIdentifierAst("undefined");
         }
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logFunctionReturnFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logFunctionReturnFunName)) {
             printCondIidToLoc(lid);
             var ret = replaceInExpr(
                 logFunctionReturnFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + ", " + RP + "2)",
@@ -251,7 +251,7 @@ if (typeof J$ === 'undefined') {
 
     function wrapLogicalAnd(node, left, right) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logConditionalFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logConditionalFunName)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
                 logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + "," + RP + "2)?" + RP + "3:" + logLastFunName + "()",
@@ -268,7 +268,7 @@ if (typeof J$ === 'undefined') {
 
     function wrapLogicalOr(node, left, right) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logConditionalFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logConditionalFunName)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
                 logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + "," + RP + "2)?" + logLastFunName + "():" + RP + "3",
@@ -283,12 +283,30 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapSwitchTest(node, test) {
+    function wrapSwitchDiscriminant(node, discriminant) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logSwitchRightFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logSwitchLeftFunName)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logSwitchRightFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + "," + RP + "2)",
+                logSwitchVarName+" = "+logSwitchLeftFunName + "(" + RP + "1, "+ currentFunctionNode.funId + ", " + logCtrVarName + "," + RP + "2)",
+                createLiteralAst(id),
+                discriminant
+            );
+            transferLoc(ret, node);
+            return ret;
+        } else {
+            return node;
+        }
+    }
+
+
+
+    function wrapSwitchTest(node, test) {
+        var id = getIid();
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logSwitchRightFunName)) {
+            printCondIidToLoc(node);
+            var ret = replaceInExpr(
+                logSwitchRightFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + "," + logSwitchVarName+"," + RP + "2)",
                 createLiteralAst(id),
                 test
             );
@@ -305,7 +323,7 @@ if (typeof J$ === 'undefined') {
         } // to handle for(;;) ;
 
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logConditionalFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logConditionalFunName)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
                 logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ", " + logCtrVarName + "," + RP + "2)",
@@ -329,7 +347,7 @@ if (typeof J$ === 'undefined') {
     function createCallAsFunEnterStatement(node, id) {
         printCondIidToLoc(node);
         var ret = replaceInStatement(
-            "var " + logCtrVarName + "=" + logFunctionEnterFunName + "(" + RP + "1, " + currentFunctionNode.funId + ")",
+            "var " + logSwitchVarName+","+logCtrVarName + "=" + logFunctionEnterFunName + "(" + RP + "1, " + currentFunctionNode.funId + ")",
             createLiteralAst(id)
         );
         transferLoc(ret, node);
@@ -378,7 +396,7 @@ if (typeof J$ === 'undefined') {
 
     function wrapLiteral(node, funId) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logLitFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logLitFunName)) {
             printCondIidToLoc(node);
             var hasGetterSetter = ifObjectExpressionHasGetterSetter(node);
 
@@ -412,14 +430,14 @@ if (typeof J$ === 'undefined') {
     function instrumentFunctionEntryExit(node, ast) {
         var body, id;
         id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logFunctionEnterFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logFunctionEnterFunName)) {
             body = createCallAsFunEnterStatement(node, id);
         } else {
             body = [];
         }
         body = body.concat(syncDefuns(node)).concat(ast);
         id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logFunctionReturnFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logFunctionReturnFunName)) {
             body = body.concat(createCallAsFunExitStatement(node, id));
         }
         return body;
@@ -428,14 +446,14 @@ if (typeof J$ === 'undefined') {
     function instrumentScriptEntryExit(node, body0) {
         var body, id;
         id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logScriptEntryFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logScriptEntryFunName)) {
             body = createCallAsScriptEnterStatement(node, id)
         } else {
             body = [];
         }
         body = body.concat(syncDefuns(node)).concat(body0);
         id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logScriptExitFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, logScriptExitFunName)) {
             body = body.concat(createCallAsScriptExitStatement(node, id));
         }
         return body;
@@ -492,6 +510,7 @@ if (typeof J$ === 'undefined') {
             return ret;
         },
         "SwitchStatement": function (node) {
+            var dis = wrapSwitchDiscriminant(node.discriminant, node.discriminant);
             var cases = MAP(node.cases, function (acase) {
                 var test;
                 if (acase.test) {
@@ -499,6 +518,7 @@ if (typeof J$ === 'undefined') {
                 }
                 return acase;
             });
+            node.discriminant = dis;
             node.cases = cases;
             return node;
         },
@@ -512,7 +532,7 @@ if (typeof J$ === 'undefined') {
 
     function mergeBodies(node) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, logSampleFunName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, node.funId, logSampleFunName)) {
             printCondIidToLoc(node);
             var ret = replaceInStatement(
                 "function n() { if (!" + logSampleFunName + "(" + RP + "1, " + node.funId + ")){" + RP + "2} else {" + RP + "3}}",
@@ -764,9 +784,7 @@ if (typeof J$ === 'undefined') {
 
 }(J$));
 
-//@todo: handle eval
 //@todo: hoist functions
-//@todo: ENABLE_SAMPLING
 //@todo: implement backend
 
 
