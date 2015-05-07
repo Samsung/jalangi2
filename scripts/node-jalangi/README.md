@@ -13,7 +13,7 @@ The target directory will be restored after the run completes.
 
 The command can be any shell command and its arguments.
 
-Three variables need to be set prior to running node-jalangi-runner.sh:
+Two variables need to be set prior to running node-jalangi-runner.sh:
 
 - `$NJ_JALANGI`: the path to the local jalangi installation, e.g. `$HOME/workspace/jalangi2`
 - `$NJ_JALANGI_ARGUMENTS`: arguments for jalangi, e.g. `--analysis $HOME/workspace/myAnalysis.js`
