@@ -87,7 +87,7 @@ WORKING_DIR = os.getcwd()
     
 JALANGI_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__),os.pardir))
 
-INSTRUMENTATION_SCRIPT = JALANGI_HOME + "/src/js/commands/esnstrument_cli.js"
+INSTRUMENTATION_SCRIPT = JALANGI_HOME + "/src/js/commands/branchEsnstrument_cli.js"
 
 INST_DIR_SCRIPT = JALANGI_HOME + "/src/js/commands/instrument.js"
 

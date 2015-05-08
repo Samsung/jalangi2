@@ -21,5 +21,5 @@ module.exports.headerSources = [
     "src/js/instrument/astUtil.js",
     "src/js/instrument/branchInstrument.js",
     "src/js/runtime/iidToLocation.js",
-    "src/js/runtime/analysis.js"
+    "src/js/runtime/branchAnalysis.js"
 ];

@@ -39,7 +39,7 @@ if (typeof J$ === 'undefined') {
     // In the following functions
     // return true in a function, if you want the ast node (passed as the second argument) to be instrumented
     // ast node gets instrumented if you do not define the corresponding function
-    Config.ENABLE_SAMPLING = false;
+//    Config.ENABLE_SAMPLING = false;
 //    Config.INSTR_INIT = function(name, ast) { return false; };
 //    Config.INSTR_READ = function(name, ast) { return false; };
 //    Config.INSTR_WRITE = function(name, ast) { return true; };
@@ -52,4 +52,16 @@ if (typeof J$ === 'undefined') {
 //    Config.INSTR_CONDITIONAL = function(type, ast) { return true; }; // type could be "&&", "||", "switch", "other"
 //    Config.INSTR_TRY_CATCH_ARGUMENTS = function(ast) {return false; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe.  DO NOT USE THIS.
 //    Config.INSTR_END_EXPRESSION = function(ast) {return true; }; // top-level expression marker
+
+    Config.requiresInstrumentation = function(id, funId, type) {
+        if (type === 'J$.T') {
+            return true;
+        }
+        if (type === 'J$.S' || type === 'J$.Fe' || type === 'J$.Fr') {
+            // must return true if any Config.requiresInstrumentation(*, funId, 'J$.C'|'J$.C1'|'J$.C2') returns true
+            return true;
+        } else { // type === 'J$.C1' || type === 'J$.C2' || type === 'J$.C'
+            return true;
+        }
+    }
 }(J$));
