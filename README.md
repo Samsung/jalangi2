@@ -104,6 +104,10 @@ If the proxy is currently enabled, the command disables the proxy.
 
 Refer to [docs/analysis.md](docs/analysis.md) and [docs/commands.md](docs/commands.md) for further information.
 
+### Supported ECMAScript versions
+
+Jalangi2 supports ECMAScript 5.1, plus the `const` construct from ECMAScript 6.  Other ES6 features may work, but have not been tested.
+
 License
 -------
 
