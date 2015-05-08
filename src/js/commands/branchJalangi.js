@@ -27,7 +27,6 @@ var parser = new argparse.ArgumentParser({
     description: "Command-line utility to perform Jalangi2's instrumentation and analysis"
 });
 parser.addArgument(['--analysis'], {help: "absolute path to analysis file to run", action: 'append'});
-parser.addArgument(['--sid'], {help: "Unique sid (script id) of the file", defaultValue: Date.now()});
 parser.addArgument(['script_and_args'], {
     help: "script to record and CLI arguments for that script",
     nargs: argparse.Const.REMAINDER
@@ -68,6 +67,8 @@ if (args.analysis) {
     });
 }
 
+var sid = 1;
+
 Module._extensions['.js'] = function (module, filename) {
     var code = fs.readFileSync(filename, 'utf8');
     var instFilename = makeInstCodeFileName(filename);
@@ -76,8 +77,9 @@ Module._extensions['.js'] = function (module, filename) {
             code: code,
             origCodeFileName: filename,
             instCodeFileName: instFilename,
-            sid: args.sid|0
+            sid: sid
         });
+    sid++;
     fs.writeFileSync(makeSMapFileName(instFilename), instCodeAndData.sourceMapString, "utf8");
     fs.writeFileSync(instFilename, instCodeAndData.code, "utf8");
     module._compile(instCodeAndData.code, filename);
