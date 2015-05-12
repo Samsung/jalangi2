@@ -28,14 +28,19 @@ var urlParser = require('url');
 var headerSources = ["node_modules/esotope/esotope.js",
     "node_modules/acorn/dist/acorn.js"];
 
+var headersSet = false;
+
 /**
  * concatenates required scripts for Jalangi to run in the browser into a single string
  */
 var headerCode = "";
 
 function setHeaders() {
-    headerSources = headerSources.concat(require("../headers").headerSources);
-    exports.headerSources = headerSources;
+    if (!headersSet) {
+        headerSources = headerSources.concat(require("../headers").headerSources);
+        exports.headerSources = headerSources;
+        headersSet = true;
+    }
 }
 
 function getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot) {
