@@ -209,8 +209,8 @@ if (typeof J$ === 'undefined') {
 
     // Method call (e.g., e.f())
     function M(iid, base, offset, isConstructor, isComputed) {
+        var f = G(iid + 2, base, offset, isComputed, false, true);
         return function () {
-            var f = G(iid + 2, base, offset, isComputed, false, true);
             return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, true));
         };
     }
