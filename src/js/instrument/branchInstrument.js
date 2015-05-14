@@ -59,7 +59,6 @@ if (typeof J$ === 'undefined') {
     var logSampleFunName = JALANGI_VAR + ".S";
 
 
-
     var Syntax = {
         AssignmentExpression: 'AssignmentExpression',
         ArrayExpression: 'ArrayExpression',
@@ -219,7 +218,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function idsOfGetterSetter(node) {
-        var ret = {}, isEmpty  = true;
+        var ret = {}, isEmpty = true;
         if (node.type === "ObjectExpression") {
             var kind, len = node.properties.length;
             for (var i = 0; i < len; i++) {
@@ -229,7 +228,34 @@ if (typeof J$ === 'undefined') {
                 }
             }
         }
-        return isEmpty?undefined:ret;
+        return isEmpty ? undefined : ret;
+    }
+
+    function checkAndGetIid(funId, sid, funName) {
+        var id = getIid();
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, funId, sid, funName)) {
+            return id;
+        } else {
+            return undefined;
+        }
+    }
+
+    function modifyAst(ast, modifier, term) {
+        var ret;
+        var i = 3; // no. of formal parameters
+        while (term.indexOf('$$') >= 0) {
+            term = term.replace(/\$\$/, arguments[i]);
+            i++;
+        }
+        var args = [];
+        args.push(term);
+        for (; i < arguments.length; i++) {
+            args.push(arguments[i]);
+        }
+        printIidToLoc(ast);
+        ret = modifier.apply(this, args);
+        transferLoc(ret, ast);
+        return ret;
     }
 
     function wrapReturn(node, expr) {
@@ -237,87 +263,39 @@ if (typeof J$ === 'undefined') {
         if (expr === null) {
             expr = createIdentifierAst("undefined");
         }
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logFunctionReturnFunName)) {
-            printIidToLoc(lid);
-            var ret = replaceInExpr(
-                logFunctionReturnFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + ", " + RP + "2)",
-                createLiteralAst(id),
-                expr
-            );
-            transferLoc(ret, lid);
-        } else {
-            ret = node;
-        }
-        return ret;
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName);
+        return id ? modifyAst(lid, replaceInExpr,
+            "$$($$, $$, $$, $$, J$_1)",
+            logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName, expr) : node;
     }
 
     function wrapLogicalAnd(node, left, right) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logConditionalFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + "," + RP + "2)?" + RP + "3:" + logLastFunName + "()",
-                createLiteralAst(id),
-                left,
-                right
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return node;
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        return id ? modifyAst(node, replaceInExpr,
+            "$$($$, $$, $$, $$, J$_1)?J$_2:$$()",
+            logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logLastFunName, left, right) : node;
     }
 
     function wrapLogicalOr(node, left, right) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logConditionalFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + "," + RP + "2)?" + logLastFunName + "():" + RP + "3",
-                createLiteralAst(id),
-                left,
-                right
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return node;
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        return id ? modifyAst(node, replaceInExpr,
+            "$$($$, $$, $$, $$, J$_1)?$$():J$_2",
+            logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logLastFunName, left, right) : node;
     }
 
     function wrapSwitchDiscriminant(node, discriminant) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logSwitchLeftFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInExpr(
-                logSwitchVarName+" = "+logSwitchLeftFunName + "(" + RP + "1, "+ currentFunctionNode.funId + ","+sid+", " + logCtrVarName + "," + RP + "2)",
-                createLiteralAst(id),
-                discriminant
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return node;
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchLeftFunName);
+        return id ? modifyAst(node, replaceInExpr,
+            "$$ = $$($$, $$, $$, $$, J$_1)",
+            logSwitchVarName, logSwitchLeftFunName, id, currentFunctionNode.funId, sid, logCtrVarName, discriminant) : node;
     }
 
 
-
     function wrapSwitchTest(node, test) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logSwitchRightFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInExpr(
-                logSwitchRightFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + "," + logSwitchVarName+"," + RP + "2)",
-                createLiteralAst(id),
-                test
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return node;
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchRightFunName);
+        return id ? modifyAst(node, replaceInExpr,
+            "$$($$, $$, $$, $$, $$, J$_1)",
+            logSwitchRightFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logSwitchVarName, test) : node;
     }
 
     function wrapConditional(node, test) {
@@ -325,20 +303,10 @@ if (typeof J$ === 'undefined') {
             return node;
         } // to handle for(;;) ;
 
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logConditionalFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + "," + RP + "2)",
-                createLiteralAst(id),
-                test
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return node;
-        }
-
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        return id ? modifyAst(node, replaceInExpr,
+            "$$($$, $$, $$, $$, J$_1)",
+            logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, test) : node;
     }
 
     function funCond(node) {
@@ -347,65 +315,34 @@ if (typeof J$ === 'undefined') {
         return node;
     }
 
+
     function createCallAsFunEnterStatement(node) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logFunctionEnterFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInStatement(
-                "var " + logSwitchVarName + "," + logCtrVarName + "=" + logFunctionEnterFunName + "(" + RP + "1, " + currentFunctionNode.funId + ","+sid+")",
-                createLiteralAst(id)
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return [];
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName);
+        return id ? modifyAst(node, replaceInStatement,
+            "var $$, $$ = $$($$, $$, $$)",
+            logSwitchVarName, logCtrVarName, logFunctionEnterFunName, id, currentFunctionNode.funId, sid) : [];
     }
 
     function createCallAsFunExitStatement(node) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logFunctionReturnFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInStatement(
-                logFunctionReturnFunName + "(" + RP + "1," + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + ")",
-                createLiteralAst(id)
-            );
-            transferLoc(ret[0].expression, node);
-            return ret;
-        } else {
-            return [];
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionReturnFunName);
+        return id ? modifyAst(node, replaceInStatement,
+            "$$($$, $$, $$, $$)",
+            logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName) : [];
     }
 
 
     function createCallAsScriptEnterStatement(node) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logScriptEntryFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInStatement(
-                "var " + logCtrVarName + "=" + logScriptEntryFunName + "(" + RP + "1," + currentFunctionNode.funId + ","+sid+")",
-                createLiteralAst(id)
-            );
-            transferLoc(ret, node);
-            return ret;
-        } else {
-            return [];
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptEntryFunName);
+        return id ? modifyAst(node, replaceInStatement,
+            "var $$, $$ = $$($$, $$, $$)",
+            logSwitchVarName, logCtrVarName, logScriptEntryFunName, id, currentFunctionNode.funId, sid) : [];
     }
 
     function createCallAsScriptExitStatement(node) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logScriptExitFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInStatement(
-                logScriptExitFunName + "(" + RP + "1," + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + ")",
-                createLiteralAst(id)
-            );
-            transferLoc(ret[0].expression, node);
-            return ret;
-        } else {
-            return [];
-        }
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptExitFunName);
+        return id ? modifyAst(node, replaceInStatement,
+            "$$($$, $$, $$, $$)",
+            logScriptExitFunName, id, currentFunctionNode.funId, sid, logCtrVarName) : [];
     }
 
     function createExpressionStatement(node) {
@@ -418,24 +355,18 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapLiteral(node, funId) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, currentFunctionNode.funId, sid, logLitFunName)) {
-            printIidToLoc(node);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logLitFunName);
+        if (id) {
             var idsOfGetterSetters = idsOfGetterSetter(node);
-
-            var ret;
             if (funId || idsOfGetterSetters) {
-                ret = replaceInExpr(
-                    logLitFunName + "(" + RP + "1," + currentFunctionNode.funId + ","+sid+", " + logCtrVarName + ", " + funId + "," + RP + "2, "+JSON.stringify(idsOfGetterSetters)+")",
-                    createLiteralAst(id),
-                    node
-                );
-                transferLoc(ret, node);
-                return ret;
+                return modifyAst(node, replaceInExpr,
+                    "$$($$, $$, $$, $$, $$, J$_1, $$)",
+                    logLitFunName, id, currentFunctionNode.funId, sid, logCtrVarName, funId, JSON.stringify(idsOfGetterSetters), node);
             }
         }
         return node;
     }
+
 
     function syncDefuns(node) {
         var ret = [], ident, declaredFunNodes = currentFunctionNode.declaredFunNodes, len = declaredFunNodes.length;
@@ -538,16 +469,11 @@ if (typeof J$ === 'undefined') {
 
 
     function mergeBodies(node) {
-        var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, node.funId, sid, logSampleFunName)) {
-            printIidToLoc(node);
-            var ret = replaceInStatement(
-                "function n() { if (!" + logSampleFunName + "(" + RP + "1, " + node.funId + ","+sid+")){" + RP + "2} else {" + RP + "3}}",
-                createLiteralAst(id),
-                node.bodyOrig.body,
-                node.body.body
-            );
-
+        var id = checkAndGetIid(node.funId, sid, logSampleFunName);
+        if (id) {
+            var ret = modifyAst(node, replaceInStatement,
+                "function n() { if (!$$($$,$$,$$)){J$_1} else {J$_2}}",
+                logSampleFunName, id, node.funId, sid, node.bodyOrig.body, node.body.body)
             node.body.body = ret[0].body.body;
             delete node.bodyOrig;
         }
@@ -705,7 +631,7 @@ if (typeof J$ === 'undefined') {
      *
      */
     function instrumentCode(options) {
-        var code = options.code,  url = options.url;
+        var code = options.code, url = options.url;
 
         iidSourceInfo = {};
         sid = options.sid;
@@ -737,16 +663,17 @@ if (typeof J$ === 'undefined') {
         }
         iidSourceInfo.sid = sid;
 
-        return {code: code, instAST: newAst, sourceMapObject: iidSourceInfo, sourceMapString: JSON.stringify(iidSourceInfo)};
+        return {
+            code: code,
+            instAST: newAst,
+            sourceMapObject: iidSourceInfo,
+            sourceMapString: JSON.stringify(iidSourceInfo)
+        };
 
     }
 
     sandbox.instrumentCode = instrumentCode;
 }(J$));
-
-//@todo: hoist functions
-//@todo: implement backend
-
 
 // exports J$.instrumentCode
 // exports J$.instrumentEvalCode
