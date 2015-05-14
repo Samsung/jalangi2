@@ -1136,6 +1136,7 @@ if (typeof J$ === 'undefined') {
 
     function instrumentPreIncDec(node) {
         var right = createLiteralAst(1);
+        right = wrapLiteral(right, right, N_LOG_NUMBER_LIT);
         var ret = wrapRHSOfModStore(node, node.argument, right, node.operator.substring(0, 1) + "=");
         return instrumentLoadModStore(ret, true);
     }
@@ -1147,6 +1148,7 @@ if (typeof J$ === 'undefined') {
             op = '+';
         }
         var right = createLiteralAst(1);
+        right = wrapLiteral(right, right, N_LOG_NUMBER_LIT);
         var ret = wrapRHSOfModStore(ast, ast, right, op);
         return ret;
     }
