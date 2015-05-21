@@ -514,12 +514,17 @@ if (typeof J$ === 'undefined') {
         parser.addArgument(['--no_html'], {help: "don't inject Jalangi runtime into HTML files", action: 'storeTrue'});
         parser.addArgument(['--outputDir'], {help: "directory in which to place instrumented files", required: true});
         parser.addArgument(['--verbose'], {help: "print verbose output", action: 'storeTrue'});
+        parser.addArgument(['--astHandlerModule'], {help: "Path to a node module that exports a function to be used for additional AST handling after instrumentation"});
         parser.addArgument(['inputFiles'], {
             help: "either a list of JavaScript files to instrument, or a single directory under which all JavaScript and HTML files should be instrumented (modulo the --no_html and --exclude flags)",
             nargs: '+'
         });
 
         var args = parser.parseArgs();
+
+        if (args.astHandlerModule) {
+            args.astHandler = require(args.astHandlerModule);
+        }
 
         instrument(args, function (err) {
             if (err) {

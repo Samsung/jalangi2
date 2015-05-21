@@ -27,13 +27,29 @@ var parser = new argparse.ArgumentParser({
     description: "Command-line utility to perform Jalangi2's instrumentation and analysis"
 });
 parser.addArgument(['--analysis'], {help: "absolute path to analysis file to run", action: 'append'});
+parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
 parser.addArgument(['--inlineIID'], {help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file", action: 'storeTrue'});
 parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
+parser.addArgument(['--astHandlerModule'], {help: "Path to a node module that exports a function to be used for additional AST handling after instrumentation"});
 parser.addArgument(['script_and_args'], {
     help: "script to record and CLI arguments for that script",
     nargs: argparse.Const.REMAINDER
 });
 var args = parser.parseArgs();
+var astHandler = null;
+if (args.astHandlerModule) {
+    astHandler = require(args.astHandlerModule);
+}
+
+function applyASTHandler(instResult) {
+    if (astHandler) {
+        var info = astHandler(instResult.instAST);
+        if (info) {
+            instResult.code = J$.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
+        }
+    }
+    return instResult.code;
+}
 
 if (args.script_and_args.length === 0) {
     console.error("must provide script to record");
@@ -63,6 +79,18 @@ require('../headers').headerSources.forEach(function (header) {
     require("./../../../" + header);
 });
 
+var initParam = null;
+if (args.initParam) {
+    initParam = {};
+    args.initParam.forEach(function (keyVal) {
+        var split = keyVal.split(':');
+        if (split.length !== 2) {
+            throw new Error("invalid initParam " + keyVal);
+        }
+        initParam[split[0]] = split[1];
+    });
+}
+J$.initParams = initParam || {};
 if (args.analysis) {
     args.analysis.forEach(function (src) {
         require(path.resolve(src));
@@ -81,6 +109,7 @@ Module._extensions['.js'] = function (module, filename) {
             inlineSourceMap: !!args.inlineIID,
             inlineSource: !!args.inlineSource
         });
+    applyASTHandler(instCodeAndData);
     fs.writeFileSync(makeSMapFileName(instFilename), instCodeAndData.sourceMapString, "utf8");
     fs.writeFileSync(instFilename, instCodeAndData.code, "utf8");
     module._compile(instCodeAndData.code, filename);
