@@ -22,6 +22,7 @@
 /*global J$ */
 
 var argparse = require('argparse');
+var instUtil = require('../instrument/instUtil');
 var parser = new argparse.ArgumentParser({
     addHelp: true,
     description: "Command-line utility to perform Jalangi2's instrumentation and analysis"
@@ -41,15 +42,7 @@ if (args.astHandlerModule) {
     astHandler = require(args.astHandlerModule);
 }
 
-function applyASTHandler(instResult) {
-    if (astHandler) {
-        var info = astHandler(instResult.instAST);
-        if (info) {
-            instResult.code = J$.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
-        }
-    }
-    return instResult.code;
-}
+
 
 if (args.script_and_args.length === 0) {
     console.error("must provide script to record");
@@ -109,7 +102,7 @@ Module._extensions['.js'] = function (module, filename) {
             inlineSourceMap: !!args.inlineIID,
             inlineSource: !!args.inlineSource
         });
-    applyASTHandler(instCodeAndData);
+    instUtil.applyASTHandler(instCodeAndData, astHandler, J$);
     fs.writeFileSync(makeSMapFileName(instFilename), instCodeAndData.sourceMapString, "utf8");
     fs.writeFileSync(instFilename, instCodeAndData.code, "utf8");
     module._compile(instCodeAndData.code, filename);

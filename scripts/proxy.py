@@ -15,7 +15,7 @@ print "Current working directory is "+WORKING_DIR
 sys.path.insert(0, JALANGI_HOME+'/scripts')
 import sj
 
-analysis = ' --analysis '.join([' ']+ANALYSES)
+extraArgs = ' --analysis '.join([' ']+ANALYSES)
 
 def processFile (content, ext):
 	try:
@@ -24,7 +24,7 @@ def processFile (content, ext):
 			print "Storing and instrumenting "+fileName+"."+ext
 			with open(fileName+"."+ext, "w") as text_file:
 				text_file.write(content)
-			sj.execute(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+analysis+' '+fileName+'.'+ext)
+			sj.execute(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+extraArgs+' '+fileName+'.'+ext)
 		with open (fileName+"_jalangi_."+ext, "r") as text_file:
 			data = text_file.read()
 		return data
@@ -34,12 +34,11 @@ def processFile (content, ext):
 		return content
 
 def start(context, argv):
-	global ANALYSES
-	global analysis
+        global extraArgs
 	if len(argv) > 1:
-		ANALYSES = [os.path.abspath(os.path.join(WORKING_DIR,x)) for x in argv[1:]]
-		analysis = ' --analysis '.join([' ']+ANALYSES)
-		print analysis
+                def mapper(p): return p if p.startswith('--') else os.path.abspath(os.path.join(WORKING_DIR,p))
+                extraArgs = ' '.join(map(mapper, [x for x in argv[1:]]))
+                print extraArgs
 
 def response(context, flow):
 	flow.response.decode()

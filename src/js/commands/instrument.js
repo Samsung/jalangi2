@@ -112,15 +112,6 @@ if (typeof J$ === 'undefined') {
 
         var astHandler = options.astHandler;
 
-        function applyASTHandler(instResult) {
-            if (astHandler) {
-                var info = astHandler(instResult.instAST);
-                if (info) {
-                    instResult.code = sandbox.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
-                }
-            }
-            return instResult.code;
-        }
 
         /**
          * extra scripts to inject into the application and instrument
@@ -150,7 +141,7 @@ if (typeof J$ === 'undefined') {
             };
 
             var instResult = sandbox.instrumentCode(options);
-            var instrumentedCode = applyASTHandler(instResult);
+            var instrumentedCode = instUtil.applyASTHandler(instResult, astHandler, sandbox);
             fs.writeFileSync(path.join(copyDir, instname).replace(/.js$/, "_jalangi_.json"), instResult.sourceMapString, "utf8");
             fs.writeFileSync(path.join(copyDir, origname), src);
             fs.writeFileSync(path.join(copyDir, instname), instrumentedCode);
@@ -310,7 +301,7 @@ if (typeof J$ === 'undefined') {
                 }
             }
             if (instResult) {
-                var instrumentedCode = applyASTHandler(instResult);
+                var instrumentedCode = instUtil.applyASTHandler(instResult, astHandler, sandbox);
                 fs.writeFileSync(this.instScriptName.replace(/.js$/, "_jalangi_.json"), instResult.sourceMapString, "utf8");
                 this.push(instrumentedCode);
             }

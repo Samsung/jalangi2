@@ -116,6 +116,15 @@ function genInitParamsCode(initParams) {
     return "<script>J$.initParams = " + JSON.stringify(initParamsObj) + ";</script>";
 }
 
+function applyASTHandler(instResult, astHandler, sandbox) {
+    if (astHandler) {
+        var info = astHandler(instResult.instAST);
+        if (info) {
+            instResult.code = sandbox.Constants.JALANGI_VAR + ".ast_info = " + JSON.stringify(info) + ";\n" + instResult.code;
+        }
+    }
+    return instResult.code;
+}
 
 function headerCodeInit(root) {
     headerSources.forEach(function (src) {
@@ -176,6 +185,7 @@ exports.setHeaders = setHeaders;
 exports.getHeaderCode = getHeaderCode;
 exports.getHeaderCodeAsScriptTags = getHeaderCodeAsScriptTags;
 exports.genInitParamsCode = genInitParamsCode;
+exports.applyASTHandler = applyASTHandler;
 exports.isInlineScript = isInlineScript;
 exports.headerSources = headerSources;
 exports.createFilenameForScript = createFilenameForScript;
