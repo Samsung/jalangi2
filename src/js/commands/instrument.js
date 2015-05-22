@@ -189,25 +189,12 @@ if (typeof J$ === 'undefined') {
                 };
                 instUtil.headerSources.forEach(addScript);
                 if (analyses) {
-                    result += genInitParamsCode();
+                    result += instUtil.genInitParamsCode(initParams);
                     analyses.forEach(addScript);
                 }
                 return result;
             }
 
-            function genInitParamsCode() {
-                var initParamsObj = {};
-                if (initParams) {
-                    initParams.forEach(function (keyVal) {
-                        var split = keyVal.split(':');
-                        if (split.length !== 2) {
-                            throw new Error("invalid initParam " + keyVal);
-                        }
-                        initParamsObj[split[0]] = split[1];
-                    });
-                }
-                return "<script>J$.initParams = " + JSON.stringify(initParamsObj) + ";</script>";
-            }
 
 
             var newHTML;
@@ -221,7 +208,7 @@ if (typeof J$ === 'undefined') {
 
             }
             if (inlineJalangi) {
-                headerLibs = instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
+                headerLibs = instUtil.getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
             } else {
                 if (copyRuntime) {
                     headerLibs = getContainedRuntimeScriptTags();
@@ -235,7 +222,7 @@ if (typeof J$ === 'undefined') {
                     }
 
                     headerLibs = instUtil.getHeaderCodeAsScriptTags(jalangiRoot);
-                    headerLibs = headerLibs + genInitParamsCode();
+                    headerLibs = headerLibs + instUtil.genInitParamsCode(initParams);
                     headerLibs = headerLibs + tmp3;
                 }
                 if (extraAppScripts.length > 0) {

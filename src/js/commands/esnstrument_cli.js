@@ -156,6 +156,7 @@ if (typeof J$ === 'undefined') {
         });
         parser.addArgument(['--inlineIID'], {help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file", action: 'storeTrue'});
         parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
+        parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
         parser.addArgument(['--outDir'], {
             help: "Directory containing scripts inlined in html",
             defaultValue: process.cwd()
@@ -180,6 +181,7 @@ if (typeof J$ === 'undefined') {
         });
         var args = parser.parseArgs();
 
+        var initParams = args.initParam;
         inlineIID = args.inlineIID;
         inlineSource = args.inlineSource;
         outDir = args.outDir;
@@ -220,7 +222,7 @@ if (typeof J$ === 'undefined') {
             instCode = proxy.rewriteHTML(origCode, "http://foo.com", rewriteInlineScript, "");
 
             var headerStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-            headerStr += instUtil.getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
+            headerStr += instUtil.getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
             // just inject our header code
             instCode = insertStringAfterBeforeTag(instCode, headerStr, "<head>", "<HEAD>", false);
 

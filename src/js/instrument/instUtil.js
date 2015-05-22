@@ -43,7 +43,8 @@ function setHeaders() {
     }
 }
 
-function getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot) {
+
+function getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot) {
     if (!headerCode) {
         headerSources.forEach(function (src) {
             if (jalangiRoot) {
@@ -55,6 +56,7 @@ function getInlinedScripts(analyses, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangi
         });
 
         if (analyses) {
+            headerCode += genInitParamsCode(initParams);
             analyses.forEach(function (src) {
                 src = path.resolve(src);
                 headerCode += "<script type=\"text/javascript\">";
@@ -98,6 +100,20 @@ function getFooterString(jalangiRoot) {
     });
 
     return footerCode;
+}
+
+function genInitParamsCode(initParams) {
+    var initParamsObj = {};
+    if (initParams) {
+        initParams.forEach(function (keyVal) {
+            var split = keyVal.split(':');
+            if (split.length !== 2) {
+                throw new Error("invalid initParam " + keyVal);
+            }
+            initParamsObj[split[0]] = split[1];
+        });
+    }
+    return "<script>J$.initParams = " + JSON.stringify(initParamsObj) + ";</script>";
 }
 
 
@@ -159,6 +175,7 @@ function createFilenameForScript(url) {
 exports.setHeaders = setHeaders;
 exports.getHeaderCode = getHeaderCode;
 exports.getHeaderCodeAsScriptTags = getHeaderCodeAsScriptTags;
+exports.genInitParamsCode = genInitParamsCode;
 exports.isInlineScript = isInlineScript;
 exports.headerSources = headerSources;
 exports.createFilenameForScript = createFilenameForScript;
