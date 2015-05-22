@@ -157,6 +157,7 @@ if (typeof J$ === 'undefined') {
         parser.addArgument(['--inlineIID'], {help: "Inline IID to (beginLineNo, beginColNo, endLineNo, endColNo) in J$.iids in the instrumented file", action: 'storeTrue'});
         parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
         parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
+        parser.addArgument(['--noResultsGUI'], { help: "disable insertion of results GUI code in HTML", action:'storeTrue'});
         parser.addArgument(['--outDir'], {
             help: "Directory containing scripts inlined in html",
             defaultValue: process.cwd()
@@ -226,8 +227,10 @@ if (typeof J$ === 'undefined') {
             // just inject our header code
             instCode = insertStringAfterBeforeTag(instCode, headerStr, "<head>", "<HEAD>", false);
 
-            var extraHtmlString = instUtil.getFooterString(jalangiRoot);
-            instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
+            if (!args.noResultsGUI) {
+                var extraHtmlString = instUtil.getFooterString(jalangiRoot);
+                instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
+            }
 
             fs.writeFileSync(instFileName, instCode, "utf8");
         }
