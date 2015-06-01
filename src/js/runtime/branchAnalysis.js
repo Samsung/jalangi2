@@ -80,7 +80,7 @@ if (typeof J$ === 'undefined') {
             }
         }
 //        associateFunidWithFunction(val, calleeId);
-        if (calleeId && sandbox.analysis && sandbox.analysis.literal) {
+        if (sandbox.analysis && sandbox.analysis.literal) {
             sandbox.analysis.literal(iid, funid, sid, invocationCounter, calleeId, val);
         }
         return val;
