@@ -47,6 +47,8 @@ if (typeof J$ === 'undefined') {
 
     var logFunctionEnterFunName = JALANGI_VAR + ".Fe";
     var logFunctionReturnFunName = JALANGI_VAR + ".Fr";
+    var logFunCallFunName = JALANGI_VAR + ".F";
+    var logMethodCallFunName = JALANGI_VAR + ".M";
     var logLitFunName = JALANGI_VAR + ".T";
     var logScriptEntryFunName = JALANGI_VAR + ".Se";
     var logScriptExitFunName = JALANGI_VAR + ".Sr";
@@ -269,6 +271,39 @@ if (typeof J$ === 'undefined') {
             logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName, expr) : node;
     }
 
+    function wrapMethodCall(node, base, offset, isCtor) {
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logMethodCallFunName);
+        return id ? modifyAst(node.callee, replaceInExpr,
+            "$$($$, $$, $$, $$, $$, J$_1, J$_2)",
+            logMethodCallFunName, id, currentFunctionNode.funId, sid, logCtrVarName, isCtor, base, offset) : node.callee;
+    }
+
+    function wrapFunCall(node, ast, isCtor) {
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunCallFunName);
+        return id ? modifyAst(node.callee, replaceInExpr,
+            "$$($$, $$, $$, $$, $$, J$_1)",
+            logFunCallFunName, id, currentFunctionNode.funId, sid, logCtrVarName, isCtor, ast) : node.callee;
+    }
+
+    function getPropertyAsAst(ast) {
+        return ast.computed ? ast.property : createLiteralAst(ast.property.name);
+    }
+
+    function wrapMethodOrFun(callAst, isCtor) {
+        var ast = callAst.callee;
+        var ret;
+        if (ast.type === 'MemberExpression') {
+            ret = wrapMethodCall(callAst, ast.object, getPropertyAsAst(ast), isCtor);
+            return ret;
+        } else if (ast.type === 'Identifier' && ast.name === "eval") {
+            return ast;
+        } else {
+            ret = wrapFunCall(callAst, ast, isCtor);
+            return ret;
+        }
+    }
+
+
     function wrapLogicalAnd(node, left, right) {
         var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
         return id ? modifyAst(node, replaceInExpr,
@@ -428,6 +463,20 @@ if (typeof J$ === 'undefined') {
             popFunctionNode();
             currentFunctionNode.declaredFunNodes.push(node);
             return node; //@todo: need to add wrapLiteral for FunctionDeclaration
+        },
+        "NewExpression": function (node) {
+            var ret = {
+                type: 'CallExpression',
+                callee: wrapMethodOrFun(node, true),
+                'arguments': node.arguments
+            };
+            return ret;
+        },
+        "CallExpression": function (node) {
+//            var isEval = node.callee.type === 'Identifier' && node.callee.name === "eval";
+            var callee = wrapMethodOrFun(node, false);
+            node.callee = callee;
+            return node;
         },
         "ReturnStatement": function (node) {
             var ret = wrapReturn(node, node.argument);

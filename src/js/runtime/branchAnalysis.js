@@ -27,7 +27,7 @@ if (typeof J$ === 'undefined') {
 }
 
 (function (sandbox) {
-    if (typeof sandbox.B !== 'undefined') {
+    if (typeof sandbox.T !== 'undefined') {
         return;
     }
     //----------------------------------- Begin Jalangi Library backend ---------------------------------
@@ -56,6 +56,100 @@ if (typeof J$ === 'undefined') {
 
     var hasGetOwnPropertyDescriptor = typeof Object.getOwnPropertyDescriptor === 'function';
     // object/function/regexp/array Literal
+
+
+    function callAsNativeConstructorWithEval(Constructor, args) {
+        var a = [];
+        for (var i = 0; i < args.length; i++)
+            a[i] = 'args[' + i + ']';
+        var eval = EVAL_ORG;
+        return eval('new Constructor(' + a.join() + ')');
+    }
+
+    function callAsNativeConstructor(Constructor, args) {
+        if (args.length === 0) {
+            return new Constructor();
+        }
+        if (args.length === 1) {
+            return new Constructor(args[0]);
+        }
+        if (args.length === 2) {
+            return new Constructor(args[0], args[1]);
+        }
+        if (args.length === 3) {
+            return new Constructor(args[0], args[1], args[2]);
+        }
+        if (args.length === 4) {
+            return new Constructor(args[0], args[1], args[2], args[3]);
+        }
+        if (args.length === 5) {
+            return new Constructor(args[0], args[1], args[2], args[3], args[4]);
+        }
+        return callAsNativeConstructorWithEval(Constructor, args);
+    }
+
+    function invokeEval(base, f, args, iid) {
+        return f(args[0]);
+    }
+
+    function invokeFunctionDecl(base, f, args) {
+        // Invoke with the original parameters to preserve exceptional behavior if input is invalid
+        f.apply(base, args);
+        // Otherwise input is valid, so instrument and invoke via eval
+        var newArgs = [];
+        for (var i = 0; i < args.length - 1; i++) {
+            newArgs[i] = args[i];
+        }
+        var code = '(function(' + newArgs.join(', ') + ') { ' + args[args.length - 1] + ' })';
+        // Using EVAL_ORG instead of eval() is important as it preserves the scoping semantics of Function()
+        var out = EVAL_ORG(code);
+        return out;
+    }
+
+    function callFun(f, base, args, isConstructor) {
+        var result;
+        if (f === EVAL_ORG) {
+            result = invokeEval(base, f, args);
+        } else if (f === Function) {
+            result = invokeFunctionDecl(base, f, args);
+        } else if (isConstructor) {
+            result = callAsNativeConstructor(f, args);
+        } else {
+            result = Function.prototype.apply.call(f, base, args);
+        }
+        return result;
+    }
+
+    function invokeFun(iid, funid, sid, invocationCounter, isConstructor, isMethod, base, f, args) {
+        var result;
+
+        if (sandbox.analysis && sandbox.analysis.invokeFunPre) {
+            sandbox.analysis.invokeFunPre(iid, funid, sid, invocationCounter, isConstructor, isMethod, base, f, args);
+        }
+        result = callFun(f, base, args, isConstructor);
+        if (sandbox.analysis && sandbox.analysis.invokeFun) {
+            sandbox.analysis.invokeFun(iid, funid, sid, invocationCounter, isConstructor, isMethod, base, f, args, result);
+        }
+        return result;
+    }
+
+    // Function call (e.g., f())
+    function F(iid, funid, sid, invocationCounter, isConstructor, f) {
+        return function () {
+            var base = this;
+            return invokeFun(iid, funid, sid, invocationCounter, isConstructor, false, base, f, arguments);
+        }
+    }
+
+    // Method call (e.g., e.f())
+    function M(iid, funid, sid, invocationCounter, isConstructor, base, offset) {
+        var f = base[offset];
+        return function () {
+            return invokeFun(iid, funid, sid, invocationCounter, isConstructor, true, base, f, arguments);
+        };
+    }
+
+
     function T(iid, funid, sid, invocationCounter, calleeId, val, idsOfGetterSetters) {
         if (idsOfGetterSetters) {
             var tmp;
@@ -189,6 +283,8 @@ if (typeof J$ === 'undefined') {
     sandbox._ = last;  // Last value passed to C
 
     sandbox.T = T; // object/function/regexp/array Literal
+    sandbox.F = F; // Function call
+    sandbox.M = M; // Method call
     sandbox.Fe = Fe; // Function enter
     sandbox.Fr = Fr; // Function return
     sandbox.Se = Se; // Script enter

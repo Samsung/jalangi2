@@ -43,6 +43,10 @@
 
         this.functionExit = function(iid, funid, sid, invocationCount){};
 
+        this.invokeFunPre = function(iid, funid, sid, invocationCounter, isConstructor, isMethod, base, f, args) {};
+
+        this.invokeFun = function(iid, funid, sid, invocationCounter, isConstructor, isMethod, base, f, args, result) {};
+
         this.scriptEnter = function(iid, funid, sid, invocationCount){};
 
         this.scriptExit = function(iid, funid, sid, invocationCount){};
