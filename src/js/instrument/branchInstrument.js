@@ -358,11 +358,11 @@ if (typeof J$ === 'undefined') {
         var id = checkAndGetIid(currentFunctionNode.funId, sid, logLitFunName);
         if (id) {
             var idsOfGetterSetters = idsOfGetterSetter(node);
-            if (funId || idsOfGetterSetters) {
+            //if (funId || idsOfGetterSetters) {
                 return modifyAst(node, replaceInExpr,
                     "$$($$, $$, $$, $$, $$, J$_1, $$)",
                     logLitFunName, id, currentFunctionNode.funId, sid, logCtrVarName, funId, JSON.stringify(idsOfGetterSetters), node);
-            }
+            //}
         }
         return node;
     }
@@ -436,6 +436,22 @@ if (typeof J$ === 'undefined') {
         },
         "ObjectExpression": function (node) {
             var ret1 = wrapLiteral(node);
+            return ret1;
+        },
+        "ArrayExpression": function (node) {
+            var ret1 = wrapLiteral(node);
+            return ret1;
+        },
+        'Literal': function (node, context) {
+            if (context === astUtil.CONTEXT.RHS) {
+                if (typeof node.value === 'object'  && node.value !== null) {
+                    var ret1 = wrapLiteral(node);
+                } else {
+                    ret1 = node;
+                }
+            } else {
+                ret1 = node;
+            }
             return ret1;
         },
         'LogicalExpression': function (node) {

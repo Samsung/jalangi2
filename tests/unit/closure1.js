@@ -32,7 +32,7 @@
 
     var result = 0;
     flag = false;
-    for (var j = 0; j < 10000000; j++) {
+    for (var j = 0; j < 10000; j++) {
         var f = e();
         result += f();
     }
