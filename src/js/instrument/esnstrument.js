@@ -286,11 +286,52 @@ if (typeof J$ === 'undefined') {
         return {type: Syntax.Identifier, name: name};
     }
 
-    function transferLoc(newNode, oldNode) {
-        if (oldNode.loc)
-            newNode.loc = oldNode.loc;
-        if (oldNode.raw)
-            newNode.raw = oldNode.loc;
+    function transferLoc(toNode, fromNode) {
+        if (fromNode.loc)
+            toNode.loc = fromNode.loc;
+        if (fromNode.raw)
+            toNode.raw = fromNode.loc;
+    }
+
+    function idsOfGetterSetter(node) {
+        var ret = {}, isEmpty = true;
+        if (node.type === "ObjectExpression") {
+            var kind, len = node.properties.length;
+            for (var i = 0; i < len; i++) {
+                if ((kind = node.properties[i].kind) === 'get' || kind === 'set') {
+                    ret[kind + node.properties[i].key.name] = node.properties[i].value.funId;
+                    isEmpty = false;
+                }
+            }
+        }
+        return isEmpty ? undefined : ret;
+    }
+
+    function checkAndGetIid(funId, sid, funName) {
+        var id = getIid();
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, funId, sid, funName)) {
+            return id;
+        } else {
+            return undefined;
+        }
+    }
+
+    function modifyAst(ast, modifier, term) {
+        var ret;
+        var i = 3; // no. of formal parameters
+        while (term.indexOf('$$') >= 0) {
+            term = term.replace(/\$\$/, arguments[i]);
+            i++;
+        }
+        var args = [];
+        args.push(term);
+        for (; i < arguments.length; i++) {
+            args.push(arguments[i]);
+        }
+        printIidToLoc(ast);
+        ret = modifier.apply(this, args);
+        transferLoc(ret, ast);
+        return ret;
     }
 
     function wrapPutField(node, base, offset, rvalue, isComputed) {
