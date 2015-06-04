@@ -102,7 +102,7 @@ If the proxy is currently enabled, the command disables the proxy.
 
 ### Developing an analysis in Jalangi2
 
-Refer to [docs/analysis.md](docs/analysis.md) and [docs/commands.md](docs/commands.md) for further information.
+Refer to [docs/index.html](docs/index.html) and [docs/commands.md](docs/commands.md) for further information.
 
 ### Supported ECMAScript versions
 
