@@ -886,7 +886,7 @@ if (typeof J$ === 'undefined') {
             body.unshift(createCallInitAsStatement(node,
                 createLiteralAst(name),
                 createIdentifierAst(name),
-                false, undefined, true, false)[0]);
+                false, createIdentifierAst(name), true, true)[0]);
         }
     }
 
