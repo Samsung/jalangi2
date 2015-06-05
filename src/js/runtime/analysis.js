@@ -51,6 +51,26 @@ if (typeof J$ === 'undefined') {
     var SPECIAL_PROP_IID = sandbox.Constants.SPECIAL_PROP_IID;
 
 
+    function decodeBitPattern(i, len) {
+        var ret = new Array(len);
+        for (var j=0; j<len; j++) {
+            var val = (i & 1)?true:false;
+            ret[len - j -1] = val;
+            i = i >> 1;
+        }
+        return ret;
+    }
+
+    function createBitPattern() {
+        var ret = 0;
+        var i;
+        for (i =0; i< arguments.length; i++) {
+            ret = (ret << 1)+(arguments[i]?1:0);
+        }
+        return ret;
+    }
+
+
     var sidStack = [], sidCounter = 0;
 
     function createAndAssignNewSid() {
@@ -200,18 +220,20 @@ if (typeof J$ === 'undefined') {
     }
 
     // Function call (e.g., f())
-    function F(iid, f, isConstructor) {
+    function F(iid, f, flags) {
+        var bFlags = decodeBitPattern(flags, 1); // [isConstructor]
         return function () {
             var base = this;
-            return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, false));
+            return (lastComputedValue = invokeFun(iid, base, f, arguments, bFlags[0], false));
         }
     }
 
     // Method call (e.g., e.f())
-    function M(iid, base, offset, isConstructor, isComputed) {
-        var f = G(iid + 2, base, offset, isComputed, false, true);
+    function M(iid, base, offset, flags) {
+        var bFlags = decodeBitPattern(flags, 2); // [isConstructor, isComputed]
+        var f = G(iid + 2, base, offset, createBitPattern(bFlags[1], false, true));
         return function () {
-            return (lastComputedValue = invokeFun(iid, base, f, arguments, isConstructor, true));
+            return (lastComputedValue = invokeFun(iid, base, f, arguments, bFlags[0], true));
         };
     }
 
@@ -258,19 +280,19 @@ if (typeof J$ === 'undefined') {
     }
 
     // variable declaration (Init)
-    function N(iid, name, val, isArgument, isLocalSync, isCatchParam) {
+    function N(iid, name, val, flags) {
+        var bFlags = decodeBitPattern(flags, 3); // [isArgument, isLocalSync, isCatchParam]
         // isLocalSync is only true when we sync variables inside a for-in loop
         var aret;
 
-        isCatchParam = !!isCatchParam;
-        if (isArgument) {
+        if (bFlags[0]) {
             argIndex++;
         }
-        if (!isLocalSync && sandbox.analysis && sandbox.analysis.declare) {
-            if (isArgument && argIndex > 1) {
-                sandbox.analysis.declare(iid, name, val, isArgument, argIndex - 2, isCatchParam);
+        if (!bFlags[1] && sandbox.analysis && sandbox.analysis.declare) {
+            if (bFlags[0] && argIndex > 1) {
+                sandbox.analysis.declare(iid, name, val, bFlags[0], argIndex - 2, bFlags[2]);
             } else {
-                sandbox.analysis.declare(iid, name, val, isArgument, -1, isCatchParam);
+                sandbox.analysis.declare(iid, name, val, bFlags[0], -1, bFlags[2]);
             }
             if (aret) {
                 val = aret.result;
@@ -280,11 +302,13 @@ if (typeof J$ === 'undefined') {
     }
 
     // getField (property read)
-    function G(iid, base, offset, isComputed, isOpAssign, isMethodCall) {
+    function G(iid, base, offset, flags) {
+        var bFlags = decodeBitPattern(flags, 3); // [isComputed, isOpAssign, isMethodCall]
+
         var aret, skip = false, val;
 
         if (sandbox.analysis && sandbox.analysis.getFieldPre) {
-            aret = sandbox.analysis.getFieldPre(iid, base, offset, isComputed, !!isOpAssign, !!isMethodCall);
+            aret = sandbox.analysis.getFieldPre(iid, base, offset, bFlags[0], bFlags[1], bFlags[2]);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -296,7 +320,7 @@ if (typeof J$ === 'undefined') {
             val = base[offset];
         }
         if (sandbox.analysis && sandbox.analysis.getField) {
-            aret = sandbox.analysis.getField(iid, base, offset, val, isComputed, !!isOpAssign, !!isMethodCall);
+            aret = sandbox.analysis.getField(iid, base, offset, val, bFlags[0], bFlags[1], bFlags[2]);
             if (aret) {
                 val = aret.result;
             }
@@ -305,11 +329,13 @@ if (typeof J$ === 'undefined') {
     }
 
     // putField (property write)
-    function P(iid, base, offset, val, isComputed, isOpAssign) {
+    function P(iid, base, offset, val, flags) {
+        var bFlags = decodeBitPattern(flags, 2); // [isComputed, isOpAssign]
+
         var aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.putFieldPre) {
-            aret = sandbox.analysis.putFieldPre(iid, base, offset, val, isComputed, !!isOpAssign);
+            aret = sandbox.analysis.putFieldPre(iid, base, offset, val, bFlags[0], !!bFlags[1]);
             if (aret) {
                 base = aret.base;
                 offset = aret.offset;
@@ -322,7 +348,7 @@ if (typeof J$ === 'undefined') {
             base[offset] = val;
         }
         if (sandbox.analysis && sandbox.analysis.putField) {
-            aret = sandbox.analysis.putField(iid, base, offset, val, isComputed, !!isOpAssign);
+            aret = sandbox.analysis.putField(iid, base, offset, val, bFlags[0], !!bFlags[1]);
             if (aret) {
                 val = aret.result;
             }
@@ -333,11 +359,12 @@ if (typeof J$ === 'undefined') {
     // variable write
     // isGlobal means that the variable is global and not declared as var
     // isScriptLocal means that the variable is global and is declared as var
-    function R(iid, name, val, isGlobal, isScriptLocal) {
+    function R(iid, name, val, flags) {
         var aret;
+        var bFlags = decodeBitPattern(flags, 2); // [isGlobal, isScriptLocal]
 
         if (sandbox.analysis && sandbox.analysis.read) {
-            aret = sandbox.analysis.read(iid, name, val, isGlobal, isScriptLocal);
+            aret = sandbox.analysis.read(iid, name, val, bFlags[0], bFlags[1]);
             if (aret) {
                 val = aret.result;
             }
@@ -346,15 +373,16 @@ if (typeof J$ === 'undefined') {
     }
 
     // variable write
-    function W(iid, name, val, lhs, isGlobal, isScriptLocal, isDeclaration) {
+    function W(iid, name, val, lhs, flags) {
+        var bFlags = decodeBitPattern(flags, 3); //[isGlobal, isScriptLocal, isDeclaration]
         var aret;
         if (sandbox.analysis && sandbox.analysis.write) {
-            aret = sandbox.analysis.write(iid, name, val, lhs, isGlobal, isScriptLocal);
+            aret = sandbox.analysis.write(iid, name, val, lhs, bFlags[0], bFlags[1]);
             if (aret) {
                 val = aret.result;
             }
         }
-        if (!isDeclaration) {
+        if (!bFlags[2]) {
             return (lastComputedValue = val);
         } else {
             lastComputedValue = undefined;
@@ -480,22 +508,24 @@ if (typeof J$ === 'undefined') {
 
 
     // Modify and assign +=, -= ...
-    function A(iid, base, offset, op, isComputed) {
+    function A(iid, base, offset, op, flags) {
+        var bFlags = decodeBitPattern(flags, 1); // [isComputed]
         // avoid iid collision: make sure that iid+2 has the same source map as iid (@todo)
-        var oprnd1 = G(iid+2, base, offset, isComputed, true, false);
+        var oprnd1 = G(iid+2, base, offset, createBitPattern(bFlags[0], true, false));
         return function (oprnd2) {
             // still possible to get iid collision with a mem operation
-            var val = B(iid, op, oprnd1, oprnd2, false, true, false);
-            return P(iid, base, offset, val, isComputed, true);
+            var val = B(iid, op, oprnd1, oprnd2, createBitPattern(false, true, false));
+            return P(iid, base, offset, val, createBitPattern(bFlags[0], true));
         };
     }
 
     // Binary operation
-    function B(iid, op, left, right, isComputed, isOpAssign, isSwitchCaseComparison) {
+    function B(iid, op, left, right, flags) {
+        var bFlags = decodeBitPattern(flags, 3); // [isComputed, isOpAssign, isSwitchCaseComparison]
         var result, aret, skip = false;
 
         if (sandbox.analysis && sandbox.analysis.binaryPre) {
-            aret = sandbox.analysis.binaryPre(iid, op, left, right, !!isOpAssign, !!isSwitchCaseComparison, !!isComputed);
+            aret = sandbox.analysis.binaryPre(iid, op, left, right, bFlags[1], bFlags[2], bFlags[0]);
             if (aret) {
                 op = aret.op;
                 left = aret.left;
@@ -580,7 +610,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (sandbox.analysis && sandbox.analysis.binary) {
-            aret = sandbox.analysis.binary(iid, op, left, right, result, !!isOpAssign, !!isSwitchCaseComparison, !!isComputed);
+            aret = sandbox.analysis.binary(iid, op, left, right, result, bFlags[1], bFlags[2], bFlags[0]);
             if (aret) {
                 result = aret.result;
             }
@@ -662,7 +692,7 @@ if (typeof J$ === 'undefined') {
         var aret, result;
 
         // avoid iid collision; iid may not have a map in the sourcemap
-        result = B(iid+1, "===", switchLeft, right, false, false, true);
+        result = B(iid+1, "===", switchLeft, right, createBitPattern(false, false, true));
 
         if (sandbox.analysis && sandbox.analysis.conditional) {
             aret = sandbox.analysis.conditional(iid, result);

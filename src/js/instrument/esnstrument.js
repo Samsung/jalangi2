@@ -149,6 +149,15 @@ if (typeof J$ === 'undefined') {
     };
 
 
+    function createBitPattern() {
+        var ret = 0;
+        var i;
+        for (i =0; i< arguments.length; i++) {
+            ret = (ret << 1)+(arguments[i]?1:0);
+        }
+        return ret;
+    }
+
     function HOP(obj, prop) {
         return Object.prototype.hasOwnProperty.call(obj, prop);
     }
@@ -339,7 +348,7 @@ if (typeof J$ === 'undefined') {
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logPutFieldFunName +
-                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isComputed ? "true" : "false") + ")",
+                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed, false)) + ")",
                 getIid(),
                 base,
                 offset,
@@ -356,7 +365,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (isComputed ? "true" : "false") + ")(" + RP + "5)",
+                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (createBitPattern(isComputed)) + ")(" + RP + "5)",
                 getIid(),
                 base,
                 offset,
@@ -374,7 +383,7 @@ if (typeof J$ === 'undefined') {
         printIidToLoc(node);
         printSpecialIidToLoc(node.callee);
         var ret = replaceInExpr(
-            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (isCtor ? "true" : "false") + "," + (isComputed ? "true" : "false") + ")",
+            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (createBitPattern(isCtor, isComputed)) + ")",
             getIid(),
             base,
             offset
@@ -386,7 +395,7 @@ if (typeof J$ === 'undefined') {
     function wrapFunCall(node, ast, isCtor) {
         printIidToLoc(node);
         var ret = replaceInExpr(
-            logFunCallFunName + "(" + RP + "1, " + RP + "2, " + (isCtor ? "true" : "false") + ")",
+            logFunCallFunName + "(" + RP + "1, " + RP + "2, " + (createBitPattern(isCtor)) + ")",
             getIid(),
             ast
         );
@@ -398,7 +407,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_GETFIELD || Config.INSTR_GETFIELD(node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (isComputed ? "true" : "false") + ")",
+                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (createBitPattern(isComputed,false, false)) + ")",
                 getIid(),
                 base,
                 offset
@@ -414,7 +423,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_READ || Config.INSTR_READ(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (isGlobal ? "true" : "false") + "," + (isScriptLocal ? "true" : "false") + ")",
+                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (createBitPattern(isGlobal,isScriptLocal)) + ")",
                 isReUseIid ? getPrevIidNoInc() : getIid(),
                 name,
                 val
@@ -463,8 +472,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_WRITE || Config.INSTR_WRITE(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isGlobal ? "true" : "false") +
-                "," + (isScriptLocal ? "true" : "false") + "," + (isDeclaration ? "true" : "false") + ")",
+                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isGlobal,isScriptLocal,isDeclaration)) + ")",
                 getIid(),
                 name,
                 val,
@@ -703,7 +711,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (isComputed ? "true" : "false") + ")",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed)) + ")",
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
@@ -840,7 +848,7 @@ if (typeof J$ === 'undefined') {
 
         if (isAssign)
             ret = replaceInStatement(
-                RP + "1 = " + logInitFunName + "(" + RP + "2, " + RP + "3, " + RP + "4, " + isArgumentSync + ", false," + isCatchParam + ")",
+                RP + "1 = " + logInitFunName + "(" + RP + "2, " + RP + "3, " + RP + "4, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
                 lhs,
                 getIid(),
                 name,
@@ -848,7 +856,7 @@ if (typeof J$ === 'undefined') {
             );
         else
             ret = replaceInStatement(
-                logInitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + isArgumentSync + ", false," + isCatchParam + ")",
+                logInitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
                 getIid(),
                 name,
                 val
@@ -914,7 +922,7 @@ if (typeof J$ === 'undefined') {
     function wrapForInBody(node, body, name) {
         printIidToLoc(node);
         var ret = replaceInStatement(
-            "function n() { " + logInitFunName + "(" + RP + "1, '" + name + "'," + name + ",false, true, false);\n {" + RP + "2}}", getIid(), [body]);
+            "function n() { " + logInitFunName + "(" + RP + "1, '" + name + "'," + name + ","+createBitPattern(false, true, false)+");\n {" + RP + "2}}", getIid(), [body]);
 
         ret = ret[0].body;
         transferLoc(ret, node);
