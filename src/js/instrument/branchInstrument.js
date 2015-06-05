@@ -233,9 +233,9 @@ if (typeof J$ === 'undefined') {
         return isEmpty ? undefined : ret;
     }
 
-    function checkAndGetIid(funId, sid, funName) {
+    function checkAndGetIid(funId, sid, funName, ast) {
         var id = getIid();
-        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, funId, sid, funName)) {
+        if (!Config.requiresInstrumentation || Config.requiresInstrumentation(id, funId, sid, funName, ast)) {
             return id;
         } else {
             return undefined;
@@ -265,21 +265,21 @@ if (typeof J$ === 'undefined') {
         if (expr === null) {
             expr = createIdentifierAst("undefined");
         }
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName, node);
         return id ? modifyAst(lid, replaceInExpr,
             "$$($$, $$, $$, $$, J$_1)",
-            logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName, expr) : node;
+            logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName, expr) : expr;
     }
 
     function wrapMethodCall(node, base, offset, isCtor) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logMethodCallFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logMethodCallFunName, node);
         return id ? modifyAst(node.callee, replaceInExpr,
             "$$($$, $$, $$, $$, $$, J$_1, J$_2)",
             logMethodCallFunName, id, currentFunctionNode.funId, sid, logCtrVarName, isCtor, base, offset) : node.callee;
     }
 
     function wrapFunCall(node, ast, isCtor) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunCallFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunCallFunName, node);
         return id ? modifyAst(node.callee, replaceInExpr,
             "$$($$, $$, $$, $$, $$, J$_1)",
             logFunCallFunName, id, currentFunctionNode.funId, sid, logCtrVarName, isCtor, ast) : node.callee;
@@ -305,21 +305,21 @@ if (typeof J$ === 'undefined') {
 
 
     function wrapLogicalAnd(node, left, right) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName, node);
         return id ? modifyAst(node, replaceInExpr,
             "$$($$, $$, $$, $$, J$_1)?J$_2:$$()",
             logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logLastFunName, left, right) : node;
     }
 
     function wrapLogicalOr(node, left, right) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName, node);
         return id ? modifyAst(node, replaceInExpr,
             "$$($$, $$, $$, $$, J$_1)?$$():J$_2",
             logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logLastFunName, left, right) : node;
     }
 
     function wrapSwitchDiscriminant(node, discriminant) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchLeftFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchLeftFunName, node);
         return id ? modifyAst(node, replaceInExpr,
             "$$ = $$($$, $$, $$, $$, J$_1)",
             logSwitchVarName, logSwitchLeftFunName, id, currentFunctionNode.funId, sid, logCtrVarName, discriminant) : node;
@@ -327,7 +327,7 @@ if (typeof J$ === 'undefined') {
 
 
     function wrapSwitchTest(node, test) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchRightFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logSwitchRightFunName, node);
         return id ? modifyAst(node, replaceInExpr,
             "$$($$, $$, $$, $$, $$, J$_1)",
             logSwitchRightFunName, id, currentFunctionNode.funId, sid, logCtrVarName, logSwitchVarName, test) : node;
@@ -338,7 +338,7 @@ if (typeof J$ === 'undefined') {
             return node;
         } // to handle for(;;) ;
 
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logConditionalFunName, node);
         return id ? modifyAst(node, replaceInExpr,
             "$$($$, $$, $$, $$, J$_1)",
             logConditionalFunName, id, currentFunctionNode.funId, sid, logCtrVarName, test) : node;
@@ -352,14 +352,14 @@ if (typeof J$ === 'undefined') {
 
 
     function createCallAsFunEnterStatement(node) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionEnterFunName, node);
         return id ? modifyAst(node, replaceInStatement,
             "var $$, $$ = $$($$, $$, $$)",
             logSwitchVarName, logCtrVarName, logFunctionEnterFunName, id, currentFunctionNode.funId, sid) : [];
     }
 
     function createCallAsFunExitStatement(node) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionReturnFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logFunctionReturnFunName, node);
         return id ? modifyAst(node, replaceInStatement,
             "$$($$, $$, $$, $$)",
             logFunctionReturnFunName, id, currentFunctionNode.funId, sid, logCtrVarName) : [];
@@ -367,14 +367,14 @@ if (typeof J$ === 'undefined') {
 
 
     function createCallAsScriptEnterStatement(node) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptEntryFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptEntryFunName, node);
         return id ? modifyAst(node, replaceInStatement,
             "var $$, $$ = $$($$, $$, $$)",
             logSwitchVarName, logCtrVarName, logScriptEntryFunName, id, currentFunctionNode.funId, sid) : [];
     }
 
     function createCallAsScriptExitStatement(node) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptExitFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logScriptExitFunName, node);
         return id ? modifyAst(node, replaceInStatement,
             "$$($$, $$, $$, $$)",
             logScriptExitFunName, id, currentFunctionNode.funId, sid, logCtrVarName) : [];
@@ -390,13 +390,13 @@ if (typeof J$ === 'undefined') {
     }
 
     function wrapLiteral(node, funId) {
-        var id = checkAndGetIid(currentFunctionNode.funId, sid, logLitFunName);
+        var id = checkAndGetIid(currentFunctionNode.funId, sid, logLitFunName, node);
         if (id) {
             var idsOfGetterSetters = idsOfGetterSetter(node);
             //if (funId || idsOfGetterSetters) {
                 return modifyAst(node, replaceInExpr,
-                    "$$($$, $$, $$, $$, $$, J$_1, $$)",
-                    logLitFunName, id, currentFunctionNode.funId, sid, logCtrVarName, funId, JSON.stringify(idsOfGetterSetters), node);
+                    "$$($$, $$, $$, $$, J$_1, $$)",
+                    logLitFunName, id, currentFunctionNode.funId, sid, funId, JSON.stringify(idsOfGetterSetters), node);
             //}
         }
         return node;
@@ -465,12 +465,12 @@ if (typeof J$ === 'undefined') {
             return node; //@todo: need to add wrapLiteral for FunctionDeclaration
         },
         "NewExpression": function (node) {
-            var ret = {
-                type: 'CallExpression',
-                callee: wrapMethodOrFun(node, true),
-                'arguments': node.arguments
-            };
-            return ret;
+            var callee = wrapMethodOrFun(node, true);
+            if (callee !== node.callee) {
+                node.callee = callee;
+                node.type = 'CallExpression';
+            }
+            return node;
         },
         "CallExpression": function (node) {
 //            var isEval = node.callee.type === 'Identifier' && node.callee.name === "eval";
@@ -534,7 +534,7 @@ if (typeof J$ === 'undefined') {
 
 
     function mergeBodies(node) {
-        var id = checkAndGetIid(node.funId, sid, logSampleFunName);
+        var id = checkAndGetIid(node.funId, sid, logSampleFunName, node);
         if (id) {
             var ret = modifyAst(node, replaceInStatement,
                 "function n() { if (!$$($$,$$,$$)){J$_1} else {J$_2}}",

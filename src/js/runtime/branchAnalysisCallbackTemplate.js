@@ -37,7 +37,7 @@
 
 (function (sandbox) {
     function MyAnalysis () {
-        this.literal = function(iid, funid, sid, invocationCount, fid, f) {};
+        this.literal = function(iid, funid, sid, fid, f) {};
 
         this.functionEnter = function (iid, funid, sid, invocationCount){};
 

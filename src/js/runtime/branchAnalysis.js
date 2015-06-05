@@ -150,7 +150,7 @@ if (typeof J$ === 'undefined') {
     }
 
 
-    function T(iid, funid, sid, invocationCounter, calleeId, val, idsOfGetterSetters) {
+    function T(iid, funid, sid, calleeId, val, idsOfGetterSetters) {
         if (idsOfGetterSetters) {
             var tmp;
             for (var offset in idsOfGetterSetters) {
@@ -161,13 +161,13 @@ if (typeof J$ === 'undefined') {
                         tmp = idsOfGetterSetters[offset];
 //                        associateFunidWithFunction(desc.get, tmp);
                         if (sandbox.analysis && sandbox.analysis.literal) {
-                            sandbox.analysis.literal(iid, funid, sid, invocationCounter, tmp, desc.get);
+                            sandbox.analysis.literal(iid, funid, sid, tmp, desc.get);
                         }
                     } else {
                         tmp = idsOfGetterSetters[offset];
 //                        associateFunidWithFunction(desc.set, tmp);
                         if (sandbox.analysis && sandbox.analysis.literal) {
-                            sandbox.analysis.literal(iid, funid, sid, invocationCounter, tmp, desc.set);
+                            sandbox.analysis.literal(iid, funid, sid, tmp, desc.set);
                         }
                     }
                 }
@@ -175,7 +175,7 @@ if (typeof J$ === 'undefined') {
         }
 //        associateFunidWithFunction(val, calleeId);
         if (sandbox.analysis && sandbox.analysis.literal) {
-            sandbox.analysis.literal(iid, funid, sid, invocationCounter, calleeId, val);
+            sandbox.analysis.literal(iid, funid, sid, calleeId, val);
         }
         return val;
     }

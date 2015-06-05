@@ -53,14 +53,16 @@ if (typeof J$ === 'undefined') {
 //    Config.INSTR_TRY_CATCH_ARGUMENTS = function(ast) {return false; }; // wrap function and script bodies with try catch block and use arguments in J$.Fe.  DO NOT USE THIS.
 //    Config.INSTR_END_EXPRESSION = function(ast) {return true; }; // top-level expression marker
 
-    Config.requiresInstrumentation = function(id, funId, type) {
+    Config.requiresInstrumentation = function(id, funId, sid, type, ast) {
         if (type === 'J$.T') {
             return true;
-        }
-        if (type === 'J$.S' || type === 'J$.Fe' || type === 'J$.Fr') {
-            // must return true if any Config.requiresInstrumentation(*, funId, 'J$.C'|'J$.C1'|'J$.C2') returns true
+        } else if (type === 'J$.S'   || type === 'J$.Se' || type === 'J$.Sr' || type === 'J$.Fr' || type === 'J$.Fe') {
+            // must return true if any Config.requiresInstrumentation(*, funId, 'J$.C'|'J$.C1'|'J$.C2'|'J$.M' | 'J$.F') returns true
             return true;
-        } else { // type === 'J$.C1' || type === 'J$.C2' || type === 'J$.C'
+        } else if (type === 'J$.C1' || type === 'J$.C2' || type === 'J$.C' || type === 'J$.M' || type === 'J$.F') { // type === 'J$.C1' || type === 'J$.C2' || type === 'J$.C' || type === 'J$.M' || type === 'J$.F'
+            return true;
+        } else {
+            throw new Error('Should not reach this statement');
             return true;
         }
     }
