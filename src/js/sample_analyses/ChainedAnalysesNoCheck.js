@@ -21,11 +21,16 @@
 (function (sandbox) {
     function ChainedAnalysesNoCheck() {
 
-        var funList = ["invokeFunPre", "invokeFun", "literal", "forinObject", "declare",
-            "getFieldPre", "getField", "putFieldPre", "putField", "read", "write",
-            "functionEnter", "functionExit", "scriptEnter", "scriptExit",
-            "binaryPre", "binary", "unaryPre", "unary", "conditional",
-            "instrumentCodePre", "instrumentCode", "_return", "_throw", "_with", "endExpression", "endExecution", "runInstrumentedFunctionBody"];
+        var funList = ["_return", "_throw", "_with",
+            "binaryPre", "binary", "conditional",
+            "declare", "endExecution", "endExpression",
+            "forinObject", "functionEnter", "functionExit",
+            "getFieldPre", "getField", "instrumentCodePre",
+            "instrumentCode", "invokeFunPre", "invokeFun",
+            "literal", "onReady","putFieldPre",
+            "putField", "read", "runInstrumentedFunctionBody",
+            "scriptEnter", "scriptExit",  "unaryPre",
+            "unary", "write"];
 
         this.globals = {};
 
