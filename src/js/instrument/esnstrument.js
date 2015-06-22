@@ -449,21 +449,21 @@ if (typeof J$ === 'undefined') {
     function wrapReadWithUndefinedCheck(node, name) {
         var ret;
 
-        if (name !== 'location') {
-            ret = replaceInExpr(
-                "(" + logIFunName + "(typeof (" + name + ") === 'undefined'? (" + name + "=" + RP + "2) : (" + name + "=" + RP + "3)))",
-                createIdentifierAst(name),
-                wrapRead(node, createLiteralAst(name), createIdentifierAst("undefined"), false, true, true),
-                wrapRead(node, createLiteralAst(name), createIdentifierAst(name), true, true, true)
-            );
-        } else {
+        //if (name !== 'location') {
+        //    ret = replaceInExpr(
+        //        "(" + logIFunName + "(typeof (" + name + ") === 'undefined'? (" + name + "=" + RP + "2) : (" + name + "=" + RP + "3)))",
+        //        createIdentifierAst(name),
+        //        wrapRead(node, createLiteralAst(name), createIdentifierAst("undefined"), false, true, true),
+        //        wrapRead(node, createLiteralAst(name), createIdentifierAst(name), true, true, true)
+        //    );
+        //} else {
             ret = replaceInExpr(
                 "(" + logIFunName + "(typeof (" + name + ") === 'undefined'? (" + RP + "2) : (" + RP + "3)))",
                 createIdentifierAst(name),
                 wrapRead(node, createLiteralAst(name), createIdentifierAst("undefined"), false, true, true),
                 wrapRead(node, createLiteralAst(name), createIdentifierAst(name), true, true, true)
             );
-        }
+//        }
         transferLoc(ret, node);
         return ret;
     }
@@ -1131,7 +1131,7 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function instrumentLoad(ast) {
+    function instrumentLoad(ast, isTypeof) {
         var ret;
         if (ast.type === 'Identifier') {
             if (ast.name === "undefined") {
@@ -1146,10 +1146,14 @@ if (typeof J$ === 'undefined') {
             } else if (scope.hasVar(ast.name)) {
                 ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, false, scope.isGlobal(ast.name));
                 return ret;
-            } else {
+            } else if (isTypeof) {
                 ret = wrapReadWithUndefinedCheck(ast, ast.name);
                 return ret;
+            } else {
+                ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, true, true)
+                return ret;
             }
+
         } else if (ast.type === 'MemberExpression') {
             return wrapGetField(ast, ast.object, getPropertyAsAst(ast), ast.computed);
         } else {
@@ -1159,9 +1163,9 @@ if (typeof J$ === 'undefined') {
 
     function instrumentLoadModStore(node, isNumber) {
         if (node.left.type === 'Identifier') {
-            var tmp0 = instrumentLoad(node.left);
+            var tmp0 = instrumentLoad(node.left, false);
             if (isNumber) {
-                tmp0 = makeNumber(node, instrumentLoad(tmp0));
+                tmp0 = makeNumber(node, instrumentLoad(tmp0, false));
             }
             var tmp1 = wrapRHSOfModStore(node.right, tmp0, node.right, node.operator.substring(0, node.operator.length - 1));
 
@@ -1480,7 +1484,10 @@ if (typeof J$ === 'undefined') {
         },
         'Identifier': function (node, context) {
             if (context === astUtil.CONTEXT.RHS) {
-                var ret = instrumentLoad(node);
+                var ret = instrumentLoad(node, false);
+                return ret;
+            } else if (context === astUtil.CONTEXT.TYPEOF) {
+                ret = instrumentLoad(node, true);
                 return ret;
             } else {
                 return node;
@@ -1488,7 +1495,7 @@ if (typeof J$ === 'undefined') {
         },
         'MemberExpression': function (node, context) {
             if (context === astUtil.CONTEXT.RHS) {
-                var ret = instrumentLoad(node);
+                var ret = instrumentLoad(node, false);
                 return ret;
             } else {
                 return node;
