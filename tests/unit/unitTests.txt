@@ -17,6 +17,7 @@ eval_global
 eval_opt
 eval_scope
 eval_value
+eval_empty_str
 exception
 field_inc
 field_read

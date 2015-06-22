@@ -485,6 +485,7 @@ if (typeof J$ === 'undefined') {
         if (sandbox.analysis && sandbox.analysis.scriptEnter) {
             sandbox.analysis.scriptEnter(iid, val, origFileName);
         }
+        lastComputedValue = undefined;
     }
 
     // Script exit
