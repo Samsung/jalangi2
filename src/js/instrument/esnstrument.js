@@ -495,7 +495,7 @@ if (typeof J$ === 'undefined') {
 //            wrapRead(node, createLiteralAst(name),createIdentifierAst(name), true)
 //        );
             var ret = replaceInExpr(
-                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + logIFunName + "(typeof(" + lhs.name + ")==='undefined'?undefined:" + lhs.name + "), true, true)",
+                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + logIFunName + "(typeof(" + lhs.name + ")==='undefined'?undefined:" + lhs.name + ")," + createBitPattern(true, false, false) +")",
                 getIid(),
                 name,
                 val
@@ -1993,4 +1993,3 @@ if (typeof J$ === 'undefined') {
 // depends on J$.Constants
 // depends on J$.Config
 // depends on J$.astUtil
-
