@@ -136,7 +136,7 @@ if (typeof J$ === 'undefined') {
                         newContext = CONTEXT.SETTER;
                     } else if (type === 'CallExpression' && key === 'callee' && child.type === 'Identifier' && child.name === 'eval') {
                         newContext = CONTEXT.IGNORE;
-                    } else if (type === 'UnaryExpression' && key === 'argument' && object.operator === 'typeof') {
+                    } else if (type === 'UnaryExpression' && key === 'argument' && object.operator === 'typeof' && child.type === 'Identifier') {
                         newContext = CONTEXT.TYPEOF;
                     } else {
                             newContext = CONTEXT.RHS;
