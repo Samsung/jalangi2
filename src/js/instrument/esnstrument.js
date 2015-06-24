@@ -460,8 +460,8 @@ if (typeof J$ === 'undefined') {
             ret = replaceInExpr(
                 "(" + logIFunName + "(typeof (" + name + ") === 'undefined'? (" + RP + "2) : (" + RP + "3)))",
                 createIdentifierAst(name),
-                wrapRead(node, createLiteralAst(name), createIdentifierAst("undefined"), false, true, true),
-                wrapRead(node, createLiteralAst(name), createIdentifierAst(name), true, true, true)
+                wrapRead(node, createLiteralAst(name), createIdentifierAst("undefined"), false, true, false),
+                wrapRead(node, createLiteralAst(name), createIdentifierAst(name), true, true, false)
             );
 //        }
         transferLoc(ret, node);
@@ -1150,7 +1150,7 @@ if (typeof J$ === 'undefined') {
                 ret = wrapReadWithUndefinedCheck(ast, ast.name);
                 return ret;
             } else {
-                ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, true, true)
+                ret = wrapRead(ast, createLiteralAst(ast.name), ast, false, true, false)
                 return ret;
             }
 
@@ -1479,7 +1479,7 @@ if (typeof J$ === 'undefined') {
             return ret1;
         },
         'ThisExpression': function (node) {
-            var ret = wrapRead(node, createLiteralAst('this'), node);
+            var ret = wrapRead(node, createLiteralAst('this'), node, false, false, false);
             return ret;
         },
         'Identifier': function (node, context) {
