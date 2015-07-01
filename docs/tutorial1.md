@@ -17,12 +17,58 @@ commands:
     python scripts/test.analysis.py
     python scripts/test.dlint.py
 
-If all test passes, you are ready to use Jalangi 2.  You should also download and install the latest version of Chrome
+If all tests pass, you are ready to use Jalangi 2.  You should also download and install the latest version of Chrome
 or Firefox if you want to test Jalangi 2 in a browser.
 
-#### An analysis to report branches covered in a test execution of a JavaScript Program
+
+#### Example
+
+As an example, we will use Jalangi to add instrumentation to the following simple example program:
+
+```javascript
+
+function foo(){
+  console.log("foo");
+}
+
+function bar(){
+  console.log("bar");
+}
+
+for (var i = 0; i < 10; i++){
+  if (i%2 === 0){
+    foo();
+  } else {
+    bar();
+  }
+}
+console.log("done");
 
 
+```
+
+Running this program with node.js can be done as follows:
+
+    node example.js 
+
+and produces the following output:
+
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    done
+
+#### A First Analysis
+
+First, we will consider an analysis that reports on branches that are covered during the execution of a JavaScript program.
+The JavaScript code below encodes such an analysis. 
 
 ```javascript
 
@@ -79,3 +125,31 @@ or Firefox if you want to test Jalangi 2 in a browser.
 
 
 ```
+Before we discuss the specific analysis, let's run it and see what happens. 
+To do this, create a directory named "experiments" in the  top-level jalangi2 directory.
+Then, copy the example program into a file example.js, and copy the above analysis into a file
+analysis.js.   Having done that, try running the following command:
+
+    node ../src/js/commands/jalangi.js --inlineIID --inlineSource --analysis analysis.js example.js
+
+If all goes well, this should produce output that looks roughly as follows:
+
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    foo
+    bar
+    done
+    At location (/Users/ftip/git/jalangi2/experiments/example.js:9:17:9:23) 'true' branch was taken 10 time(s) and 'false' branch was taken 1 time(s).
+    At location (/Users/ftip/git/jalangi2/experiments/example.js:10:7:10:16) 'true' branch was taken 5 time(s) and 'false' branch was taken 5 time(s).
+
+As you can see, the program has produced the same output as before. However, upon termination
+additional information was printed that reflects the number of times each branch was executed. 
+Specifically, you can see that the predicate of the for-loop has executed 11 times, of which it
+evaluated to "true" 10 times, and to "false" once. Moreover, the condition of the if-statement
+evaluated to true 5 times, and to false 5 times, as expected.
