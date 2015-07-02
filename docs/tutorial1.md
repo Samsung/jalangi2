@@ -72,23 +72,22 @@ The JavaScript code below encodes such an analysis.
 
 ```javascript
 
-(function (sandbox) {
-    var branches = {};
+(function(){
+  var branches = {};
+  J$.analysis = {
 
-    function MyAnalysis() {
-
-        /**
-         * This callback is called after a condition check before branching.
-         * Branching can happen in various statements
-         * including if-then-else, switch-case, while, for, ||, &&, ?:.
-         *
-         * @param {number} iid - Static unique instruction identifier of this callback
-         * @param {*} result - The value of the conditional expression
-         * @returns {{result: *}|undefined} - If an object is returned, the result of
-         * the conditional expression is replaced with the value stored in the
-         * <tt>result</tt> property of the object.
-         */
-        this.conditional = function (iid, result) {
+    /**
+     * This callback is called after a condition check before branching.
+     * Branching can happen in various statements
+     * including if-then-else, switch-case, while, for, ||, &&, ?:.
+     *
+     * @param {number} iid - Static unique instruction identifier of this callback
+     * @param {*} result - The value of the conditional expression
+     * @returns {{result: *}|undefined} - If an object is returned, the result of
+     * the conditional expression is replaced with the value stored in the
+     * <tt>result</tt> property of the object.
+     */
+    conditional : function (iid, result) {
             var id = J$.getGlobalIID(iid);
             var branchInfo = branches[id];
             if (!branchInfo) {
@@ -99,30 +98,29 @@ The JavaScript code below encodes such an analysis.
             } else {
                 branchInfo.falseCount++;
             }
-        };
-
-        /**
-         * This callback is called when an execution terminates in node.js.  In a browser
-         * environment, the callback is called if ChainedAnalyses.js or ChainedAnalysesNoCheck.js
-         * is used and Alt-Shift-T is pressed.
-         *
-         * @returns {undefined} - Any return value is ignored
-         */
-        this.endExecution = function () {
+        },
+        
+     /**
+      * This callback is called when an execution terminates in node.js.  In a browser
+      * environment, the callback is called if ChainedAnalyses.js or ChainedAnalysesNoCheck.js
+      * is used and Alt-Shift-T is pressed.
+      *
+      * @returns {undefined} - Any return value is ignored
+      */        
+     endExecution : function () {
             for (var id in branches) {
                 if (branches.hasOwnProperty(id)) {
                     var branchInfo = branches[id];
-                    console.log("At location " + J$.iidToLocation(id) +
+                    var location = J$.iidToLocation(id);
+                    console.log("At location " + location +
                     " 'true' branch was taken " + branchInfo.trueCount +
                     " time(s) and 'false' branch was taken " + branchInfo.falseCount + " time(s).");
                 }
             }
-        };
-    }
+        }
+};
 
-    sandbox.analysis = new MyAnalysis();
-}(J$));
-
+}());
 
 ```
 Before we discuss the specific analysis, let's run it and see what happens. 
@@ -153,3 +151,26 @@ additional information was printed that reflects the number of times each branch
 Specifically, you can see that the predicate of the for-loop has executed 11 times, of which it
 evaluated to "true" 10 times, and to "false" once. Moreover, the condition of the if-statement
 evaluated to true 5 times, and to false 5 times, as expected.
+
+Now, let’s try to understand the analysis code. A Jalangi analysis is specified by assigning an object
+to `J$.analysis`. In the case of the above example, this object defines properties `conditional` and 
+`endExecution` that are bound to call-back functions that are invoked by the Jalangi runtime
+at appropriate points during the subject program’s execution. For example, the function bound
+to `endExecution` is invoked by Jalangi when the execution of the subject program has finished,
+and the function bound to `conditional` is invoked anytime that a conditional is executed. 
+
+These callback function assigned to `conditional` takes two arguments: (i) a static instruction 
+identifier `iid`, which uniquely identifies the instruction with which the callback is associated, 
+and (ii) a boolean `result`,  which indicates whether it evaluated to `true` or `false`. In general, these
+identifiers are only unique within a single script. In order to uniquely identify instructions in
+the presence of multiple scripts, you need to call `J$.getGlobalIID(iid)` to get a string that statically 
+identifies the callback throughout the program. In the above analysis, we call  `J$.getGlobalIID(iid)`
+to obtain a unique location for each branch in the program so that we can use that location as
+the key in a map. The value of result is used to update the `trueCount` and `falseCount` properties
+associated with each key depending on the value that the branch evaluates to.
+
+The `endExecution` callback takes no arguments. It iterates through the unique identifiers that
+have been encountered during program execution. For each such identifier, the function
+`J$.iidToLocation(id)` is called to obtain a string representation of the identifier, containing the
+file name and positional (row:column) information of the start and end of the instruction.
+
