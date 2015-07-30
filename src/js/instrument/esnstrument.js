@@ -1239,7 +1239,7 @@ if (typeof J$ === 'undefined') {
         return node;
     }
 
-    RegExp.prototype.toJSON = function () {
+    function regExpToJSON() {
         var str = this.source;
         var glb = this.global;
         var ignoreCase = this.ignoreCase;
@@ -1257,6 +1257,8 @@ if (typeof J$ === 'undefined') {
     function JSONStringifyHandler(key, value) {
         if (key === 'scope') {
             return undefined;
+        } if (value instanceof RegExp) {
+            return regExpToJSON.call(value);
         } else {
             return value;
         }
