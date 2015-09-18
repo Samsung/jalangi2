@@ -1,6 +1,6 @@
 {
   "name":"jalangi2",
-  "version":"0.2.3",
+  "version":"0.2.4",
   "description":"dynamic analysis framework for JavaScript",
   "dependencies":{
     "acorn": "1.0.3",
