@@ -3,7 +3,7 @@ if (typeof J$ === 'undefined') {
 }
 
 (function (sandbox) {
-    sandbox.SMemory = function () {
+    sandbox.Frames = function () {
         var Constants = sandbox.Constants;
 
         var SPECIAL_PROP3 = Constants.SPECIAL_PROP3 + "M";

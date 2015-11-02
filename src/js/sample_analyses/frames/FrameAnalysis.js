@@ -25,7 +25,7 @@
 /**
  * @file A template for writing a Jalangi 2 analysis
  * @author  Koushik Sen
- *
+ 
  */
 
 (function (sandbox) {
@@ -33,52 +33,52 @@
 
     function MyAnalysis() {
 
-        var smemory = new sandbox.SMemory();
-        sandbox.smemory = smemory;
+        var frames = new sandbox.Frames();
+        sandbox.frames = frames;
 
 
         this.literal = function (iid, val, hasGetterSetter) {
 
             if (typeof val === 'function') {
-                smemory.defineFunction(val);
+                frames.defineFunction(val);
             }
 
         };
 
         this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam) {
-            smemory.initialize(name);
+            frames.initialize(name);
         };
 
         this.functionEnter = function (iid, f, dis, args) {
-            smemory.functionEnter(f);
+            frames.functionEnter(f);
         };
 
 
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            smemory.functionReturn();
+            frames.functionReturn();
 
         };
 
 
         this.scriptEnter = function (iid, instrumentedFileName, originalFileName) {
-            smemory.scriptEnter();
+            frames.scriptEnter();
 
         };
 
         this.scriptExit = function (iid, wrappedExceptionVal) {
-            smemory.scriptReturn();
+            frames.scriptReturn();
 
         };
 
 
         this.instrumentCodePre = function (iid, code) {
-            smemory.evalBegin();
+            frames.evalBegin();
 
         };
 
 
         this.instrumentCode = function (iid, newCode, newAst) {
-            smemory.evalEnd();
+            frames.evalEnd();
 
 
         };
