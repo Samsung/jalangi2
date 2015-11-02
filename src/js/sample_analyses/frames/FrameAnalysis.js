@@ -22,12 +22,6 @@
 // do not remove the following comment
 // JALANGI DO NOT INSTRUMENT
 
-/**
- * @file A template for writing a Jalangi 2 analysis
- * @author  Koushik Sen
- 
- */
-
 (function (sandbox) {
     require('./Frames.js');
 
