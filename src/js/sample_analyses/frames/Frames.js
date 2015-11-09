@@ -6,7 +6,7 @@ if (typeof J$ === 'undefined') {
     sandbox.Frames = function () {
         var Constants = sandbox.Constants;
 
-        var SPECIAL_PROP3 = Constants.SPECIAL_PROP3 + "M";
+        var SPECIAL_PROP_FRAMES = Constants.SPECIAL_PROP3 + "FRAMES";
         var scriptCount = 0;
         var HOP = Constants.HOP;
 
@@ -23,7 +23,7 @@ if (typeof J$ === 'undefined') {
         this.getFrame = function (name) {
             var tmp = frame;
             while (tmp && !HOP(tmp, name)) {
-                tmp = tmp[SPECIAL_PROP3];
+                tmp = tmp[SPECIAL_PROP_FRAMES];
             }
 
             if (tmp) {
@@ -35,7 +35,7 @@ if (typeof J$ === 'undefined') {
 
         this.getParentFrame = function (otherFrame) {
             if (otherFrame) {
-                return otherFrame[SPECIAL_PROP3];
+                return otherFrame[SPECIAL_PROP_FRAMES];
             } else {
                 return null;
             }
@@ -46,19 +46,19 @@ if (typeof J$ === 'undefined') {
         };
 
         this.getClosureFrame = function (fun) {
-            return fun[SPECIAL_PROP3];
+            return fun[SPECIAL_PROP_FRAMES];
         };
 
 
         this.defineFunction = function (val) {
 
             if (Object && Object.defineProperty && typeof Object.defineProperty === 'function') {
-                Object.defineProperty(val, SPECIAL_PROP3, {
+                Object.defineProperty(val, SPECIAL_PROP_FRAMES, {
                     enumerable: false,
                     writable: true
                 });
             }
-            val[SPECIAL_PROP3] = frame;
+            val[SPECIAL_PROP_FRAMES] = frame;
 
         };
 
@@ -80,12 +80,12 @@ if (typeof J$ === 'undefined') {
         this.functionEnter = function (val) {
             frameStack.push(frame = Object.create(null));
             if (Object && Object.defineProperty && typeof Object.defineProperty === 'function') {
-                Object.defineProperty(frame, SPECIAL_PROP3, {
+                Object.defineProperty(frame, SPECIAL_PROP_FRAMES, {
                     enumerable: false,
                     writable: true
                 });
             }
-            frame[SPECIAL_PROP3] = val[SPECIAL_PROP3];
+            frame[SPECIAL_PROP_FRAMES] = val[SPECIAL_PROP_FRAMES];
 
         };
 
@@ -98,7 +98,7 @@ if (typeof J$ === 'undefined') {
             scriptCount++;
             if (scriptCount > 1) {
                 frameStack.push(frame = Object.create(null));
-                frame[SPECIAL_PROP3] = frameStack[0];
+                frame[SPECIAL_PROP_FRAMES] = frameStack[0];
             }
         };
 
@@ -113,5 +113,6 @@ if (typeof J$ === 'undefined') {
     };
 
 }(J$));
+
 
 
