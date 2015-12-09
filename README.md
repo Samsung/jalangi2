@@ -20,10 +20,10 @@ In the Jalangi2 distribution you will find several analyses:
 We tested Jalangi on Mac OS X 10.10 with Chromium browser.  Jalangi should work on Mac OS
 10.7, Ubuntu 11.0 and higher and Windows 7 or higher. Jalangi will NOT work with IE.
 
-  * Latest version of Node.js available at http://nodejs.org/.  We have tested Jalangi with Node v0.10.33.
+  * Node.js v0.10.x available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v0.10.33.
   * Chrome browser if you need to test web apps.
   * Python (http://python.org) version 2.7 or higher and less than 3.0.
-  
+
 On Windows you need the following extra dependencies:
 
   * Install Microsoft Visual Studio 2010 (Free express version is fine).
