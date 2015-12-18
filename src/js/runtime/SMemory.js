@@ -93,7 +93,8 @@
                     if (!isGetField && typeof desc.set === 'function') {
                         return {"owner":obj, "isProperty":false};
                     }
-                } else if (isGetField && HOP(obj, prop)) {
+                }
+                if (isGetField && HOP(obj, prop)) {
                     return {"owner":obj, "isProperty":true};
                 }
                 obj = obj.__proto__;
