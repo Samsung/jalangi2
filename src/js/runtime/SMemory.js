@@ -1,12 +1,11 @@
 /**
- * If you want to use smemory you must include --analysis path-to-SMemory.js as the first --analysis option during an analysis.
+ * If you want to use smemory you must include --analysis $JALANGI_HOME/src/js/sample_analyses/ChainedAnalyses.js
+ * --analysis $JALANGI_HOME/src/js/runtime/SMemory.js as the first two --analysis options during an analysis.
  * smemory can be accessed via J$.smemory or sandbox.smemory.  The smemory object defines two methods: getShadowObject
- * and getFrame.  Those two methods can be used to obtain the shadow memory for an object property or a program variable,
+ * and getShadowFrame.  Those two methods can be used to obtain the shadow memory for an object property or a program variable,
  * respectively.  getShadowObject should be used in getFieldPre, putFieldPre, and literal callbacks.  (In a literal
  * callback with an object literal, one must go over all the own properties of the literal object to suitably update
- * shadow object.) getFrame should only be used in read and write callbacks and should not be used in declare callback.
- * A declare callback on a variable "name"
- * will automatically update the shadow activation frame with an entry that maps "name" to undefined.
+ * shadow object.) getShadowFrame should only be used in declare, read, and write callbacks.
  *
  */
 
@@ -56,6 +55,17 @@
         };
 
         // public function
+        /**
+         * This method returns the shadow object associated with the activation frame that contains the variable "name".
+         *
+         * @param name - Name of the variable whose owner activation frame's shadow object we want to retrieve
+         * @returns {Object} -  The shadow object of the activation frame owning the variable.
+         */
+        this.getShadowFrame = function (name) {
+            return this.getShadowObjectOfObject(this.getFrame(name))l
+        };
+
+
         /**
          * This method returns the shadow object associated with the activation frame that contains the variable "name".
          *
