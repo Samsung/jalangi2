@@ -62,7 +62,7 @@
          * @returns {Object} -  The shadow object of the activation frame owning the variable.
          */
         this.getShadowFrame = function (name) {
-            return this.getShadowObjectOfObject(this.getFrame(name))l
+            return this.getShadowObjectOfObject(this.getFrame(name));
         };
 
 
