@@ -16,6 +16,7 @@
         var PREFIX = Constants.JALANGI_VAR;
         var SPECIAL_PROP_SOBJECT = "*" + PREFIX + "O*";
         var SPECIAL_PROP_FRAME = "*" + PREFIX + "F*";
+        var SPECIAL_PROP_ACTUAL = "*" + PREFIX + "A*";
         var objectId = 1;
         var frameId = 2;
         var scriptCount = 0;
@@ -62,8 +63,41 @@
          * @returns {Object} -  The shadow object of the activation frame owning the variable.
          */
         this.getShadowFrame = function (name) {
-            return this.getShadowObjectOfObject(this.getFrame(name));
+            var f = this.getFrame(name);
+            var ret = this.getShadowObjectOfObject(f);
+            if (Object && Object.defineProperty && typeof Object.defineProperty === 'function') {
+                Object.defineProperty(ret, SPECIAL_PROP_ACTUAL, {
+                    enumerable: false,
+                    writable: true
+                });
+            }
+            ret[SPECIAL_PROP_ACTUAL] = f[SPECIAL_PROP_ACTUAL];
+            return ret;
         };
+
+        // public function
+        /**
+         * Given a shadow object or frame, it returns the unique id of the shadow objects or frame.
+         * @param obj
+         * @returns {*}
+         */
+
+        this.getIDFromShadowObjectOrFrame = function (obj) {
+            return obj[SPECIAL_PROP_SOBJECT];
+        };
+
+        // public function
+        /**
+         * Given a shadow object, it returns the actual object.
+         * Given a shadow frame, it returns the function whose invocation created the frame.
+         *
+         * @param obj
+         * @returns {*}
+         */
+        this.getActualObjectOrFunctionFromShadowObjectOrFrame = function (obj) {
+            return obj[SPECIAL_PROP_ACTUAL];
+        };
+
 
 
         /**
@@ -124,10 +158,15 @@
                         enumerable: false,
                         writable: true
                     });
+                    Object.defineProperty(val, SPECIAL_PROP_ACTUAL, {
+                        enumerable: false,
+                        writable: true
+                    });
                 }
                 try {
                     val[SPECIAL_PROP_SOBJECT] = Object.create(null);
                     val[SPECIAL_PROP_SOBJECT][SPECIAL_PROP_SOBJECT] = objectId;
+                    val[SPECIAL_PROP_SOBJECT][SPECIAL_PROP_ACTUAL] = val;
                     objectId = objectId + 2;
                 } catch (e) {
                     // cannot attach special field in some DOM Objects.  So ignore them.
@@ -148,25 +187,6 @@
             return value;
         };
 
-        this.getParentFrame = function (otherFrame) {
-            if (otherFrame) {
-                return otherFrame[SPECIAL_PROP_FRAME];
-            } else {
-                return null;
-            }
-        };
-
-        this.getCurrentFrame = function () {
-            return frame;
-        };
-
-        this.getClosureFrame = function (fun) {
-            return fun[SPECIAL_PROP_FRAME];
-        };
-
-        this.getShadowObjectID = function (obj) {
-            return obj[SPECIAL_PROP_SOBJECT];
-        };
 
         this.defineFunction = function (f) {
             if (typeof f === 'function') {
@@ -201,8 +221,13 @@
                     enumerable: false,
                     writable: true
                 });
+                Object.defineProperty(frame, SPECIAL_PROP_ACTUAL, {
+                    enumerable: false,
+                    writable: true
+                });
             }
             frame[SPECIAL_PROP_FRAME] = val[SPECIAL_PROP_FRAME];
+            frame[SPECIAL_PROP_ACTUAL] = val;
         };
 
         this.functionReturn = function () {
