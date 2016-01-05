@@ -240,6 +240,7 @@
 
         this.functionEnter = function (iid, f, dis, args) {
             smemory.functionEnter(f);
+            smemory.initialize('this');
         };
 
 
