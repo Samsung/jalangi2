@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2014 Samsung Information Systems America, Inc.
  *
@@ -42,38 +41,30 @@
         this.conditional = function (iid, result) {
             var iids = J$.smap[J$.sid];
             var fileName = iids.originalCodeFileName;
-            var branchInfo = branches[J$.sid-1];
+            var branchInfo = branches[J$.sid - 1];
             if (!branchInfo) {
-                branchInfo = new Array(iids.nBranches+1);
-                branches[J$.sid-1] = branchInfo;
-                branchSidToFileName[J$.sid-1] = fileName;
+                branchInfo = new Array(iids.nBranches + 1);
+                branches[J$.sid - 1] = branchInfo;
+                branchSidToFileName[J$.sid - 1] = fileName;
             }
             if (result) {
-                branchInfo[iid/4+1] = true;
+                branchInfo[iid / 4 + 1] = true;
             } else {
-                branchInfo[iid/4] = true;
+                branchInfo[iid / 4] = true;
             }
         };
 
-        /**
-         * This callback is called when an execution terminates in node.js.  In a browser
-         * environment, the callback is called if ChainedAnalyses.js or ChainedAnalysesNoCheck.js
-         * is used and Alt-Shift-T is pressed.
-         *
-         * @returns {undefined} - Any return value is ignored
-         */
         this.endExecution = function () {
 
             var ret = {};
-            for (var i=0; i<branches.length; i++) {
-                if (branches[i] === undefined) {
-                    branches[i] = [];
+            for (var i = 0; i < branches.length; i++) {
+                if (branches[i] !== undefined) {
+                    ret[branchSidToFileName[i]] = branches[i];
                 }
-                ret[branchSidToFileName[i]] = branches[i];
             }
             var fs = require('fs');
-            console.log("coverage"+testIndex+".json");
-            fs.writeFileSync("coverage"+testIndex+".json", JSON.stringify(ret), "utf8");
+            console.log("coverage" + testIndex + ".json");
+            fs.writeFileSync("coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
             testIndex++;
         };
     }
