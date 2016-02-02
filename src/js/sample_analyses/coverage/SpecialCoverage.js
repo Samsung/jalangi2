@@ -43,14 +43,14 @@
             var fileName = iids.originalCodeFileName;
             var branchInfo = branches[J$.sid - 1];
             if (!branchInfo) {
-                branchInfo = new Array(iids.nBranches + 1);
+                branchInfo = new Array(iids.nBranches);
                 branches[J$.sid - 1] = branchInfo;
                 branchSidToFileName[J$.sid - 1] = fileName;
             }
             if (result) {
-                branchInfo[iid / 4 + 1] = true;
+                branchInfo[iid / 4 - 1] = true;
             } else {
-                branchInfo[iid / 4] = true;
+                branchInfo[iid / 4 - 2] = true;
             }
         };
 

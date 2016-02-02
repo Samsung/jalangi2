@@ -1949,7 +1949,7 @@ if (typeof J$ === 'undefined') {
 
         var tmp = {};
 
-        tmp.nBranches = iidSourceInfo.nBranches = condIid / IID_INC_STEP * 2;
+        tmp.nBranches = iidSourceInfo.nBranches = (condIid / IID_INC_STEP - 1) * 2;
         tmp.originalCodeFileName = iidSourceInfo.originalCodeFileName = origCodeFileName;
         tmp.instrumentedCodeFileName = iidSourceInfo.instrumentedCodeFileName = instCodeFileName;
         if (url) {
