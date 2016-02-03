@@ -200,9 +200,10 @@
             }
         };
 
-        this.evalBegin = function () {
+        this.evalBegin = function (isDirect) {
             evalFrames.push(frame);
-            frame = frameStack[0];
+            if (!isDirect)
+                frame = frameStack[0];
         };
 
         this.evalEnd = function () {
@@ -235,16 +236,23 @@
             frame = frameStack[frameStack.length - 1];
         };
 
-        this.scriptEnter = function () {
+        var isEvalScript = [];
+
+        this.scriptEnter = function (instrumentedFileName, originalFileName) {
             scriptCount++;
-            if (scriptCount > 1) {
-                frameStack.push(frame = Object.create(null));
-                frame[SPECIAL_PROP_FRAME] = frameStack[0];
+            if (scriptCount > 0) {
+                if (!(originalFileName === 'eval'  && instrumentedFileName === originalFileName)) {
+                    frameStack.push(frame = Object.create(null));
+                    frame[SPECIAL_PROP_FRAME] = frameStack[0];
+                    isEvalScript.push(false);
+                } else {
+                    isEvalScript.push(true);
+                }
             }
         };
 
         this.scriptReturn = function () {
-            if (scriptCount > 1) {
+            if (scriptCount > 0 && !isEvalScript.pop()) {
                 frameStack.pop();
                 frame = frameStack[frameStack.length - 1];
             }
@@ -275,7 +283,7 @@
 
 
         this.scriptEnter = function (iid, instrumentedFileName, originalFileName) {
-            smemory.scriptEnter();
+            smemory.scriptEnter(instrumentedFileName, originalFileName);
         };
 
         this.scriptExit = function (iid, wrappedExceptionVal) {
@@ -283,14 +291,15 @@
         };
 
 
-        this.instrumentCodePre = function (iid, code) {
-            smemory.evalBegin();
-        };
-
-
-        this.instrumentCode = function (iid, newCode, newAst) {
-            smemory.evalEnd();
-        };
+        //this.instrumentCodePre = function (iid, code, isDirect) {
+        //    smemory.evalBegin(isDirect);
+        //};
+        //
+        //
+        //this.instrumentCode = function (iid, newCode, newAst, isDirect) {
+        //    console.log(newCode);
+        //    smemory.evalEnd(isDirect);
+        //};
 
     }
 

@@ -683,7 +683,7 @@ if (typeof J$ === 'undefined') {
     function wrapEvalArg(ast) {
         printIidToLoc(ast);
         var ret = replaceInExpr(
-            instrumentCodeFunName + "(" + RP + "1, " + RP + "2)",
+            instrumentCodeFunName + "(" + RP + "1, " + RP + "2, true)",
             ast,
             getIid()
         );
@@ -1884,13 +1884,14 @@ if (typeof J$ === 'undefined') {
     }
 
 
-    function instrumentEvalCode(code, iid) {
+    function instrumentEvalCode(code, iid, isDirect) {
         return instrumentCode({
             code: code,
             thisIid: iid,
             isEval: true,
             inlineSourceMap: true,
-            inlineSource: true
+            inlineSource: true,
+            isDirect: isDirect
         }).code;
     }
 
@@ -1904,7 +1905,7 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments the provided code.
      *
-     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string }} options
+     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string, isDirect: boolean }} options
      * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
@@ -1915,12 +1916,12 @@ if (typeof J$ === 'undefined') {
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
-        instCodeFileName = options.instCodeFileName ? options.instCodeFileName : "eval";
-        origCodeFileName = options.origCodeFileName ? options.origCodeFileName : "eval";
+        instCodeFileName = options.instCodeFileName ? options.instCodeFileName : (options.isDirect?"eval":"evalIndirect");
+        origCodeFileName = options.origCodeFileName ? options.origCodeFileName : (options.isDirect?"eval":"evalIndirect");
 
 
         if (sandbox.analysis && sandbox.analysis.instrumentCodePre) {
-            aret = sandbox.analysis.instrumentCodePre(thisIid, code);
+            aret = sandbox.analysis.instrumentCodePre(thisIid, code, options.isDirect);
             if (aret) {
                 code = aret.code;
                 skip = aret.skip;
@@ -1972,7 +1973,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {
-            aret = sandbox.analysis.instrumentCode(thisIid, instCode, newAst);
+            aret = sandbox.analysis.instrumentCode(thisIid, instCode, newAst, options.isDirect);
             if (aret) {
                 instCode = aret.result;
             }

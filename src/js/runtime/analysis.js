@@ -158,7 +158,7 @@ if (typeof J$ === 'undefined') {
     }
 
     function invokeEval(base, f, args, iid) {
-        return f(sandbox.instrumentEvalCode(args[0], iid));
+        return f(sandbox.instrumentEvalCode(args[0], iid, false));
     }
 
     function invokeFunctionDecl(base, f, args, iid) {
@@ -170,7 +170,7 @@ if (typeof J$ === 'undefined') {
             newArgs[i] = args[i];
         }
         var code = '(function(' + newArgs.join(', ') + ') { ' + args[args.length-1] + ' })';
-        var code = sandbox.instrumentEvalCode(code, iid);
+        var code = sandbox.instrumentEvalCode(code, iid, false);
         // Using EVAL_ORG instead of eval() is important as it preserves the scoping semantics of Function()
         var out = EVAL_ORG(code);
         return out;

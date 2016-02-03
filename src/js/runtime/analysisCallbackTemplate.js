@@ -561,11 +561,12 @@
          *
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} code - Code that is going to get instrumented
+         * @param {boolean} isDirect - true if this is a direct call to eval
          * @returns {{code: *, skip: boolean}} - If an object is returned and the
          * <tt>skip</tt> property is true, then the instrumentation of <tt>code</tt> is skipped.
          * Original <tt>code</tt> is replaced with that from the returned object if an object is returned.
          */
-        this.instrumentCodePre = function (iid, code) {
+        this.instrumentCodePre = function (iid, code, isDirect) {
             return {code: code, skip: false};
         };
 
@@ -575,10 +576,11 @@
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} newCode - Instrumented code
          * @param {Object} newAst - The AST of the instrumented code
+         * @param {boolean} isDirect - true if this is a direct call to eval
          * @returns {{result: *}|undefined} - If an object is returned, the instrumented code is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.instrumentCode = function (iid, newCode, newAst) {
+        this.instrumentCode = function (iid, newCode, newAst, isDirect) {
             return {result: newCode};
         };
 
