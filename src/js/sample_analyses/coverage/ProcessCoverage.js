@@ -27,8 +27,8 @@ for(var i=0; i<files.length; i++) {
                         if (loc === undefined) {
                             console.log("k = "+k*8+" "+JSON.stringify(smap));
                         }
-                        smapNew[k*8-1] = {loc: {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}}};
-                        smapNew[k*8] = {loc: {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}}};
+                        smapNew[k*8-1] = {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}};
+                        smapNew[k*8] = {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}};
                     }
                     stmtMap[jsFile] = smapNew;
                 }
@@ -51,5 +51,5 @@ for(var i=0; i<files.length; i++) {
     }
 }
 
-fs.writeFileSync('allcoverage.json', JSON.stringify({stmtMap: stmtMap, testCov: testCov}, null, '\t'), 'utf8');
+fs.writeFileSync('allcoverage.json', JSON.stringify({statementMap: stmtMap, testCov: testCov}, null, '\t'), 'utf8');
 
