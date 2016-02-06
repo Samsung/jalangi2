@@ -27,10 +27,10 @@ for(var i=0; i<files.length; i++) {
                         if (loc === undefined) {
                             console.log("k = "+k*8+" "+JSON.stringify(smap));
                         }
-                        smapNew[k*8-1] = {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}};
-                        smapNew[k*8] = {start: {line: loc[0], column: loc[1]}, end: {line: loc[2], column: loc[3]}};
+                        smapNew[k*8-1] = {start: {line: loc[0], column: loc[1]-1}, end: {line: loc[2], column: loc[3]-1}};
+                        smapNew[k*8] = {start: {line: loc[0], column: loc[1]-1}, end: {line: loc[2], column: loc[3]-1}};
                     }
-                    stmtMap[jsFile] = smapNew;
+                    stmtMap[jsFile.substring(0, jsFile.length-3)+".org"] = smapNew;
                 }
 
                 var oldCoverage = coverage[jsFile];
@@ -43,7 +43,7 @@ for(var i=0; i<files.length; i++) {
                             newCoverage.push((j+1)*4);
                     }
                 }
-                fileMap[jsFile] = newCoverage;
+                fileMap[jsFile.substring(0, jsFile.length-3)+".org"] = newCoverage;
             }
         }
         testCov.push(fileMap);
@@ -53,3 +53,11 @@ for(var i=0; i<files.length; i++) {
 
 fs.writeFileSync('allcoverage.json', JSON.stringify({statementMap: stmtMap, testCov: testCov}, null, '\t'), 'utf8');
 
+//1) Instrument the folder containing js files using
+//
+//$JALANGI_HOME/scripts/instrument_folder_coverage.sh path_to_folder
+//
+//2) add the contents of $JALANGI_HOME/src/js/sample_analyses/coverage/mocha_prefix.js before the first "describe" call in the top-level mocha test in the test directory.
+//
+//3) call mocha test and it will generate a coverage*.json for each mocha test.
+//4) run node $JALANGI_HOME/src/js/sample_analyses/coverage/ProcessCoverage.js  . This will generate allcoverage.json.
