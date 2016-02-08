@@ -120,8 +120,8 @@ if (typeof J$ === 'undefined') {
         url = args.url;
 
         var prefix = 'if (typeof J$ === "undefined") {\n';
-        prefix += " require('"+path.resolve(__dirname, "./../../../node_modules/acorn/dist/acorn.js")+"');\n";
-        prefix += " require('"+path.resolve(__dirname, "./../../../node_modules/esotope/esotope.js")+"');\n";
+        prefix += " acorn = require('"+path.resolve(__dirname, "./../../../node_modules/acorn/dist/acorn.js")+"');\n";
+        prefix += " esotope = require('"+path.resolve(__dirname, "./../../../node_modules/esotope/esotope.js")+"');\n";
         require('../headers').headerSources.forEach(function (header) {
             prefix += " require('"+path.resolve(__dirname, "./../../../" + header)+"');\n";
         });

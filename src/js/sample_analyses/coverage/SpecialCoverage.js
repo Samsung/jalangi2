@@ -32,6 +32,17 @@
 
     function MyAnalysis() {
 
+        function getBranchInfo() {
+            var branchInfo = branches[J$.sid - 1];
+            if (!branchInfo) {
+                var iids = J$.smap[J$.sid];
+                var fileName = iids.originalCodeFileName;
+                branchInfo = {};
+                branches[J$.sid - 1] = branchInfo;
+                branchSidToFileName[J$.sid - 1] = fileName;
+            }
+            return branchInfo;
+        }
 
         this.beginExecution = function () {
             branches = [];
@@ -39,19 +50,17 @@
         };
 
         this.conditional = function (iid, result) {
-            var iids = J$.smap[J$.sid];
-            var fileName = iids.originalCodeFileName;
-            var branchInfo = branches[J$.sid - 1];
-            if (!branchInfo) {
-                branchInfo = new Array(iids.nBranches);
-                branches[J$.sid - 1] = branchInfo;
-                branchSidToFileName[J$.sid - 1] = fileName;
-            }
+            var branchInfo = getBranchInfo();
             if (result) {
-                branchInfo[iid / 4 - 1] = true;
+                branchInfo[iid] = 1;
             } else {
-                branchInfo[iid / 4 - 2] = true;
+                branchInfo[iid - 1] = 1;
             }
+        };
+
+        this.endExpression = function (iid) {
+            var branchInfo = getBranchInfo();
+            branchInfo[iid] = 2;
         };
 
         this.endExecution = function () {
