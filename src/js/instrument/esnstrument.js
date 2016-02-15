@@ -243,6 +243,11 @@ if (typeof J$ === 'undefined') {
         printLineInfoAux(memIid, ast0);
     }
 
+    function printModIidToLoc(ast0) {
+        printLineInfoAux(memIid, ast0);
+        printLineInfoAux(memIid+2, ast0);
+    }
+
     function printOpIidToLoc(ast0) {
         printLineInfoAux(opIid, ast0);
     }
@@ -363,7 +368,7 @@ if (typeof J$ === 'undefined') {
 
     function wrapModAssign(node, base, offset, op, rvalue, isComputed) {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
-            printIidToLoc(node);
+            printModIidToLoc(node);
             var ret = replaceInExpr(
                 logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (createBitPattern(isComputed)) + ")(" + RP + "5)",
                 getIid(),
