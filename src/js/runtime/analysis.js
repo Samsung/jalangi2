@@ -252,8 +252,12 @@ if (typeof J$ === 'undefined') {
                 if (hasGetOwnPropertyDescriptor && val.hasOwnProperty(offset)) {
                     var desc = Object.getOwnPropertyDescriptor(val, offset);
                     if (desc !== undefined) {
-                        associateSidWithFunction(desc.get, internalIid);
-                        associateSidWithFunction(desc.set, internalIid);
+                        if (typeof desc.get === 'function') {
+                            T(iid, desc.get, 12, false, internalIid);
+                        }
+                        if (typeof desc.set === 'function') {
+                            T(iid, desc.set, 12, false, internalIid);
+                        }
                     }
                 }
             }
