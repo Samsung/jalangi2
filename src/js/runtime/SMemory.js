@@ -242,8 +242,12 @@
             scriptCount++;
             if (scriptCount > 0) {
                 if (!(originalFileName === 'eval'  && instrumentedFileName === originalFileName)) {
-                    frameStack.push(frame = Object.create(null));
-                    frame[SPECIAL_PROP_FRAME] = frameStack[0];
+                    if (Constants.isBrowser) {
+                        frame = frameStack[0];
+                    } else {
+                        frameStack.push(frame = Object.create(null));
+                        frame[SPECIAL_PROP_FRAME] = frameStack[0];
+                    }
                     isEvalScript.push(false);
                 } else {
                     isEvalScript.push(true);
@@ -253,7 +257,9 @@
 
         this.scriptReturn = function () {
             if (scriptCount > 0 && !isEvalScript.pop()) {
-                frameStack.pop();
+                if (!Constants.isBrowser) {
+                    frameStack.pop();
+                }
                 frame = frameStack[frameStack.length - 1];
             }
             scriptCount--;
