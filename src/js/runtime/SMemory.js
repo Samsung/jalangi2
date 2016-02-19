@@ -200,15 +200,15 @@
             }
         };
 
-        this.evalBegin = function (isDirect) {
-            evalFrames.push(frame);
-            if (!isDirect)
-                frame = frameStack[0];
-        };
+        //this.evalBegin = function (isDirect) {
+        //    evalFrames.push(frame);
+        //    if (!isDirect)
+        //        frame = frameStack[0];
+        //};
 
-        this.evalEnd = function () {
-            frame = evalFrames.pop();
-        };
+        //this.evalEnd = function () {
+        //    frame = evalFrames.pop();
+        //};
 
 
         this.initialize = function (name) {
