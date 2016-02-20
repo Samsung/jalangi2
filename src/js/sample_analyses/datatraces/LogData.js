@@ -6,10 +6,11 @@
         var lastiid = -1;
         var lastsid = -1;
 
-        var logs = [];
+        var traceWriter = new sandbox.TraceWriter("trace.log")
+        //var logs = [];
 
         function logEvent(str) {
-            logs.push(str);
+            traceWriter.logToFile(str+"\n");
             //@todo dump and clear the logs array once its size exceeds some constant, say 1024
         }
 
@@ -95,9 +96,13 @@
         };
 
         this.endExecution = function () {
-            for (var i = 0; i < logs.length; i++) {
-                console.log(logs[i]);
-            }
+            traceWriter.stopTracing();
+            var tw = new sandbox.TraceWriter("strings.json");
+            tw.logToFile(JSON.stringify(stringMap)+"\n");
+            tw.stopTracing();
+            tw = new sandbox.TraceWriter("smap.json");
+            tw.logToFile(JSON.stringify(sandbox.smap)+"\n");
+            tw.stopTracing();
         };
 
         this.runInstrumentedFunctionBody = function (iid, f, functionIid) {
@@ -123,5 +128,5 @@
 })(J$);
 
 
-// node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/datatraces/LogData.js tests/octane/deltablue.js
+// node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/datatraces/TraceWriter.js --analysis src/js/sample_analyses/datatraces/LogData.js tests/octane/deltablue.js
 
