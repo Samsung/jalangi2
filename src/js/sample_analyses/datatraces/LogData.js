@@ -2,6 +2,7 @@
 (function (sandbox) {
     function MyAnalysis() {
         var stringMap = {};
+        var stringList = [];
         var stringCount = 0;
         var lastiid = -1;
         var lastsid = -1;
@@ -44,6 +45,7 @@
             } else {
                 stringCount++;
                 stringMap[str] = stringCount;
+                stringList.push(str);
                 return stringCount;
             }
         }
@@ -102,7 +104,7 @@
         this.endExecution = function () {
             traceWriter.stopTracing();
             var tw = new sandbox.TraceWriter("strings.json");
-            tw.logToFile(JSON.stringify(stringMap)+"\n");
+            tw.logToFile(JSON.stringify(stringList)+"\n");
             tw.stopTracing();
             tw = new sandbox.TraceWriter("smap.json");
             tw.logToFile(JSON.stringify(sandbox.smap)+"\n");
