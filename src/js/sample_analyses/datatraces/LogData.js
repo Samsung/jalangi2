@@ -98,7 +98,7 @@
         };
 
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            logEvent('E');
+            logEvent('E,' + sandbox.sid + "," + iid + "," + getValue(returnVal) + "," + getType(returnVal));
         };
 
         this.endExecution = function () {
