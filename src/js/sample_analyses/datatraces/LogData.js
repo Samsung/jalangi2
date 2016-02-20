@@ -2,6 +2,7 @@
 (function (sandbox) {
     function MyAnalysis() {
         var stringMap = {};
+        var stringList = [];
         var stringCount = 0;
         var lastiid = -1;
         var lastsid = -1;
@@ -44,6 +45,7 @@
             } else {
                 stringCount++;
                 stringMap[str] = stringCount;
+                stringList.push(str);
                 return stringCount;
             }
         }
@@ -61,18 +63,22 @@
         };
 
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
+            var objectId = sandbox.smemory.getIDFromShadowObjectOrFrame(sandbox.smemory.getShadowObjectOfObject(base));
             var shadowObj = sandbox.smemory.getShadowObject(base, offset, true);
+            var ownerId = shadowObj.owner ? sandbox.smemory.getIDFromShadowObjectOrFrame(shadowObj.owner) : 0;
             if (shadowObj.isProperty) {
-                logEvent('G,' + sandbox.sid + "," + iid + "," + sandbox.smemory.getIDFromShadowObjectOrFrame(shadowObj.owner) + "," + getStringIndex(offset) + "," + getValue(val) + "," + getType(val));
+                logEvent('G,' + sandbox.sid + "," + iid + "," + objectId + "," + ownerId + "," + getStringIndex(offset) + "," + getValue(val) + "," + getType(val));
             }
         };
 
         this.putFieldPre = function (iid, base, offset, val, isComputed, isOpAssign) {
             lastiid = iid;
             lastsid = sandbox.sid;
+            var objectId = sandbox.smemory.getIDFromShadowObjectOrFrame(sandbox.smemory.getShadowObjectOfObject(base));
             var shadowObj = sandbox.smemory.getShadowObject(base, offset, false);
+            var ownerId = shadowObj.owner ? sandbox.smemory.getIDFromShadowObjectOrFrame(shadowObj.owner) : 0;
             if (shadowObj.isProperty) {
-                logEvent('P,' + sandbox.sid + "," + iid + "," + sandbox.smemory.getIDFromShadowObjectOrFrame(shadowObj.owner) + "," + getStringIndex(offset) + "," + getValue(val) + "," + getType(val));
+                logEvent('P,' + sandbox.sid + "," + iid + "," + objectId + "," + ownerId + "," + getStringIndex(offset) + "," + getValue(val) + "," + getType(val));
             }
         };
 
@@ -92,13 +98,13 @@
         };
 
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            logEvent('E');
+            logEvent('E,' + sandbox.sid + "," + iid + "," + getValue(returnVal) + "," + getType(returnVal));
         };
 
         this.endExecution = function () {
             traceWriter.stopTracing();
             var tw = new sandbox.TraceWriter("strings.json");
-            tw.logToFile(JSON.stringify(stringMap)+"\n");
+            tw.logToFile(JSON.stringify(stringList)+"\n");
             tw.stopTracing();
             tw = new sandbox.TraceWriter("smap.json");
             tw.logToFile(JSON.stringify(sandbox.smap)+"\n");
