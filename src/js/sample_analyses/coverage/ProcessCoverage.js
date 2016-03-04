@@ -69,6 +69,19 @@ while (fs.existsSync(file)) {
 
 fs.writeFileSync('allcoverage.json', JSON.stringify({statementMap: stmtMap, testCov: testCov}, null, '\t'), 'utf8');
 
+//0) vi node_modules/mocha/lib/runnable.js
+//   Runnable.prototype.run = function(fn) {
+//   var self = this;
+//   var start = new Date();
+//   var ctx = this.ctx;
+//   var finished;
+//   var emitted;
+//
+//   if (this.type==='test') {
+//       console.log(this.fn.toString());
+//}
+
+
 //1) Instrument the folder containing js files using
 //
 //$JALANGI_HOME/scripts/instrument_folder_coverage.sh path_to_folder
