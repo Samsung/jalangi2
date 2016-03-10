@@ -2,6 +2,52 @@
     var coverageType = 1;
     var unusedCoverageType = 3;
 
+    function Set() {
+        this.set = new Object(null);
+    }
+
+    Set.prototype.add = function() {
+        var val = this.set;
+        for(var i=1; i<arguments.length; i++) {
+            var valc = val[arguments[i]];
+            if (valc===undefined) {
+                if (i === arguments.length-1) {
+                    valc = arguments[0];
+                } else {
+                    valc = new Object(null);
+                }
+                val[arguments[i]] = valc;
+            }
+            val = valc;
+        }
+    };
+
+    Set.prototype.contains = function() {
+        var val = this.set;
+        for(var i=0; i<arguments.length; i++) {
+            var valc = val[arguments[i]];
+            if (valc===undefined) {
+                return false;
+            }
+            val = valc;
+        }
+        return true;
+    };
+
+    Set.prototype.remove = function() {
+        var val = this.set;
+        for(var i=0; i<arguments.length; i++) {
+            var valc = val[arguments[i]];
+            if (valc===undefined) {
+                return false;
+            }
+            if (i === arguments.length-1) {
+                delete val[arguments[i]];
+            }
+            val = valc;
+        }
+        return true;
+    };
 
     function isSubset(tests1, tests2) {
         Objects.keys(tests1).forEach(function(test1){

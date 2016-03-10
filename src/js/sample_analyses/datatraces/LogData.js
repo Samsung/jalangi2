@@ -6,6 +6,7 @@
         var stringCount = 0;
         var lastiid = -1;
         var lastsid = -1;
+        var HOP = sandbox.Constants.HOP;
 
         var traceWriter = new sandbox.TraceWriter("trace.log")
         //var logs = [];
@@ -39,14 +40,17 @@
         }
 
         function getStringIndex(str) {
+            if (typeof str === 'number' && str >= 0) {
+                return str;
+            }
             str = str + "";
-            if (stringMap.hasOwnProperty(str)) {
+            if (HOP(stringMap,str)) {
                 return stringMap[str];
             } else {
                 stringCount++;
                 stringMap[str] = stringCount;
                 stringList.push(str);
-                return stringCount;
+                return -stringCount;
             }
         }
 
@@ -63,7 +67,8 @@
         };
 
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            var objectId = sandbox.smemory.getIDFromShadowObjectOrFrame(sandbox.smemory.getShadowObjectOfObject(base));
+            var so = sandbox.smemory.getShadowObjectOfObject(base);
+            var objectId = so?sandbox.smemory.getIDFromShadowObjectOrFrame(so):0;
             var shadowObj = sandbox.smemory.getShadowObject(base, offset, true);
             var ownerId = shadowObj.owner ? sandbox.smemory.getIDFromShadowObjectOrFrame(shadowObj.owner) : 0;
             if (shadowObj.isProperty) {
