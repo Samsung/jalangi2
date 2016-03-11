@@ -2,91 +2,169 @@
     var coverageType = 1;
     var unusedCoverageType = 3;
 
-    function Set() {
-        this.set = new Object(null);
+    function Set(map) {
+        this.set = false;
+        this.count = 0;
     }
 
-    Set.prototype.add = function() {
+    Set.prototype.add = function () {
+        var base = this;
+        var offset = "set";
+        var val = base[offset];
+        for (var i = 0; i < arguments.length; i++) {
+            if (typeof val !== "object") {
+                base[offset] = val = {isFinal: val, children: new Object(null)}
+            }
+            var valc = val.children[arguments[i]];
+            if (valc === undefined) {
+                valc = false;
+                val.children[arguments[i]] = valc;
+            }
+            base = val.children;
+            offset = arguments[i];
+            val = valc;
+        }
+        if (typeof val !== "object") {
+            if (base[offset] !== true) {
+                this.count++;
+            }
+            base[offset] = true;
+        } else {
+            if (val.isFinal !== true) {
+                this.count++;
+            }
+            val.isFinal = true;
+        }
+    };
+
+    Set.prototype.contains = function () {
         var val = this.set;
-        for(var i=1; i<arguments.length; i++) {
-            var valc = val[arguments[i]];
-            if (valc===undefined) {
-                if (i === arguments.length-1) {
-                    valc = arguments[0];
-                } else {
-                    valc = new Object(null);
+        for (var i = 0; i < arguments.length; i++) {
+            if (typeof val !== "object") {
+                return false;
+            }
+            var valc = val.children[arguments[i]];
+            if (valc === undefined) {
+                return false;
+            }
+            val = valc;
+        }
+        if (typeof val !== "object") {
+            return val;
+        } else {
+            return val.isFinal;
+        }
+    };
+
+    Set.prototype.remove = function () {
+        var base = this;
+        var offset = "set";
+        var val = base[offset];
+        for (var i = 0; i < arguments.length; i++) {
+            if (typeof val !== "object") {
+                return false;
+            }
+            var valc = val.children[arguments[i]];
+            if (valc === undefined) {
+                return false;
+            }
+            base = val.children;
+            offset = arguments[i];
+            val = valc;
+        }
+        if (typeof val !== "object") {
+            if (base[offset] !== false) {
+                this.count--;
+            } else {
+                return false;
+            }
+            base[offset] = true;
+        } else {
+            if (val.isFinal !== false) {
+                this.count--;
+            }  else {
+                return false;
+            }
+            val.isFinal = true;
+        }
+        return true;
+    };
+
+    Set.prototype.clone = function () {
+        var ret = new Set();
+        this.forEach(null, function () {
+            ret.add.apply(ret, arguments);
+        });
+        return ret;
+    };
+
+    function forEach(obj, f, dis) {
+        if (obj === true || (typeof obj === "object" && obj.isFinal)) {
+            f();
+        }
+        if (typeof obj === "object") {
+            Object.keys(obj.children).forEach(function (key) {
+                forEach(obj.children[key], f.bind(dis, key), dis);
+            });
+        }
+    }
+
+    Set.prototype.forEach = function (dis, f) {
+        forEach(this.set, f, dis);
+    };
+
+    function getMapElement(obj, args) {
+        var ret = obj;
+        for (var i = 0; i < args.length; i++) {
+            ret = ret[args[i]];
+            if (ret === undefined) {
+                return ret;
+            }
+        }
+        return ret;
+    }
+
+    function putMapElement(obj, args, val) {
+        var ret = obj;
+        for (var i = 0; i < args.length; i++) {
+            if (i === args.length - 1) {
+                ret[args[i]] = val;
+            } else {
+                ret = ret[args[i]];
+                if (ret === undefined) {
+                    return ret;
                 }
-                val[arguments[i]] = valc;
             }
-            val = valc;
         }
-    };
+        return ret;
+    }
 
-    Set.prototype.contains = function() {
-        var val = this.set;
-        for(var i=0; i<arguments.length; i++) {
-            var valc = val[arguments[i]];
-            if (valc===undefined) {
-                return false;
-            }
-            val = valc;
-        }
-        return true;
-    };
-
-    Set.prototype.remove = function() {
-        var val = this.set;
-        for(var i=0; i<arguments.length; i++) {
-            var valc = val[arguments[i]];
-            if (valc===undefined) {
-                return false;
-            }
-            if (i === arguments.length-1) {
-                delete val[arguments[i]];
-            }
-            val = valc;
-        }
-        return true;
-    };
-
-    function isSubset(tests1, tests2) {
-        Objects.keys(tests1).forEach(function(test1){
-            if (!tests2.hasOwnProperty(test1)) {
-                return false;
+    Set.prototype.split = function (coverage) {
+        var intersection = new Set();
+        var difference = new Set();
+        this.forEach(null, function () {
+            if (getMapElement(coverage, arguments) == coverageType) {
+                intersection.add.apply(intersection, arguments);
+                putMapElement(coverage, arguments, unusedCoverageType);
+            } else {
+                difference.add.apply(difference, arguments);
             }
         });
-        return true;
-    }
+        return {intersection: intersection, difference: difference};
+    };
 
-    function diffCoverage(old, coverage) {
-        var one = {}, two = {}, onef = false, twof = false;
-        Object.keys(old).forEach(function (keyf) {
-            Object.keys(old[keyf]).forEach(function (keyi) {
-                    var o = coverage[keyf];
-                    if (o && o[keyi] === coverageType) {
-                        if (one[keyf] === undefined) {
-                            one[keyf] = {};
-                        }
-                        one[keyf][keyi] = true;
-                        o[keyi] = unusedCoverageType;
-                        onef = true;
-                    } else {
-                        if (two[keyf] === undefined) {
-                            two[keyf] = {};
-                        }
-                        two[keyf][keyi] = true;
-                        twof = true;
-                    }
-                }
-            );
-        });
-        return {one: one, onef: onef, two: two, twof: twof};
-    }
+    Set.prototype.size = function () {
+        return this.count;
+    };
+
+    Set.prototype.isEmpty = function () {
+        return this.count === 0;
+    };
 
     var features = [];
     var tests = [];
 
-    function addCoverage(testCode, coverage) {
+    function addCoverage(testCode, coverage, forceAdd) {
         var testIndex = tests.length;
         var feature, feature2;
         var mod = false;
@@ -94,38 +172,29 @@
         var i;
         for (i = 0; i < features.length; i++) {
             feature = features[i];
-            var split = diffCoverage(feature.coverage, coverage);
-            if (split.onef && split.twof) {
-                features.push(feature2 = {coverage: split.two, tests: {}});
-                Object.keys(feature.tests).forEach(function (ti) {
-                    feature2.tests[ti] = true;
-                });
-
-                feature.coverage = split.one;
-                feature.tests[testIndex] = true;
+            var split = feature.coverage.split(coverage);
+            if (!split.intersection.isEmpty() && !split.difference.isEmpty()) {
+                features.push(feature2 = {coverage: split.difference, tests: feature.tests.clone()});
+                feature.coverage = split.intersection;
+                feature.tests.add(testIndex);
                 mod = true;
-            } else if (split.onef) {
-                feature.tests[testIndex] = true;
+            } else if (!split.intersection.isEmpty()) {
+                feature.tests.add(testIndex);
             }
         }
 
-        var newFeature = {};
-        var newFeaturef = false;
+        var newFeature = new Set();
         Object.keys(coverage).forEach(function (keyf) {
             var o = coverage[keyf];
             Object.keys(o).forEach(function (keyi) {
                 if (o[keyi] === coverageType) {
-                    newFeaturef = true;
-                    if (newFeature[keyf] === undefined) {
-                        newFeature[keyf] = {};
-                    }
-                    newFeature[keyf][keyi] = true;
+                    newFeature.add(keyf, keyi);
                 }
             });
         });
-        if (newFeaturef) {
-            features.push(feature = {coverage: newFeature, tests: {}});
-            feature.tests[testIndex] = true;
+        if (!newFeature.isEmpty()) {
+            features.push(feature = {coverage: newFeature, tests: new Set()});
+            feature.tests.add(testIndex);
             mod = true;
         }
         if (mod) {
@@ -136,5 +205,6 @@
 
     }
 
+    module.exports.Set = Set;
 
 }(module.exports));

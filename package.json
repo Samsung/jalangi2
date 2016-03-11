@@ -1,8 +1,8 @@
 {
-  "name":"jalangi2",
-  "version":"0.2.4",
-  "description":"dynamic analysis framework for JavaScript",
-  "dependencies":{
+  "name": "jalangi2",
+  "version": "0.2.4",
+  "description": "dynamic analysis framework for JavaScript",
+  "dependencies": {
     "acorn": "1.0.3",
     "argparse": "0.1.6",
     "cover": "0.2.9",
@@ -17,17 +17,20 @@
     "jquery": "2.1.3",
     "datatables": "1.10.6"
   },
-  "bundledDependencies": ["acorn","esotope"],
+  "bundledDependencies": [
+    "acorn",
+    "esotope"
+  ],
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"
   },
-  "license":"Apache",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/Samsung/jalangi2.git"
+  "license": "Apache",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Samsung/jalangi2.git"
   },
   "devDependencies": {
-    "mocha": "2.1.0"
+    "mocha": "^2.4.5"
   },
   "main": "src/js/utils/api.js"
 }
