@@ -163,23 +163,74 @@
 
     var features = [];
     var tests = [];
+    var featureGraph = new Object(null);
+
+    function addEdge(x, y) {
+        var children = featureGraph[x];
+        if (children === undefined) {
+            children = featureGraph[x] = new Object(null);
+        }
+        children[y] = true;
+    }
+
+    function removeEdge(x, y) {
+        var children = featureGraph[x];
+        if (children === undefined) {
+            return;
+        }
+        delete children[y];
+        if (Object.keys(children).length === 0) {
+            delete featureGraph[x];
+        }
+    }
+
+    function forEachEdge(x, f) {
+        var children = featureGraph[x];
+        if (children) {
+            Object.keys(children).forEach(function(y){
+                f(y);
+            });
+        }
+    }
+
+    function resetEdges(x, testIndex) {
+        var mod = false;
+        forEachEdge(x, function(y){
+            var feature3 = features[y];
+            if (!feature3.tests.contains(testIndex)) {
+                removeEdge(x, y);
+                mod = true;
+            }
+        });
+        return mod;
+    }
 
     function addCoverage(testCode, coverage, forceAdd) {
         var testIndex = tests.length;
-        var feature, feature2;
+        var feature, feature2, feature3;
         var mod = false;
+        var modFeatures = new Object(null);
 
         var i;
         for (i = 0; i < features.length; i++) {
             feature = features[i];
             var split = feature.coverage.split(coverage);
             if (!split.intersection.isEmpty() && !split.difference.isEmpty()) {
-                features.push(feature2 = {coverage: split.difference, tests: feature.tests.clone()});
+                features.push(feature2 = {coverage: split.difference, tests: feature.tests.clone(), index: features.length});
                 feature.coverage = split.intersection;
                 feature.tests.add(testIndex);
+                modFeatures[feature.index] = true;
                 mod = true;
+
+                addEdge(feature2.index, feature.index);
+                forEachEdge(feature.index, function(y) {
+                   addEdge(feature2.index, y);
+                });
+                resetEdges(feature.index, testIndex)
             } else if (!split.intersection.isEmpty()) {
                 feature.tests.add(testIndex);
+                modFeatures[feature.index] = true;
+                mod = resetEdges(feature.index, testIndex) || mod;
             }
         }
 
@@ -193,8 +244,9 @@
             });
         });
         if (!newFeature.isEmpty()) {
-            features.push(feature = {coverage: newFeature, tests: new Set()});
+            features.push(feature = {coverage: newFeature, tests: new Set(), index: features.length});
             feature.tests.add(testIndex);
+            featureGraph[feature.index] = modFeatures;
             mod = true;
         }
         if (mod) {
@@ -202,7 +254,6 @@
         } else {
             tests.push(null);
         }
-
     }
 
     module.exports.Set = Set;
