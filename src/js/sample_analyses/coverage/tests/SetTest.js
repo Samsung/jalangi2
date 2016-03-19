@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Set = require('./../AddCoverage').Set;
+var Set = require('./../AddCoverage').Features.Set;
 
 describe("Set functionality", function () {
     describe("set creation", function () {

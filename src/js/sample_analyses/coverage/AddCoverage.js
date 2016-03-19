@@ -1,6 +1,8 @@
 (function (sandbox) {
+    var fs = require('fs');
     var coverageType = 1;
     var unusedCoverageType = 3;
+    var featuresFile = "features.json";
 
     function Set(map) {
         this.set = false;
@@ -82,7 +84,7 @@
         } else {
             if (val.isFinal !== false) {
                 this.count--;
-            }  else {
+            } else {
                 return false;
             }
             val.isFinal = true;
@@ -187,7 +189,7 @@
     function forEachEdge(x, f) {
         var children = featureGraph[x];
         if (children) {
-            Object.keys(children).forEach(function(y){
+            Object.keys(children).forEach(function (y) {
                 f(y);
             });
         }
@@ -195,7 +197,7 @@
 
     function resetEdges(x, testIndex) {
         var mod = false;
-        forEachEdge(x, function(y){
+        forEachEdge(x, function (y) {
             var feature3 = features[y];
             if (!feature3.tests.contains(testIndex)) {
                 removeEdge(x, y);
@@ -205,30 +207,62 @@
         return mod;
     }
 
+    function readData() {
+        try {
+            var data = JSON.parseJSON(fs.readFileSync(featuresFile, "utf8"));
+            features = data.features;
+            tests = data.tests;
+            featureGraph = data.featureGraph;
+        } catch (e) {
+            features = [];
+            tests = [];
+            featureGraph = new Object(null);
+        }
+    }
+
+    function saveData() {
+        try {
+            var data = {features: features, tests: tests, featureGraph: featureGraph};
+            fs.writeFileSync(featuresFile, JSON.stringify(data), "utf8");
+        } catch (e) {
+            console.log("Cannot save feature data");
+            console.err(e);
+        }
+    }
+
     function addCoverage(testCode, coverage, forceAdd) {
+        readData();
+
         var testIndex = tests.length;
         var feature, feature2, feature3;
         var mod = false;
         var modFeatures = new Object(null);
+        var featuresCovered = new Object(null);
 
         var i;
         for (i = 0; i < features.length; i++) {
             feature = features[i];
             var split = feature.coverage.split(coverage);
             if (!split.intersection.isEmpty() && !split.difference.isEmpty()) {
-                features.push(feature2 = {coverage: split.difference, tests: feature.tests.clone(), index: features.length});
+                features.push(feature2 = {
+                    coverage: split.difference,
+                    tests: feature.tests.clone(),
+                    index: features.length
+                });
                 feature.coverage = split.intersection;
                 feature.tests.add(testIndex);
+                featuresCovered[feature.index] = true;
                 modFeatures[feature.index] = true;
                 mod = true;
 
                 addEdge(feature2.index, feature.index);
-                forEachEdge(feature.index, function(y) {
-                   addEdge(feature2.index, y);
+                forEachEdge(feature.index, function (y) {
+                    addEdge(feature2.index, y);
                 });
                 resetEdges(feature.index, testIndex)
             } else if (!split.intersection.isEmpty()) {
                 feature.tests.add(testIndex);
+                featuresCovered[feature.index] = true;
                 modFeatures[feature.index] = true;
                 mod = resetEdges(feature.index, testIndex) || mod;
             }
@@ -246,16 +280,50 @@
         if (!newFeature.isEmpty()) {
             features.push(feature = {coverage: newFeature, tests: new Set(), index: features.length});
             feature.tests.add(testIndex);
+            featuresCovered[feature.index] = true;
             featureGraph[feature.index] = modFeatures;
             mod = true;
         }
-        if (mod) {
+        if (mod || forceAdd) {
             tests.push(testCode);
-        } else {
-            tests.push(null);
+            saveData();
         }
+        return {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
     }
 
-    module.exports.Set = Set;
+    /**
+     *
+     * @returns {Array({coverage: Set, tests: Set, index: number})}
+     */
 
-}(module.exports));
+    function getFeatures() {
+        return features;
+    }
+
+    function getFeaturesFromTest(testIndex) {
+        var i, ret = new Object(null);
+        for (i = 0; i < features.length; i++) {
+            if (features[i].tests.contains(testIndex)) {
+                ret[i] = true;
+            }
+        }
+        return ret;
+    }
+
+    function getTestsFromFeature(index) {
+        return features[index];
+    }
+
+    function getTestCode(testIndex) {
+        return tests[testIndex];
+    }
+
+    sandbox.Features = {
+        Set: Set,
+        addCoverage: addCoverage,
+        getFeaturesFromTest: getFeaturesFromTest,
+        getTestsFromFeature: getTestsFromFeature,
+        getTestCode: getTestCode
+    };
+
+}((typeof J$ === 'undefined') ? module.exports : J$));
