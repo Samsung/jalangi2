@@ -29,6 +29,8 @@
     var branches = [];
     var testIndex = 0;
     var branchSidToFileName = [];
+    var testCode;
+    var Feature = sandbox.Features;
 
     function MyAnalysis() {
 
@@ -44,7 +46,8 @@
             return branchInfo;
         }
 
-        this.beginExecution = function () {
+        this.beginExecution = function (code) {
+            testCode = code;
             branches = [];
             branchSidToFileName = [];
         };
@@ -75,6 +78,8 @@
             console.log("coverage" + testIndex + ".json");
             fs.writeFileSync("coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
             testIndex++;
+            var stat = Feature.addCoverage(testCode, ret);
+            console.log("Modified feature graph "+stat.modified);
         };
     }
 

@@ -209,7 +209,7 @@
 
     function readData() {
         try {
-            var data = JSON.parseJSON(fs.readFileSync(featuresFile, "utf8"));
+            var data = JSON.parse(fs.readFileSync(featuresFile, "utf8"));
             features = data.features;
             tests = data.tests;
             featureGraph = data.featureGraph;
@@ -217,6 +217,7 @@
             features = [];
             tests = [];
             featureGraph = new Object(null);
+            console.log("Cannot read features data "+e);
         }
     }
 
@@ -226,7 +227,7 @@
             fs.writeFileSync(featuresFile, JSON.stringify(data), "utf8");
         } catch (e) {
             console.log("Cannot save feature data");
-            console.err(e);
+            console.log(e);
         }
     }
 
@@ -242,6 +243,8 @@
         var i;
         for (i = 0; i < features.length; i++) {
             feature = features[i];
+            feature.coverage.__proto__ = Set.prototype;
+            feature.tests.__proto__ = Set.prototype;
             var split = feature.coverage.split(coverage);
             if (!split.intersection.isEmpty() && !split.difference.isEmpty()) {
                 features.push(feature2 = {
