@@ -224,7 +224,7 @@
     function saveData() {
         try {
             var data = {features: features, tests: tests, featureGraph: featureGraph};
-            fs.writeFileSync(featuresFile, JSON.stringify(data), "utf8");
+            fs.writeFileSync(featuresFile, JSON.stringify(data, null, "    "), "utf8");
         } catch (e) {
             console.log("Cannot save feature data");
             console.log(e);
@@ -326,7 +326,9 @@
         addCoverage: addCoverage,
         getFeaturesFromTest: getFeaturesFromTest,
         getTestsFromFeature: getTestsFromFeature,
-        getTestCode: getTestCode
+        getTestCode: getTestCode,
+        loadFeatures: readData,
+        storeFeatures: saveData
     };
 
 }((typeof J$ === 'undefined') ? module.exports : J$));
