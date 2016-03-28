@@ -56,7 +56,7 @@ Clone the repository, and then run:
 
 An analysis can be performed on a JavaScript file in node.js by issuing the following commands:
 
-	node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue.js
+    node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue.js
 
 In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js*.
 
@@ -65,7 +65,7 @@ In the above analysis, we chained several analyses by including *--analysis src/
 An analysis can be performed on a JavaScript file in node.js by issuing the following commands:
 
     node src/js/commands/esnstrument_cli.js --inlineIID --inlineSource tests/octane/deltablue.js
-	node src/js/commands/direct.js --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue_jalangi_.js
+    node src/js/commands/direct.js --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue_jalangi_.js
 
 In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js*.
 
@@ -81,24 +81,22 @@ While performing analysis in a browser, one needs to press Alt-Shift-T to end th
 **Analysis in a browser using a proxy and on-the-fly instrumentation**
 
 You can also setup a proxy to instrument JavaScript files on-the-fly.  To do so, you need to install [mitmproxy](http://mitmproxy.org/)
-and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Then you can run the Jalangi instrumentation proxy by giving the following
-commands:
+and [mitmproxy CA](http://mitmproxy.org/doc/ssl.html).  Then you can run the Jalangi instrumentation proxy by issuing the following
+command:
 
-    mkdir tmp
-    cd tmp
-    mitmdump -q --anticache -s "../scripts/proxy.py --analysis ../src/js/sample_analyses/ChainedAnalyses.js --analysis ../src/js/runtime/analysisCallbackTemplate.js"
+    mitmdump --quiet --anticache -s "scripts/proxy.py --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/analysisCallbackTemplate.js"
 
-In your browser, the http and https proxy should be set to 127.0.0.1:8080.  Now if you load a website in your browser, all JavaScript files associated with
-the website will get instrumented on-the-fly.
+In your browser, the http and https proxy should be set to 127.0.0.1:8080.  Now if you load a website in your browser, all JavaScript files associated with the website will get instrumented on-the-fly.
 
-On a mac, proxy can be set and launched automatically by giving the following commands:
+On a mac, the proxy can be set and launched automatically by issuing the following command:
 
-    mkdir tmp
-    cd tmp
-    ../scripts/mitmproxywrapper.py -t -q --anticache -s "../scripts/proxy.py --analysis ../src/js/sample_analyses/ChainedAnalyses.js --analysis ../src/js/runtime/analysisCallbackTemplate.js"
+    ./scripts/mitmproxywrapper.py --toggle --auto-disable --quiet --anticache -s "scripts/proxy.py --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/analysisCallbackTemplate.js"
 
-The proxy can be disabled by re-executing the last command. The last command enables proxy and starts the mitmproxy if the proxy is not currently enabled.
-If the proxy is currently enabled, the command disables the proxy.
+The command starts mitmproxy if the proxy is not currently enabled, and disables it otherwise.
+The `--auto-disable` option will automatically disable the proxy when the script is interrupted.
+
+Jalangi2 caches the instrumented source files in `./cache/`.
+The use of the cache can be disabled during development by passing the `--no-cache` flag to `scripts/proxy.py`.
 
 ### Developing an analysis in Jalangi2
 
