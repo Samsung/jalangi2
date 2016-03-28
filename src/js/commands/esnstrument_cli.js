@@ -86,6 +86,7 @@ if (typeof J$ === 'undefined') {
             try {
                 instCodeAndData = instrumentCode(
                     {
+                        allowReturnOutsideFunction: metadata.type === 'event-handler' || metadata.type === 'javascript-url',
                         code: src,
                         isEval: false,
                         origCodeFileName: sanitizePath(origname),
@@ -182,6 +183,7 @@ if (typeof J$ === 'undefined') {
         if (fileName.endsWith(".js")) {
             instCodeAndData = instrumentCode(
                 {
+                    allowReturnOutsideFunction: false,
                     code: origCode,
                     isEval: false,
                     origCodeFileName: sanitizePath(fileName),
