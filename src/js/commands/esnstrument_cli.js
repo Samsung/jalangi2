@@ -111,46 +111,6 @@ if (typeof J$ === 'undefined') {
         return path.join(__dirname, '../../..');
     }
 
-
-    function insertStringAfterBeforeTag(originalCode, injectedCode, lowerCaseTag, upperCaseTag, isAppend) {
-        var headIndex;
-
-        if (isAppend) {
-            headIndex = originalCode.lastIndexOf(lowerCaseTag);
-        } else {
-            headIndex = originalCode.indexOf(lowerCaseTag);
-        }
-        if (headIndex === -1) {
-            if (isAppend) {
-                headIndex = originalCode.lastIndexOf(upperCaseTag);
-            } else {
-                headIndex = originalCode.indexOf(upperCaseTag);
-            }
-            if (headIndex === -1) {
-                if (isAppend) {
-                    console.error("WARNING: could not find "+lowerCaseTag+" element in HTML file " + this.filename);
-                    originalCode = originalCode + injectedCode;
-                } else {
-                    console.error("WARNING: could not find " + lowerCaseTag + " element in HTML file " + this.filename);
-                    originalCode = injectedCode + originalCode;
-                }
-            } else {
-                if (isAppend) {
-                    originalCode = originalCode.slice(0, headIndex) + injectedCode + originalCode.slice(headIndex);
-                } else {
-                    originalCode = originalCode.slice(0, headIndex + upperCaseTag.length) + injectedCode + originalCode.slice(headIndex + upperCaseTag.length);
-                }
-            }
-        } else {
-            if (isAppend) {
-                originalCode = originalCode.slice(0, headIndex) + injectedCode + originalCode.slice(headIndex);
-            } else {
-                originalCode = originalCode.slice(0, headIndex + lowerCaseTag.length) + injectedCode + originalCode.slice(headIndex + lowerCaseTag.length);
-            }
-        }
-        return originalCode;
-    }
-
     function instrumentFile() {
         var argparse = require('argparse');
         var parser = new argparse.ArgumentParser({
@@ -162,6 +122,7 @@ if (typeof J$ === 'undefined') {
         parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
         parser.addArgument(['--noResultsGUI'], { help: "disable insertion of results GUI code in HTML", action:'storeTrue'});
         parser.addArgument(['--astHandlerModule'], {help: "Path to a node module that exports a function to be used for additional AST handling after instrumentation"});
+        parser.addArgument(['--htmlVisitorModule'], {help: "Path to a node module that exports a function to be used for HTML handling before instrumentation"});
         parser.addArgument(['--outDir'], {
             help: "Directory containing scripts inlined in html",
             defaultValue: process.cwd()
@@ -189,6 +150,10 @@ if (typeof J$ === 'undefined') {
         var astHandler = null;
         if (args.astHandlerModule) {
             astHandler = require(args.astHandlerModule);
+        }
+        var htmlVisitor = {};
+        if (args.htmlVisitorModule) {
+            htmlVisitor = require(args.htmlVisitorModule);
         }
         var initParams = args.initParam;
         inlineIID = args.inlineIID;
@@ -229,20 +194,55 @@ if (typeof J$ === 'undefined') {
             fs.writeFileSync(makeSMapFileName(instFileName), instCodeAndData.sourceMapString, "utf8");
             fs.writeFileSync(instFileName, instCodeAndData.code, "utf8");
         } else {
-            var jalangiRoot = getJalangiRoot();
-            instCode = proxy.rewriteHTML(origCode, "http://foo.com", inlineRewriter, "");
+            // HTML will never be instrumented online, so it is safe to use require here
+            var parse5 = require('parse5');
 
-            var headerStr = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-            headerStr += instUtil.getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot);
-            // just inject our header code
-            instCode = insertStringAfterBeforeTag(instCode, headerStr, "<head>", "<HEAD>", false);
+            try {
+                var jalangiRoot = getJalangiRoot();
+                var rewriteOptions = {
+                    onNodeVisited: function (node) {
+                        var newNode;
 
-            if (!args.noResultsGUI) {
-                var extraHtmlString = instUtil.getFooterString(jalangiRoot);
-                instCode = insertStringAfterBeforeTag(instCode, extraHtmlString, "</body>", "</BODY>", true);
+                        if (htmlVisitor.visitor) {
+                            htmlVisitor.visitor(node);
+                        }
+
+                        switch (node.tagName) {
+                            case 'head':
+                                var fragment = parse5.parseFragment(
+                                    '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' +
+                                    instUtil.getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot, cdn)
+                                );
+                                Array.prototype.unshift.apply(node.childNodes, fragment.childNodes);
+                                break;
+
+                            case 'body':
+                                if (!args.noResultsGUI) {
+                                    var fragment = parse5.parseFragment(instUtil.getFooterString(jalangiRoot));
+                                    Array.prototype.push.apply(node.childNodes, fragment.childNodes);
+                                }
+                                break;
+
+                            case 'script':
+                                var attrs = node.attrs || [];
+                                for (var i = attrs.length-1; i >= 0; --i) {
+                                    if (attrs[i].name.toLowerCase() === 'integrity') {
+                                        attrs.splice(i, 1);
+                                    }
+                                }
+                                break;
+                        }
+                    },
+                    locationInfo: htmlVisitor.locationInfo
+                };
+                var rewriteUrl = process.env.JALANGI_URL || "http://foo.com"; // JALANGI_URL is set by the proxy
+                instCode = proxy.rewriteHTML(origCode, rewriteUrl, inlineRewriter, null, null, rewriteOptions);
+                fs.writeFileSync(instFileName, instCode, "utf8");
+            } catch (e) {
+                console.error('Failure during HTML instrumentation:', e.message + ' (' + e.name + ').');
+                console.error('Source:', origCode);
+                throw e;
             }
-
-            fs.writeFileSync(instFileName, instCode, "utf8");
         }
     }
 
