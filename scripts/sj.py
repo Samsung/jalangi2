@@ -36,8 +36,8 @@ def find_node():
                  "C:/Program Files (x86)/nodejs/node.exe"]
     l = filter(is_node_exe, LOCATIONS)
     if len(l) == 0:
-        print "Could not find the node.js executable. node.js is required for Jalangi"
-        print "If you have installed node.js in a non-standard location you can set environment variable NODE_EXECUTABLE to the full path of the node executable."
+        print('Could not find the node.js executable. node.js is required for Jalangi')
+        print('If you have installed node.js in a non-standard location you can set environment variable NODE_EXECUTABLE to the full path of the node executable.')
         exit(1)
     find_node.mem = l[0]
     return l[0]
@@ -46,7 +46,7 @@ def execute_return(script, **kwargs):
     """Execute script and returns output string"""
     saveStdErr = kwargs['savestderr'] if 'savestderr' in kwargs else False
     cmd = [find_node()] + script.split()
-    print ' '.join(cmd)
+    print(' '.join(cmd))
     with NamedTemporaryFile() as f:
          try:
              subprocess.check_call(cmd,stdout=f, 
@@ -71,17 +71,23 @@ def execute_return_np(script, **kwargs):
              f.seek(0)
              return f.read()
 
-def execute(script, *args):
+def execute(script, env=None):
     """Execute script and print output"""
-    cmd = [find_node()] + script.split()
-    print ' '.join(cmd)
-    subprocess.call(cmd)
+    try:
+        cmd = [find_node()] + script.split()
+        sub_env = os.environ.copy()
+        if (env):
+            for key in env.keys():
+                sub_env[key] = env[key]
+        print(' '.join(cmd))
+        print(subprocess.check_output(cmd, env=sub_env, stderr=subprocess.STDOUT))
+    except subprocess.CalledProcessError, e:
+        print(e.output)
 
 def execute_np(script, *args):
     """Execute script and print output"""
     cmd = [find_node()] + script.split()
     return subprocess.call(cmd)
-
 
 WORKING_DIR = os.getcwd()
     
@@ -106,4 +112,3 @@ def cd_parent():
 
 def full_path(file):
     return os.path.abspath(file)
-    
