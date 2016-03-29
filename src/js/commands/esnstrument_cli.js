@@ -121,6 +121,7 @@ if (typeof J$ === 'undefined') {
         parser.addArgument(['--inlineSource'], {help: "Inline original source as string in J$.iids.code in the instrumented file", action: 'storeTrue'});
         parser.addArgument(['--initParam'], { help: "initialization parameter for analysis, specified as key:value", action:'append'});
         parser.addArgument(['--noResultsGUI'], { help: "disable insertion of results GUI code in HTML", action:'storeTrue'});
+        parser.addArgument(['--cdn'], {help: "CDN URL from which to serve analysis (rather than inlining)"});
         parser.addArgument(['--astHandlerModule'], {help: "Path to a node module that exports a function to be used for additional AST handling after instrumentation"});
         parser.addArgument(['--htmlVisitorModule'], {help: "Path to a node module that exports a function to be used for HTML handling before instrumentation"});
         parser.addArgument(['--outDir'], {
@@ -147,6 +148,13 @@ if (typeof J$ === 'undefined') {
         });
         var args = parser.parseArgs();
 
+        var cdn = null;
+        if (args.cdn) {
+            cdn = args.cdn;
+            if (cdn[cdn.length-1] === '/') {
+                cdn = cdn.substring(0, cdn.length-1);
+            }
+        }
         var astHandler = null;
         if (args.astHandlerModule) {
             astHandler = require(args.astHandlerModule);
