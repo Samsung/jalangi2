@@ -1,3 +1,4 @@
+import codecs
 import hashlib
 import os
 import sys
@@ -33,7 +34,14 @@ def processFile (flow, content, ext):
         if not useCache or not os.path.isfile(instrumentedFileName):
             print('Instrumenting: ' + fileName + ' from ' + url)
             with open(fileName, 'w') as file:
-                file.write(content)
+                if content.startswith(codecs.BOM_UTF16):
+                    file.write(content.decode('utf-16').encode('utf-8'))
+                elif content.startswith(codecs.BOM_UTF16_BE):
+                    file.write(content.decode('utf-16-be').encode('utf-8'))
+                elif content.startswith(codecs.BOM_UTF16_LE):
+                    file.write(content.decode('utf-16-le').encode('utf-8'))
+                else:
+                    file.write(content)
             sub_env = { 'JALANGI_URL': url }
             sj.execute(sj.INSTRUMENTATION_SCRIPT + ' ' + jalangiArgs + ' ' + fileName + ' --out ' + instrumentedFileName + ' --outDir ' + os.path.dirname(instrumentedFileName), sub_env)
         else:

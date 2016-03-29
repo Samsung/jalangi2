@@ -13,10 +13,11 @@ import re
 import argparse
 import contextlib
 import os
+import signal
 import sys
 
 class Wrapper(object):
-    
+
     def __init__(self, port, extra_arguments=None):
         self.port = port
         self.extra_arguments = extra_arguments
@@ -47,7 +48,7 @@ class Wrapper(object):
         popen = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         (stdout, stderr) = popen.communicate(input)
         return stdout
-    
+
     def primary_interace_name(self):
         scutil_script = 'get State:/Network/Global/IPv4\nd.show\n'
         stdout = self.run_command_with_input('/usr/sbin/scutil', scutil_script)
@@ -104,7 +105,7 @@ class Wrapper(object):
         for service_name in connected_service_names:
             if not self.proxy_enabled_for_service(service_name):
                 self.enable_proxy_for_service(service_name)
-        
+
         yield
 
         for service_name in connected_service_names:
@@ -124,12 +125,21 @@ class Wrapper(object):
             epilog='Any additional arguments will be passed on unchanged to mitmproxy.'
         )
         parser.add_argument('-t', '--toggle', action='store_true', help='just toggle the proxy configuration')
+        parser.add_argument('-d', '--auto-disable', action='store_true', help='auto disable the proxy')
 #         parser.add_argument('--honeyproxy', action='store_true', help='run honeyproxy instead of mitmproxy')
         parser.add_argument('-p', '--port', type=int, help='override the default port of 8080', default=8080)
         args, extra_arguments = parser.parse_known_args()
 
         wrapper = cls(port=args.port, extra_arguments=extra_arguments)
-        
+
+        if (args.auto_disable):
+            def exit_handler(self, signum):
+                wrapper.toggle_proxy()
+                sys.exit(0)
+
+            signal.signal(signal.SIGINT, exit_handler)
+            signal.signal(signal.SIGTERM, exit_handler)
+
         if args.toggle:
             wrapper.toggle_proxy()
 
@@ -137,4 +147,3 @@ class Wrapper(object):
 if __name__ == '__main__':
     Wrapper.ensure_superuser()
     Wrapper.main()
-
