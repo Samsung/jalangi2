@@ -115,6 +115,25 @@
         forEach(this.set, f, dis);
     };
 
+    Set.prototype.print = function() {
+        var ret = "[", flag = true;
+        this.forEach(null, function () {
+            if (flag) {
+                flag = false;
+            } else {
+                ret += ", ";
+            }
+            for (var i = 0; i < arguments.length; i++) {
+                ret += arguments[i];
+                if (i !== arguments.length - 1) {
+                    ret += ":";
+                }
+            }
+        });
+        ret += "]";
+        process.stdout.write(ret);
+    };
+
     function getMapElement(obj, args) {
         var ret = obj;
         for (var i = 0; i < args.length; i++) {
@@ -168,11 +187,20 @@
     var featureGraph = new Object(null);
 
     function addEdge(x, y) {
+        if (x==y) throw new Error("x "+x +" === y "+y);
         var children = featureGraph[x];
         if (children === undefined) {
             children = featureGraph[x] = new Object(null);
         }
         children[y] = true;
+    }
+
+    function containsEdge(x, y) {
+        var children = featureGraph[x];
+        if (children === undefined) {
+            return false;
+        }
+        return children[y];
     }
 
     function removeEdge(x, y) {
@@ -245,6 +273,10 @@
             feature = features[i];
             feature.coverage.__proto__ = Set.prototype;
             feature.tests.__proto__ = Set.prototype;
+
+        }
+        for (i = 0; i < features.length; i++) {
+            feature = features[i];
             var split = feature.coverage.split(coverage);
             if (!split.intersection.isEmpty() && !split.difference.isEmpty()) {
                 features.push(feature2 = {
@@ -262,7 +294,12 @@
                 forEachEdge(feature.index, function (y) {
                     addEdge(feature2.index, y);
                 });
-                resetEdges(feature.index, testIndex)
+                resetEdges(feature.index, testIndex);
+                Object.keys(featureGraph).forEach(function(x) {
+                    if (containsEdge(x, feature.index)) {
+                        if (x != feature2.index) addEdge(x, feature2.index);
+                    }
+                });
             } else if (!split.intersection.isEmpty()) {
                 feature.tests.add(testIndex);
                 featuresCovered[feature.index] = true;
@@ -291,6 +328,7 @@
             tests.push(testCode);
             saveData();
         }
+        printGraph();
         return {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
     }
 
@@ -314,7 +352,27 @@
     }
 
     function getTestsFromFeature(index) {
-        return features[index];
+        return features[index].tests;
+    }
+
+    function printGraph() {
+        process.stdout.write("Printing graph:\n");
+        if (featureGraph) {
+            Object.keys(featureGraph).forEach(function (x) {
+                var children = featureGraph[x];
+                if (children) {
+                    var feature = features[x];
+                    process.stdout.write(x);
+                    feature.tests.print();
+                    process.stdout.write("<-");
+                    Object.keys(children).forEach(function (y) {
+                        process.stdout.write(y + " ");
+                    });
+                    process.stdout.write("\n");
+                }
+
+            });
+        }
     }
 
     function getTestCode(testIndex) {
