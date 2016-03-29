@@ -44,36 +44,51 @@ function setHeaders() {
 }
 
 
-function getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot) {
+function getInlinedScripts(analyses, initParams, extraAppScripts, EXTRA_SCRIPTS_DIR, jalangiRoot, cdn) {
     if (!headerCode) {
-        headerSources.forEach(function (src) {
-            if (jalangiRoot) {
-                src = path.join(jalangiRoot, src);
-            }
-            headerCode += "<script type=\"text/javascript\">";
-            headerCode += fs.readFileSync(src);
-            headerCode += "</script>";
-        });
-
-        if (analyses) {
-            headerCode += genInitParamsCode(initParams);
-            analyses.forEach(function (src) {
-                src = path.resolve(src);
+        if (cdn) {
+            headerCode += "<script type=\"text/javascript\" src=\"" + cdn + "/jalangi.js\"></script>";
+        } else {
+            headerSources.forEach(function (src) {
+                if (jalangiRoot) {
+                    src = path.join(jalangiRoot, src);
+                }
                 headerCode += "<script type=\"text/javascript\">";
                 headerCode += fs.readFileSync(src);
                 headerCode += "</script>";
             });
         }
 
+        if (analyses) {
+            var initParamsCode = genInitParamsCode(initParams);
+            if (initParamsCode) {
+                headerCode += initParamsCode;
+            }
+            if (cdn) {
+                headerCode += "<script type=\"text/javascript\" src=\"" + cdn + "/analyses.js\"></script>";
+            } else {
+                analyses.forEach(function (src) {
+                    src = path.resolve(src);
+                    headerCode += "<script type=\"text/javascript\">";
+                    headerCode += fs.readFileSync(src);
+                    headerCode += "</script>";
+                });
+            }
+        }
+
         if (extraAppScripts.length > 0) {
             // we need to inject script tags for the extra app scripts,
             // which have been copied into the app directory
-            extraAppScripts.forEach(function (script) {
-                var scriptSrc = path.join(EXTRA_SCRIPTS_DIR, path.basename(script));
-                headerCode += "<script type=\"text/javascript\">";
-                headerCode += fs.readFileSync(scriptSrc);
-                headerCode += "</script>";
-            });
+            if (cdn) {
+                headerCode += "<script type=\"text/javascript\" src=\"" + cdn + "/extras.js\"></script>";
+            } else {
+                extraAppScripts.forEach(function (script) {
+                    var scriptSrc = path.join(EXTRA_SCRIPTS_DIR, path.basename(script));
+                    headerCode += "<script type=\"text/javascript\">";
+                    headerCode += fs.readFileSync(scriptSrc);
+                    headerCode += "</script>";
+                });
+            }
         }
     }
     return headerCode;
