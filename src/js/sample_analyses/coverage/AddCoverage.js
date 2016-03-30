@@ -2,7 +2,8 @@
     var fs = require('fs');
     var coverageType = 1;
     var unusedCoverageType = 3;
-    var featuresFile = "features.json";
+    var featuresFile = "tmp/features.json";
+    var resultFile = "tmp/results.json";
 
     function Set(map) {
         this.set = false;
@@ -115,7 +116,7 @@
         forEach(this.set, f, dis);
     };
 
-    Set.prototype.print = function() {
+    Set.prototype.print = function () {
         var ret = "[", flag = true;
         this.forEach(null, function () {
             if (flag) {
@@ -187,7 +188,7 @@
     var featureGraph = new Object(null);
 
     function addEdge(x, y) {
-        if (x==y) throw new Error("x "+x +" === y "+y);
+        if (x == y) throw new Error("x " + x + " === y " + y);
         var children = featureGraph[x];
         if (children === undefined) {
             children = featureGraph[x] = new Object(null);
@@ -245,7 +246,7 @@
             features = [];
             tests = [];
             featureGraph = new Object(null);
-            console.log("Cannot read features data "+e);
+            console.log("Cannot read features data " + e);
         }
     }
 
@@ -295,7 +296,7 @@
                     addEdge(feature2.index, y);
                 });
                 resetEdges(feature.index, testIndex);
-                Object.keys(featureGraph).forEach(function(x) {
+                Object.keys(featureGraph).forEach(function (x) {
                     if (containsEdge(x, feature.index)) {
                         if (x != feature2.index) addEdge(x, feature2.index);
                     }
@@ -324,12 +325,14 @@
             featureGraph[feature.index] = modFeatures;
             mod = true;
         }
-        if (mod || forceAdd) {
+        if (forceAdd) {
             tests.push(testCode);
             saveData();
         }
         printGraph();
-        return {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
+        var results = {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
+        fs.writeFileSync(resultFile, JSON.stringify(results, null, "    "), "utf8");
+        return results;
     }
 
     /**
@@ -378,6 +381,72 @@
     function getTestCode(testIndex) {
         return tests[testIndex];
     }
+
+
+    var deltaDebug = (function () {
+        function get_deltasmall(str, $i, $n, $size) {
+            var ret;
+            if ($i === $n) {
+                ret = str.substring(($i - 1) * $size);
+            } else {
+                ret = str.substring(($i - 1) * $size, $i * $size);
+            }
+            return ret;
+        }
+
+        function get_deltalarge(str, $i, $n, $size) {
+            var ret;
+            if ($i === $n) {
+                ret = str.substring(0, ($i - 1) * $size);
+            } else {
+                ret = str.substring(0, ($i - 1) * $size) + str.substring($i * $size);
+            }
+            return ret;
+        }
+
+
+        function deltaDebug(str, pred) {
+            var MAX_COST = 100000;
+            var $n = 2;
+            var cost = MAX_COST;
+            var tmpn, tmpstr;
+            L1: while (true) {
+                var $len = str.length;
+                var $size = Math.floor($len / $n);
+
+                while ($size >= 1) {
+                    var found = false;
+                    for (var $i = 1; $i <= $n; $i++) {
+                        var str1 = get_deltasmall(str, $i, $n, $size);
+                        var $ret = pred(str1);
+                        if ($ret <= cost) {
+                            tmpn = 2;
+                            tmpstr = str1;
+                            found = true;
+                        }
+                        var str2 = get_deltalarge(str, $i, $n, $size);
+                        $ret = pred(str2);
+                        if ($ret < cost) {
+                            tmpn = $n - 1;
+                            tmpstr = str2;
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        $n = tmpn;
+                        str = tmpstr;
+                        continue L1;
+                    }
+                    $n = $n * 2;
+                    $size = $len / $n;
+                }
+                return str;
+            }
+        }
+
+        return deltaDebug;
+    }());
+
 
     sandbox.Features = {
         Set: Set,

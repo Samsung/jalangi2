@@ -76,7 +76,7 @@
             }
             var fs = require('fs');
             console.log("coverage" + testIndex + ".json");
-            fs.writeFileSync("coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
+            fs.writeFileSync("tmp/coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
             testIndex++;
             var stat = Feature.addCoverage(testCode, ret);
             console.log("Modified feature graph "+stat.modified);
