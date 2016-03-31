@@ -4,6 +4,12 @@
     var unusedCoverageType = 3;
     var featuresFile = "tmp/features.json";
     var resultFile = "tmp/results.json";
+    var prefixTestFile = "tmpTestPrefix.js";
+    var postfixTestFile = 'tmpTestPostfix.js';
+    var tmpTestFile = "tmpTestFile.js";
+    var newTestFileName = "newtest";
+    var minTestFileName = "mintest";
+    var MAX_COST = 100000;
 
     function Set(map) {
         this.set = false;
@@ -305,7 +311,7 @@
                 feature.tests.add(testIndex);
                 featuresCovered[feature.index] = true;
                 modFeatures[feature.index] = true;
-                mod = resetEdges(feature.index, testIndex) || mod;
+                // mod = resetEdges(feature.index, testIndex) || mod;
             }
         }
 
@@ -329,7 +335,7 @@
             tests.push(testCode);
             saveData();
         }
-        printGraph();
+        //printGraph();
         var results = {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
         fs.writeFileSync(resultFile, JSON.stringify(results, null, "    "), "utf8");
         return results;
@@ -353,6 +359,32 @@
         }
         return ret;
     }
+
+    function getFeatureCountForTests() {
+        var i, ret = new Object(null);
+        for (i = 0; i < features.length; i++) {
+            for (var j = 0; j<tests.length; j++) {
+                if (!(features[i].tests instanceof  Set)) {
+                    features[i].tests.__proto__ = Set.prototype;
+                }
+                if (features[i].tests.contains(j)) {
+                    ret[j] = (ret[j]|0)+1;
+                }
+            }
+        }
+        return ret;
+    }
+
+    function getTestWithMinFeatures(featureCountForTests, tests) {
+        var min = MAX_COST;
+        tests.forEach(null, function(testIndex){
+            if (min > featureCountForTests[testIndex]) {
+                min = featureCountForTests[testIndex];
+            }
+        });
+        return min;
+    }
+
 
     function getTestsFromFeature(index) {
         return features[index].tests;
@@ -413,6 +445,8 @@
             L1: while (true) {
                 var $len = str.length;
                 var $size = Math.floor($len / $n);
+                console.log("len = "+$len);
+
 
                 while ($size >= 1) {
                     var found = false;
@@ -447,6 +481,66 @@
         return deltaDebug;
     }());
 
+    function getMinTestForEachFeature() {
+        var shelljs = require('shelljs');
+        readData();
+        var featureCountForTests = getFeatureCountForTests();
+        var min = MAX_COST;
+        var newTestIndex = 0;
+        for (var i = features.length - 1; i >= 0; i--) {
+            var thisTests = features[i].tests;
+            var combinedTest = "";
+            thisTests.forEach(null, function (testIndex) {
+                combinedTest += tests[testIndex];
+            });
+            console.log("Running dd");
+            console.log(combinedTest);
+
+            function predicate(str) {
+                var prefix = fs.readFileSync(prefixTestFile, "utf8");
+                var postfix = fs.readFileSync(postfixTestFile, "utf8");
+                fs.writeFileSync(tmpTestFile, prefix + str + postfix, "utf8");
+                var result = shelljs.exec("node " + tmpTestFile+ " > /dev/null 2>&1");
+                if (result.code !== 0) {
+                    return MAX_COST + 1;
+                } else {
+                    var results = JSON.parse(fs.readFileSync(resultFile, "utf8"));
+                    if (results.featuresCovered[i]) {
+                        if (results.modified) {
+                            console.log("New feature splitting test found: " + str);
+                            console.log("Writing test to " + newTestFileName + newTestIndex + ".js. Ignoring the test.");
+                            fs.writeFileSync(newTestFileName + newTestIndex + ".js", prefix + st + str + postfix, "utf8");
+                            return MAX_COST + 1;
+                        } else {
+                            var curMin = Object.keys(results.featuresCovered).length;
+                            if (min > curMin) {
+                                min = curMin;
+                            }
+                            console.log("Found a passing test");
+                            console.log(str);
+                            return curMin;
+                        }
+                    } else {
+                        return MAX_COST + 1;
+                    }
+                }
+            }
+
+            min = MAX_COST;
+            var mintest = deltaDebug(combinedTest, predicate);
+            var oldmin = getTestWithMinFeatures(featureCountForTests, thisTests);
+            if (min < oldmin) {
+                var prefix = fs.readFileSync(prefixTestFile, "utf8");
+                var postfix = fs.readFileSync(postfixTestFile, "utf8");
+                fs.writeFileSync(minTestFileName+i+".js", prefix + mintest + postfix, "utf8");
+                console.log("Found minimal test old minimal features = "+oldmin+" new minimal features "+min);
+                console.log(mintest);
+            } else {
+                console.log("Failed to find min test for feature "+i);
+            }
+        }
+    }
+
 
     sandbox.Features = {
         Set: Set,
@@ -458,4 +552,9 @@
         storeFeatures: saveData
     };
 
+    if (require.main === module) {
+        getMinTestForEachFeature();
+    }
+
 }((typeof J$ === 'undefined') ? module.exports : J$));
+

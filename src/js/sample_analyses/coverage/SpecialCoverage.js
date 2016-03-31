@@ -66,7 +66,7 @@
             branchInfo[iid] = 2;
         };
 
-        this.endExecution = function () {
+        this.endExecution = function (noadd) {
 
             var ret = {};
             for (var i = 0; i < branches.length; i++) {
@@ -74,11 +74,11 @@
                     ret[branchSidToFileName[i]] = branches[i];
                 }
             }
-            var fs = require('fs');
-            console.log("coverage" + testIndex + ".json");
-            fs.writeFileSync("tmp/coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
+            //var fs = require('fs');
+            //console.log("coverage" + testIndex + ".json");
+            //fs.writeFileSync("tmp/coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
             testIndex++;
-            var stat = Feature.addCoverage(testCode, ret);
+            var stat = Feature.addCoverage(testCode, ret, !noadd);
             console.log("Modified feature graph "+stat.modified);
         };
     }
