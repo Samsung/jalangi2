@@ -12,8 +12,13 @@
     var MAX_COST = 100000;
 
     function Set(map) {
-        this.set = false;
-        this.count = 0;
+        if (map === undefined) {
+            this.set = false;
+            this.count = 0;
+        } else {
+            this.set = map.set;
+            this.count = map.count;
+        }
     }
 
     Set.prototype.add = function () {
@@ -254,6 +259,13 @@
             featureGraph = new Object(null);
             console.log("Cannot read features data " + e);
         }
+        for (var i = 0; i < features.length; i++) {
+            var feature = features[i];
+            feature = features[i];
+            feature.coverage =  new Set(feature.coverage);
+            feature.tests =  new Set(feature.tests);
+        }
+
     }
 
     function saveData() {
@@ -276,12 +288,6 @@
         var featuresCovered = new Object(null);
 
         var i;
-        for (i = 0; i < features.length; i++) {
-            feature = features[i];
-            feature.coverage.__proto__ = Set.prototype;
-            feature.tests.__proto__ = Set.prototype;
-
-        }
         for (i = 0; i < features.length; i++) {
             feature = features[i];
             var split = feature.coverage.split(coverage);
@@ -364,9 +370,6 @@
         var i, ret = new Object(null);
         for (i = 0; i < features.length; i++) {
             for (var j = 0; j<tests.length; j++) {
-                if (!(features[i].tests instanceof  Set)) {
-                    features[i].tests.__proto__ = Set.prototype;
-                }
                 if (features[i].tests.contains(j)) {
                     ret[j] = (ret[j]|0)+1;
                 }
