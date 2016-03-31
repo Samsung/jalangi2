@@ -376,13 +376,14 @@
     }
 
     function getTestWithMinFeatures(featureCountForTests, tests) {
-        var min = MAX_COST;
+        var min = MAX_COST, ti;
         tests.forEach(null, function(testIndex){
             if (min > featureCountForTests[testIndex]) {
                 min = featureCountForTests[testIndex];
+                ti = testIndex;
             }
         });
-        return min;
+        return {min: min, testIndex: ti};
     }
 
 
@@ -494,13 +495,14 @@
                 combinedTest += tests[testIndex];
             });
             console.log("Running dd");
-            console.log(combinedTest);
+            //console.log(combinedTest);
 
             function predicate(str) {
                 var prefix = fs.readFileSync(prefixTestFile, "utf8");
                 var postfix = fs.readFileSync(postfixTestFile, "utf8");
                 fs.writeFileSync(tmpTestFile, prefix + str + postfix, "utf8");
-                var result = shelljs.exec("node " + tmpTestFile+ " > /dev/null 2>&1");
+                process.stdout.write('.');
+                var result = shelljs.exec("gtimeout 30s node " + tmpTestFile+ " > /dev/null 2>&1");
                 if (result.code !== 0) {
                     return MAX_COST + 1;
                 } else {
@@ -509,7 +511,7 @@
                         if (results.modified) {
                             console.log("New feature splitting test found: " + str);
                             console.log("Writing test to " + newTestFileName + newTestIndex + ".js. Ignoring the test.");
-                            fs.writeFileSync(newTestFileName + newTestIndex + ".js", prefix + st + str + postfix, "utf8");
+                            fs.writeFileSync(newTestFileName + newTestIndex + ".js", prefix + str + postfix, "utf8");
                             return MAX_COST + 1;
                         } else {
                             var curMin = Object.keys(results.featuresCovered).length;
@@ -528,15 +530,24 @@
 
             min = MAX_COST;
             var mintest = deltaDebug(combinedTest, predicate);
-            var oldmin = getTestWithMinFeatures(featureCountForTests, thisTests);
-            if (min < oldmin) {
+            var oldmins = getTestWithMinFeatures(featureCountForTests, thisTests);
+            if (min < oldmins.min) {
                 var prefix = fs.readFileSync(prefixTestFile, "utf8");
                 var postfix = fs.readFileSync(postfixTestFile, "utf8");
                 fs.writeFileSync(minTestFileName+i+".js", prefix + mintest + postfix, "utf8");
-                console.log("Found minimal test old minimal features = "+oldmin+" new minimal features "+min);
+                console.log("Found minimal test old minimal features = "+oldmins+" new minimal features "+min);
+                console.log("---------------old minimal------------------");
+                console.log(tests[oldmins.testIndex]);
+                console.log("----------------computed minimal-----------------");
                 console.log(mintest);
+                console.log("---------------------------------");
             } else {
                 console.log("Failed to find min test for feature "+i);
+                console.log("---------------old minimal------------------");
+                console.log(tests[oldmins.testIndex]);
+                console.log("----------------computed minimal-----------------");
+                console.log(mintest);
+                console.log("---------------------------------");
             }
         }
     }
