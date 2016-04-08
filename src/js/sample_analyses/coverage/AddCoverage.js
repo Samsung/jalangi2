@@ -70,6 +70,38 @@
         }
     };
 
+    Set.prototype.subsetOf = function (other) {
+        var ret = true;
+        this.forEach(null, function () {
+            ret = ret && other.contains.apply(other, arguments);
+        });
+        return ret;
+    };
+
+    Set.prototype.isDisjoint = function (other) {
+        var ret = true;
+        this.forEach(null, function () {
+            ret = ret && !other.contains.apply(other, arguments);
+        });
+        return ret;
+    };
+
+    Set.prototype.intersect = function (other) {
+        var ret = new Set();
+        this.forEach(null, function () {
+            if (other.contains.apply(other, arguments)) {
+                ret.add.apply(ret, arguments);
+            }
+        });
+        return ret;
+    };
+
+    Set.prototype.addAll = function (other) {
+        other.forEach(this, function () {
+            this.add.apply(this, arguments);
+        });
+    };
+
     Set.prototype.remove = function () {
         var base = this;
         var offset = "set";
@@ -262,8 +294,8 @@
         for (var i = 0; i < features.length; i++) {
             var feature = features[i];
             feature = features[i];
-            feature.coverage =  new Set(feature.coverage);
-            feature.tests =  new Set(feature.tests);
+            feature.coverage = new Set(feature.coverage);
+            feature.tests = new Set(feature.tests);
         }
 
     }
@@ -275,6 +307,24 @@
         } catch (e) {
             console.log("Cannot save feature data");
             console.log(e);
+        }
+    }
+
+    function checkFeatureGraph() {
+        for (var i = 0; i < features.length; i++) {
+            for (var j = 0; j < features.length; j++) {
+                if (i !== j) {
+                    if (features[i].tests.subsetOf(features[j].tests)) {
+                        if (!featureGraph[i][j]) {
+                            features[i].tests.print();
+                            process.stdout.write(" is subset of ");
+                            features[j].tests.print();
+                            process.stdout.write("\n but edge (" + i + "," + j + ") is missing from feature graph ");
+                            throw new Error("Validation failed");
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -369,9 +419,9 @@
     function getFeatureCountForTests() {
         var i, ret = new Object(null);
         for (i = 0; i < features.length; i++) {
-            for (var j = 0; j<tests.length; j++) {
+            for (var j = 0; j < tests.length; j++) {
                 if (features[i].tests.contains(j)) {
-                    ret[j] = (ret[j]|0)+1;
+                    ret[j] = (ret[j] | 0) + 1;
                 }
             }
         }
@@ -380,7 +430,7 @@
 
     function getTestWithMinFeatures(featureCountForTests, tests) {
         var min = MAX_COST, ti;
-        tests.forEach(null, function(testIndex){
+        tests.forEach(null, function (testIndex) {
             if (min > featureCountForTests[testIndex]) {
                 min = featureCountForTests[testIndex];
                 ti = testIndex;
@@ -446,40 +496,57 @@
             var $n = 2;
             var cost = MAX_COST;
             var tmpn, tmpstr;
-            L1: while (true) {
-                var $len = str.length;
-                var $size = Math.floor($len / $n);
-                console.log("len = "+$len);
+            if (($ret = pred(str)) < cost) {
+                cost = $ret;
+                L1: while (true) {
+                    var $len = str.length;
+                    var $size = ($len / $n) | 0;
+                    console.log("len = " + $len);
+                    if ($len === 140) {
+                        console.log(str);
+                    }
 
 
-                while ($size >= 1) {
-                    var found = false;
-                    for (var $i = 1; $i <= $n; $i++) {
-                        var str1 = get_deltasmall(str, $i, $n, $size);
-                        var $ret = pred(str1);
-                        if ($ret <= cost) {
-                            tmpn = 2;
-                            tmpstr = str1;
-                            found = true;
+                    while ($size >= 1) {
+                        var found = false;
+                        for (var $i = 1; $i <= $n; $i++) {
+                            var str1 = get_deltasmall(str, $i, $n, $size);
+                            //console.log("small $i = " + $i + " $n = " + $n + " $size = " + $size);
+                            var $ret = pred(str1);
+                            //console.log("cost = " + cost + " ret = " + $ret);
+                            if ($ret <= cost) {
+                                tmpn = 2;
+                                tmpstr = str1;
+                                found = true;
+                                cost = $ret;
+                            }
+                            var str2 = get_deltalarge(str, $i, $n, $size);
+                            //console.log("large $i = " + $i + " $n = " + $n + " $size = " + $size);
+                            $ret = pred(str2);
+                            //console.log("cost = " + cost + " ret = " + $ret);
+                            if ($ret <= cost) {
+                                tmpn = $n - 1;
+                                tmpstr = str2;
+                                found = true;
+                                cost = $ret;
+                            }
                         }
-                        var str2 = get_deltalarge(str, $i, $n, $size);
-                        $ret = pred(str2);
-                        if ($ret < cost) {
-                            tmpn = $n - 1;
-                            tmpstr = str2;
-                            found = true;
+                        if (found) {
+                            $n = tmpn;
+                            str = tmpstr;
+                            continue L1;
+                        }
+                        $n = $n * 2;
+                        $size = ($len / $n) | 0;
+                        if ($size < 1) {
+                            break L1;
                         }
                     }
-                    if (found) {
-                        $n = tmpn;
-                        str = tmpstr;
-                        continue L1;
-                    }
-                    $n = $n * 2;
-                    $size = $len / $n;
                 }
-                return str;
+            } else {
+                console.log("Original test cannot be executed "+str);
             }
+            return str;
         }
 
         return deltaDebug;
@@ -493,10 +560,14 @@
         var newTestIndex = 0;
         for (var i = features.length - 1; i >= 0; i--) {
             var thisTests = features[i].tests;
+            var oldmins = getTestWithMinFeatures(featureCountForTests, thisTests);
             var combinedTest = "";
-            thisTests.forEach(null, function (testIndex) {
-                combinedTest += tests[testIndex];
-            });
+
+            combinedTest = tests[oldmins.testIndex];
+            combinedTest = combinedTest.substring(combinedTest.indexOf("{") + 1, combinedTest.lastIndexOf("}"));
+            //thisTests.forEach(null, function (testIndex) {
+            //    combinedTest += tests[testIndex];
+            //});
             console.log("Running dd");
             //console.log(combinedTest);
 
@@ -505,7 +576,8 @@
                 var postfix = fs.readFileSync(postfixTestFile, "utf8");
                 fs.writeFileSync(tmpTestFile, prefix + str + postfix, "utf8");
                 process.stdout.write('.');
-                var result = shelljs.exec("gtimeout 30s node " + tmpTestFile+ " > /dev/null 2>&1");
+                //console.log(str);
+                var result = shelljs.exec("gtimeout 30s node " + tmpTestFile + " > /dev/null 2>&1");
                 if (result.code !== 0) {
                     return MAX_COST + 1;
                 } else {
@@ -521,7 +593,7 @@
                             if (min > curMin) {
                                 min = curMin;
                             }
-                            console.log("Found a passing test");
+                            console.log("Found a passing test min = "+min +" oldmins.test = "+oldmins.test);
                             console.log(str);
                             return curMin;
                         }
@@ -533,19 +605,18 @@
 
             min = MAX_COST;
             var mintest = deltaDebug(combinedTest, predicate);
-            var oldmins = getTestWithMinFeatures(featureCountForTests, thisTests);
             if (min < oldmins.min) {
                 var prefix = fs.readFileSync(prefixTestFile, "utf8");
                 var postfix = fs.readFileSync(postfixTestFile, "utf8");
-                fs.writeFileSync(minTestFileName+i+".js", prefix + mintest + postfix, "utf8");
-                console.log("Found minimal test old minimal features = "+oldmins+" new minimal features "+min);
+                fs.writeFileSync(minTestFileName + i + ".js", prefix + mintest + postfix, "utf8");
+                console.log("Found minimal test old minimal features = " + oldmins + " new minimal features " + min);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
                 console.log("----------------computed minimal-----------------");
                 console.log(mintest);
                 console.log("---------------------------------");
             } else {
-                console.log("Failed to find min test for feature "+i);
+                console.log("Failed to find min test for feature " + i);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
                 console.log("----------------computed minimal-----------------");
@@ -563,7 +634,8 @@
         getTestsFromFeature: getTestsFromFeature,
         getTestCode: getTestCode,
         loadFeatures: readData,
-        storeFeatures: saveData
+        storeFeatures: saveData,
+        checkFeatureGraph: checkFeatureGraph
     };
 
     if (require.main === module) {
