@@ -593,7 +593,7 @@
                             if (min > curMin) {
                                 min = curMin;
                             }
-                            console.log("Found a passing test min = "+min +" oldmins.test = "+oldmins.test);
+                            console.log("Found a passing test min = "+min +" oldmins.test = "+oldmins.min);
                             console.log(str);
                             return curMin;
                         }
