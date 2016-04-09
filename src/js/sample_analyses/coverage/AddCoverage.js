@@ -367,7 +367,8 @@
                 feature.tests.add(testIndex);
                 featuresCovered[feature.index] = true;
                 modFeatures[feature.index] = true;
-                // mod = resetEdges(feature.index, testIndex) || mod;
+                // mod =
+                resetEdges(feature.index, testIndex);// || mod;
             }
         }
 
@@ -491,21 +492,17 @@
         }
 
 
-        function deltaDebug(str, pred) {
-            var MAX_COST = 100000;
+        function deltaDebug(str, pred, min) {
             var $n = 2;
-            var cost = MAX_COST;
+            var cost = min;
             var tmpn, tmpstr;
-            if (($ret = pred(str)) < cost) {
+            if (($ret = pred(str)) <= cost) {
+                console.log("Running dd");
                 cost = $ret;
                 L1: while (true) {
                     var $len = str.length;
                     var $size = ($len / $n) | 0;
                     console.log("len = " + $len);
-                    if ($len === 140) {
-                        console.log(str);
-                    }
-
 
                     while ($size >= 1) {
                         var found = false;
@@ -546,7 +543,7 @@
             } else {
                 console.log("Original test cannot be executed "+str);
             }
-            return str;
+            return {test: str, min: cost};
         }
 
         return deltaDebug;
@@ -568,7 +565,6 @@
             //thisTests.forEach(null, function (testIndex) {
             //    combinedTest += tests[testIndex];
             //});
-            console.log("Running dd");
             //console.log(combinedTest);
 
             function predicate(str) {
@@ -590,10 +586,10 @@
                             return MAX_COST + 1;
                         } else {
                             var curMin = Object.keys(results.featuresCovered).length;
-                            if (min > curMin) {
-                                min = curMin;
-                            }
-                            console.log("Found a passing test min = "+min +" oldmins.test = "+oldmins.min);
+                            //if (min > curMin) {
+                            //    min = curMin;
+                            //}
+                            console.log("Found a passing test curMin = "+curMin);
                             console.log(str);
                             return curMin;
                         }
@@ -603,24 +599,23 @@
                 }
             }
 
-            min = MAX_COST;
-            var mintest = deltaDebug(combinedTest, predicate);
-            if (min < oldmins.min) {
+            var mintest = deltaDebug(combinedTest, predicate, oldmins.min);
+            if (mintest.min < oldmins.min) {
                 var prefix = fs.readFileSync(prefixTestFile, "utf8");
                 var postfix = fs.readFileSync(postfixTestFile, "utf8");
-                fs.writeFileSync(minTestFileName + i + ".js", prefix + mintest + postfix, "utf8");
-                console.log("Found minimal test old minimal features = " + oldmins + " new minimal features " + min);
+                fs.writeFileSync(minTestFileName + i + ".js", prefix + mintest.test + postfix, "utf8");
+                console.log("Found minimal test old minimal features = " + oldmins.min + " new minimal features " + mintest.min);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
                 console.log("----------------computed minimal-----------------");
-                console.log(mintest);
+                console.log(mintest.test);
                 console.log("---------------------------------");
             } else {
                 console.log("Failed to find min test for feature " + i);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
                 console.log("----------------computed minimal-----------------");
-                console.log(mintest);
+                console.log(mintest.test);
                 console.log("---------------------------------");
             }
         }

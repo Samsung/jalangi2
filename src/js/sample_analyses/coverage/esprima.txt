@@ -1,0 +1,40 @@
+
+git clone
+cd esprima https://github.com/jquery/esprima
+npm install
+npm test
+cp test/unit-tests.js test/unit-tests.old.js.
+vi test/unit-tests.js
+
+        try {
+                J$.analysis.beginExecution(testCase);
+            evaluateTestCase(testCase);
+                J$.analysis.endExecution();
+        } catch (e) {
+            if (!e.expected) {
+                throw e;
+            }
+                J$.analysis.endExecution();
+
+            e.source = testCase.case || testCase.key;
+            failures.push(e);
+        }
+
+
+$JALANGI_HOME/jalangi2//scripts/instrument_folder_coverage.sh dist
+node test/unit-tests.js
+
+
+vi tmpTestPrefix.js
+
+    var assert = require('assert'),
+        approx = require('./tools/approx'),
+        math = require('./index');
+
+
+    J$.analysis.beginExecution("");
+
+vi tmpTestPostfix.js
+
+    J$.analysis.endExecution(true);
+
