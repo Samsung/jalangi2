@@ -1,0 +1,32 @@
+git clone https://github.com/josdejong/mathjs.git
+cd mathjs
+npm install
+npm test
+vi package.json
+
+        "test": "mocha test --recursive --no-timeouts",
+
+
+vi node_modules/mocha/lib/runnable.js
+
+ Runnable.prototype.run = function(fn) {
+  var self = this;
+  var start = new Date();
+  var ctx = this.ctx;
+  var finished;
+  var emitted;
+
+  if (this.type==='test')
+       J$.analysis.beginExecution(this.fn.toString());
+
+
+vi test/index.test.js
+
+  afterEach(function() {
+    J$.analysis.endExecution();
+  });
+
+~/Dropbox/jalangi2/scripts/instrument_folder_coverage.sh lib
+
+mkdir tmp
+npm test

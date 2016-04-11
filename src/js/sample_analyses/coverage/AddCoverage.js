@@ -328,6 +328,24 @@
         }
     }
 
+    function checkTestFeatures(testCode, featuresCovered) {
+        var ti = tests.indexOf(testCode);
+        var oldFeaturesCovered = getFeaturesFromTest(ti);
+        Object.keys(featuresCovered).forEach(function(key) {
+            if (oldFeaturesCovered[key] === true) {
+                delete oldFeaturesCovered[key];
+                delete featuresCovered[key];
+            }
+        });
+        if (Object.keys(oldFeaturesCovered).length >0 || Object.keys(featuresCovered).length >0) {
+            console.log("********** Feature check failed.  For test "+ti+". OldFeatures - NewFeatures "+JSON.stringify(oldFeaturesCovered,null, "  ")+
+                ". OldFeatures - NewFeatures "+JSON.stringify(featuresCovered,null, "  ")+". Test is "+testCode);
+            return false;
+        }
+        process.stdout.write(".");
+        return true;
+    }
+
     function addCoverage(testCode, coverage, forceAdd) {
         readData();
 
@@ -389,12 +407,15 @@
             mod = true;
         }
         if (forceAdd) {
-            tests.push(testCode);
+            tests.push(JSON.stringify(testCode, null, "  "));
             saveData();
         }
         //printGraph();
         var results = {modified: mod, featuresCovered: featuresCovered, testIndex: testIndex};
         fs.writeFileSync(resultFile, JSON.stringify(results, null, "    "), "utf8");
+        if (!forceAdd) {
+            checkTestFeatures(JSON.stringify(testCode, null, "  "), featuresCovered);
+        }
         return results;
     }
 
@@ -440,6 +461,10 @@
         return {min: min, testIndex: ti};
     }
 
+
+    function getTests() {
+        return tests;
+    }
 
     function getTestsFromFeature(index) {
         return features[index].tests;
@@ -628,6 +653,7 @@
         getFeaturesFromTest: getFeaturesFromTest,
         getTestsFromFeature: getTestsFromFeature,
         getTestCode: getTestCode,
+        getTests: getTests,
         loadFeatures: readData,
         storeFeatures: saveData,
         checkFeatureGraph: checkFeatureGraph

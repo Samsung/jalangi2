@@ -1,9 +1,9 @@
 
-git clone
-cd esprima https://github.com/jquery/esprima
+git clone https://github.com/jquery/esprima
+cd esprima
 npm install
 npm test
-cp test/unit-tests.js test/unit-tests.old.js.
+cp test/unit-tests.js test/unit-tests.old.js
 vi test/unit-tests.js
 
         try {
@@ -21,7 +21,8 @@ vi test/unit-tests.js
         }
 
 
-$JALANGI_HOME/jalangi2//scripts/instrument_folder_coverage.sh dist
+$JALANGI_HOME/scripts/instrument_folder_coverage.sh dist
+mkdir tmp
 node test/unit-tests.js
 
 
