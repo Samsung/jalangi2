@@ -677,6 +677,7 @@
                             console.log("New feature splitting test found: " + str);
                             console.log("Writing test to " + newTestFileName + newTestIndex + ".js. Ignoring the test.");
                             fs.writeFileSync(newTestFileName + newTestIndex + ".js", str, "utf8");
+                            newTestIndex++;
                             return MAX_COST + 1;
                         } else {
                             var curMin = Object.keys(results.featuresCovered).length;
