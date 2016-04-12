@@ -355,11 +355,57 @@
         });
         if (Object.keys(oldFeaturesCovered).length > 0 || Object.keys(featuresCovered).length > 0) {
             console.log("********** Feature check failed.  For test " + ti + ". OldFeatures - NewFeatures " + JSON.stringify(oldFeaturesCovered, null, "  ") +
-                ". OldFeatures - NewFeatures " + JSON.stringify(featuresCovered, null, "  ") + ". Test is " + testCode);
+            ". OldFeatures - NewFeatures " + JSON.stringify(featuresCovered, null, "  ") + ". Test is " + testCode);
             return false;
         }
         process.stdout.write(".");
         return true;
+    }
+
+    function testProcessor(testCode) {
+        if (testCode.case !== undefined) {
+            return testCode.case;
+        } else if (testCode.source !== undefined) {
+            return testCode.source;
+        } else {
+            return null;
+        }
+    }
+
+    function runTest(str) {
+        var prefix = fs.readFileSync(prefixTestFile, "utf8");
+        var postfix = fs.readFileSync(postfixTestFile, "utf8");
+        var ret = prefix + JSON.stringify(str) + postfix;
+        fs.writeFileSync(tmpTestFile, ret, "utf8");
+        return shelljs.exec("gtimeout 30s node " + tmpTestFile + " > /dev/null 2>&1");
+    }
+
+
+    var newTestIndex = 0;
+    function predicate(str, extra) {
+        process.stdout.write('.');
+        var result = runTest(str);
+        if (result.code !== 0) {
+            return MAX_COST + 1;
+        } else {
+            var results = JSON.parse(fs.readFileSync(resultFile, "utf8"));
+            if (results.featuresCovered[extra]) {
+                if (results.modified) {
+                    console.log("New feature splitting test found: " + str);
+                    console.log("Writing test to " + newTestFileName + newTestIndex + ".js. Ignoring the test.");
+                    fs.writeFileSync(newTestFileName + newTestIndex + ".js", str, "utf8");
+                    newTestIndex++;
+                    return MAX_COST + 1;
+                } else {
+                    var curMin = Object.keys(results.featuresCovered).length;
+                    console.log("Found a passing test curMin = " + curMin);
+                    console.log(str);
+                    return curMin;
+                }
+            } else {
+                return MAX_COST + 1;
+            }
+        }
     }
 
     function addCoverage(testCode, coverage) {
@@ -367,7 +413,7 @@
         //console.log("config.mode = " +config.mode);
         if (config.mode === mode.RECORDTEST) {
             //console.log("Adding "+JSON.stringify(testCode, null, "  "));
-            addTestOnly(testCode);
+            addTestOnly(testCode, testProcessor);
         } else if (config.mode === mode.FORCEADD) {
             processCoverage(testCode, coverage, true);
         } else if (config.mode === mode.NOADD) {
@@ -375,13 +421,12 @@
         }
     }
 
-    function addTestOnly(testCode) {
-        if (testCode.case !== undefined) {
-            fs.appendFileSync(testFile, JSON.stringify(testCode.case) + "\n", "utf8");
-        } else if (testCode.source !== undefined) {
-            fs.appendFileSync(testFile, JSON.stringify(testCode.source) + "\n", "utf8");
+    function addTestOnly(testCode, pred) {
+        var ret = pred(testCode);
+        if (ret !== null) {
+            fs.appendFileSync(testFile, JSON.stringify(ret) + "\n", "utf8");
         } else {
-            console.log("Failed to add:"+JSON.stringify(testCode, null, "  "));
+            console.log("Failed to add:" + JSON.stringify(testCode, null, "  "));
         }
     }
 
@@ -394,7 +439,10 @@
         var modFeatures = new Object(null);
         var featuresCovered = new Object(null);
 
-        try {fs.unlinkSync(resultFile)} catch(e) {}
+        try {
+            fs.unlinkSync(resultFile)
+        } catch (e) {
+        }
         var i;
         for (i = 0; i < features.length; i++) {
             feature = features[i];
@@ -457,34 +505,24 @@
         return results;
     }
 
-    function createTest(str) {
-        var prefix = fs.readFileSync(prefixTestFile, "utf8");
-        var postfix = fs.readFileSync(postfixTestFile, "utf8");
-        var ret = prefix + JSON.stringify(str) + postfix;
-        return ret;
-    }
-
-
-    function runTest(str) {
-        fs.writeFileSync(tmpTestFile, createTest(str), "utf8");
-        return shelljs.exec("gtimeout 30s node " + tmpTestFile + " > /dev/null 2>&1");
-    }
-
     function runAllTests() {
         var i = 0;
-        try {fs.unlinkSync(featuresFile);} catch(e){}
+        try {
+            fs.unlinkSync(featuresFile);
+        } catch (e) {
+        }
         fs.writeFileSync(configFile, JSON.stringify({mode: mode.FORCEADD}), "utf8");
         fs.readFileSync(testFile).toString().split('\n').forEach(function (line) {
             i++;
-            console.log("Executing :"+i);
-                var test;
-                try {
-                    test = JSON.parse(line);
-                    runTest(test);
-                } catch (e) {
-                    console.log("JSON.parse failed on "+test);
-                    console.log(e)
-                }
+            console.log("Executing :" + i);
+            var test;
+            try {
+                test = JSON.parse(line);
+                runTest(test);
+            } catch (e) {
+                console.log("JSON.parse failed on " + line);
+                console.log(e)
+            }
         });
     }
 
@@ -586,11 +624,11 @@
         }
 
 
-        function deltaDebug(str, pred) {
+        function deltaDebug(str, pred, extra) {
             var $n = 2;
             var cost = MAX_COST, max = MAX_COST;
             var tmpn, tmpstr;
-            if (($ret = pred(str)) <= cost) {
+            if (($ret = pred(str, extra)) <= cost) {
                 console.log("Running dd");
                 max = cost = $ret;
                 L1: while (true) {
@@ -606,7 +644,7 @@
                         for (var $i = 1; $i <= $n; $i++) {
                             var str1 = get_deltasmall(str, $i, $n, $size);
                             //console.log("small $i = " + $i + " $n = " + $n + " $size = " + $size);
-                            var $ret = pred(str1);
+                            var $ret = pred(str1, extra);
                             //console.log("cost = " + cost + " ret = " + $ret);
                             if ($ret <= cost) {
                                 tmpn = 2;
@@ -616,7 +654,7 @@
                             }
                             var str2 = get_deltalarge(str, $i, $n, $size);
                             //console.log("large $i = " + $i + " $n = " + $n + " $size = " + $size);
-                            $ret = pred(str2);
+                            $ret = pred(str2, extra);
                             //console.log("cost = " + cost + " ret = " + $ret);
                             if ($ret <= cost) {
                                 tmpn = $n - 1;
@@ -638,7 +676,7 @@
                     }
                 }
             } else {
-                console.log("Original test cannot be executed " + str+" $ret "+$ret+" cost "+cost);
+                console.log("Original test cannot be executed " + str + " $ret " + $ret + " cost " + cost);
             }
             return {test: str, min: cost, max: max};
         }
@@ -651,7 +689,6 @@
         readData();
         var featureCountForTests = getFeatureCountForTests();
         var min = MAX_COST;
-        var newTestIndex = 0;
         for (var i = features.length - 1; i >= 0; i--) {
             var thisTests = features[i].tests;
             var oldmins = getTestWithMinFeatures(featureCountForTests, thisTests);
@@ -665,38 +702,10 @@
             //});
             //console.log(combinedTest);
 
-            function predicate(str) {
-                process.stdout.write('.');
-                var result = runTest(str);
-                if (result.code !== 0) {
-                    return MAX_COST + 1;
-                } else {
-                    var results = JSON.parse(fs.readFileSync(resultFile, "utf8"));
-                    if (results.featuresCovered[i]) {
-                        if (results.modified) {
-                            console.log("New feature splitting test found: " + str);
-                            console.log("Writing test to " + newTestFileName + newTestIndex + ".js. Ignoring the test.");
-                            fs.writeFileSync(newTestFileName + newTestIndex + ".js", str, "utf8");
-                            newTestIndex++;
-                            return MAX_COST + 1;
-                        } else {
-                            var curMin = Object.keys(results.featuresCovered).length;
-                            console.log("Found a passing test curMin = " + curMin);
-                            console.log(str);
-                            return curMin;
-                        }
-                    } else {
-                        return MAX_COST + 1;
-                    }
-                }
-            }
-
-            var mintest = deltaDebug(combinedTest, predicate);
+            var mintest = deltaDebug(combinedTest, predicate, i);
             if (mintest.min < mintest.max) {
-                var prefix = fs.readFileSync(prefixTestFile, "utf8");
-                var postfix = fs.readFileSync(postfixTestFile, "utf8");
-                fs.writeFileSync(orgTestFileName + i + ".js", combinedTest, "utf8");
-                fs.writeFileSync(minTestFileName + i + ".js", mintest.test, "utf8");
+                fs.writeFileSync(orgTestFileName + i + "-"+oldmins.testIndex+"-"+oldmins.min+".js", combinedTest, "utf8");
+                fs.writeFileSync(minTestFileName + i + "-"+oldmins.testIndex+"-"+mintest.min+".js", mintest.test, "utf8");
                 console.log("Found minimal test old minimal features = " + oldmins.min + " new minimal features " + mintest.min);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
@@ -704,7 +713,7 @@
                 console.log(mintest.test);
                 console.log("---------------------------------");
             } else {
-                fs.writeFileSync(orgTestFileName + i + ".js", combinedTest, "utf8");
+                fs.writeFileSync(orgTestFileName + i + "-"+oldmins.testIndex+"-"+oldmins.min+".js", combinedTest, "utf8");
                 console.log("Failed to find min test for feature " + i);
                 console.log("---------------old minimal------------------");
                 console.log(tests[oldmins.testIndex]);
