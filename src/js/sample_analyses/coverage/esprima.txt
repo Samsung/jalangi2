@@ -28,14 +28,12 @@ node test/unit-tests.js
 
 vi tmpTestPrefix.js
 
-    var assert = require('assert'),
-        approx = require('./tools/approx'),
-        math = require('./index');
-
-
-    J$.analysis.beginExecution("");
+ar esprima = require('./dist/esprima');
+J$.analysis.beginExecution("");
+esprima.parse(
 
 vi tmpTestPostfix.js
+);
+J$.analysis.endExecution();
 
-    J$.analysis.endExecution(true);
 

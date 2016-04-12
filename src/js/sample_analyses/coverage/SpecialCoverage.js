@@ -80,7 +80,7 @@
             branchInfo[iid] = 2;
         };
 
-        this.endExecution = function (noadd) {
+        this.endExecution = function () {
 
             var ret = {};
             for (var i = 0; i < branches.length; i++) {
@@ -91,9 +91,9 @@
             //var fs = require('fs');
             //console.log("coverage" + testIndex + ".json");
             //fs.writeFileSync("tmp/coverage" + testIndex + ".json", JSON.stringify(ret), "utf8");
-            testIndex++;
-            var stat = Feature.addCoverage(testCode, ret, !noadd );
-            console.log("Modified feature graph "+stat.modified);
+            //testIndex++;
+            Feature.addCoverage(testCode, ret);
+            //console.log("Modified feature graph "+stat.modified);
         };
     }
 
