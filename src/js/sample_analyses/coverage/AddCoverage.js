@@ -3,13 +3,14 @@
     var shelljs = require('shelljs');
     var coverageType = 1;
     var unusedCoverageType = 3;
-    var featuresFile = "tmp/features.json";
-    var testFile = "tmp/tests.json";
-    var resultFile = "tmp/results.json";
+    var tmpDir = "tmp/";
+    var featuresFile = tmpDir + "features.json";
+    var testFile = tmpDir + "tests.json";
+    var resultFile = tmpDir + "results.json";
     var tmpTestFile = "tmpTestFile.js";
-    var configFile = "tmp/config-cov.json";
-    var minTestFileName = "tmp/mintest";
-    var orgTestFileName = "tmp/orgtest";
+    var configFile = tmpDir + "config-cov.json";
+    var minTestFileName = tmpDir + "mintest";
+    var orgTestFileName = tmpDir + "orgtest";
     var MAX_COST = 100000;
     var EXTERNAL = "./EsprimaConfig";
 
@@ -307,10 +308,14 @@
 
     }
 
-    function saveData() {
+    function saveData(optionalFile) {
         try {
             var data = {features: features, tests: tests, featureGraph: featureGraph};
-            fs.writeFileSync(featuresFile, JSON.stringify(data, null, "    "), "utf8");
+            if (optionalFile !== undefined) {
+                fs.writeFileSync(optionalFile, JSON.stringify(data, null, "    "), "utf8");
+            } else {
+                fs.writeFileSync(featuresFile, JSON.stringify(data, null, "    "), "utf8");
+            }
         } catch (e) {
             console.log("Cannot save feature data");
             console.log(e);
@@ -755,8 +760,26 @@
         } else if (process.argv[2] === "minimize") {
             fs.writeFileSync(configFile, JSON.stringify({mode: mode.NOADD}), "utf8");
             getMinTestForEachFeature();
+        } else if (process.argv[2] === "process1") {
+            var pattern = /mintest(\d+)-(\d+)-(\d+)\.js/;
+            var files = fs.readdirSync(tmpDir);
+            readData();
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var captures = file.match(pattern);
+                if (captures !== null) {
+                    console.log("Feature " + captures[1]);
+                    console.log("-----------------------Minimal---------------------------");
+                    console.log(fs.readFileSync(tmpDir+file, "utf8"));
+                    var testSet = features[captures[1]].tests;
+                    testSet.forEach(undefined, function (testIndex) {
+                        console.log("-----------------------Original---------------------------");
+                        console.log(JSON.parse(tests[testIndex]).str);
+                    });
+                }
+            }
         } else {
-            console.log("Usage: node " + process.argv[1] + " collect|minimize");
+            console.log("Usage: node " + process.argv[1] + " collect|minimize|process1");
         }
     }
 
