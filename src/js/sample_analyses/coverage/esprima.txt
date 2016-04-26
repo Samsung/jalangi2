@@ -22,43 +22,11 @@ vi test/unit-tests.js
 
 
 $JALANGI_HOME/scripts/instrument_folder_coverage.sh dist
+
 mkdir tmp
+
 node test/unit-tests.js
-
-
-vi tmpTestPrefix.js
-
-var esprima = require('./dist/esprima');
-var test =
-
-vi tmpTestPostfix.js
-
-;
-J$.analysis.beginExecution(test);
-
-if (test.type==="tree") {
-    esprima.parse(test.str);
-} else if (test.type==="tokens") {
-    esprima.parse(test.str);
-} else {
-    try {
-        esprima.parse(test.str);
-    } catch(e) {
-        if (e instanceof ReferenceError) {
-            console.log("Unexpected exception: " +e);
-            throw e;
-        }
-        console.log("Expected exception: " +e);
-    }
-}
-J$.analysis.endExecution();
-
-
-
-tmp/config-cov.json
-
-{mode: "FORCEADD"}
-
-node $JALANGI_HOME/src/js/sample_analyses/coverage/AddCoverage.js
+node $JALANGI_HOME/src/js/sample_analyses/coverage/AddCoverage.js collect
+node $JALANGI_HOME/src/js/sample_analyses/coverage/AddCoverage.js minimize
 
 
