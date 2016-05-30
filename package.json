@@ -1,6 +1,6 @@
 {
   "name": "jalangi2",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "dynamic analysis framework for JavaScript",
   "dependencies": {
     "acorn": "3.1.0",
@@ -25,7 +25,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"
   },
-  "license": "Apache",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Samsung/jalangi2.git"
