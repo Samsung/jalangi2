@@ -36,7 +36,7 @@ if (typeof J$ === 'undefined') {
     var fs = require('fs');
     var path = require("path");
     var mkdirp = require('mkdirp');
-    var ncp = require('ncp').ncp;
+    var ncp = require('graceful-ncp').ncp;
     var stream = require("stream");
     var util = require("util");
     var assert = require('assert');
@@ -185,7 +185,6 @@ if (typeof J$ === 'undefined') {
                 }
                 return result;
             }
-
 
 
             var newHTML;
