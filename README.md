@@ -20,7 +20,7 @@ In the Jalangi2 distribution you will find several analyses:
 We tested Jalangi on Mac OS X 10.10 with Chromium browser.  Jalangi should work on Mac OS
 10.7, Ubuntu 11.0 and higher and Windows 7 or higher. Jalangi will NOT work with IE.
 
-  * Node.js v0.10.x available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v0.10.33.
+  * Node.js v4.4.5 available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v4.4.5.
   * Chrome browser if you need to test web apps.
   * Python (http://python.org) version 2.7 or higher and less than 3.0.
 
@@ -47,6 +47,7 @@ Clone the repository, and then run:
 
 ### Run tests
 
+    python scripts/test.traceall.py
     python scripts/test.analysis.py
     python scripts/test.dlint.py
 
@@ -58,7 +59,26 @@ An analysis can be performed on a JavaScript file in node.js by issuing the foll
 
     node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js --analysis src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js --analysis src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js --analysis src/js/sample_analyses/dlint/ShadowProtoProperty.js --analysis src/js/sample_analyses/dlint/ConcatUndefinedToString.js --analysis src/js/sample_analyses/dlint/UndefinedOffset.js tests/octane/deltablue.js
 
-In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js*.
+In the above analysis, we chained several analyses by including *--analysis src/js/analyses/ChainedAnalyses.js* as the first analysis.
+The command runs the following analyses
+
+    src/js/sample_analyses/dlint/CheckNaN.js
+    src/js/sample_analyses/dlint/FunCalledWithMoreArguments.js
+    src/js/sample_analyses/dlint/CompareFunctionWithPrimitives.js
+    src/js/sample_analyses/dlint/ShadowProtoProperty.js
+    src/js/sample_analyses/dlint/ConcatUndefinedToString.js
+    src/js/sample_analyses/dlint/UndefinedOffset.js
+
+The implementation of an analysis requires the implementation of several callback functions. One can start writing
+an writing analysis using the template file [src/js/runtime/analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js).
+A documentation of these call back functions can be found at [docs/MyAnalysis.html](docs/MyAnalysis.html).
+A tutorial on writing a Jalangi analysis can be found at [docs/tutorial1.md](docs/tutorial1.md). While writing 
+an analysis one could run [src/js/sample_analyses/tutorial/TraceAll.js](src/js/sample_analyses/tutorial/TraceAll.js) 
+analysis on a JavaScript file to print all the callback functions that got 
+called during the execution of the file.  Such a trace is useful to see what callbacks get called during an 
+execution.  The following command runs the TraceAll.js analysis on the file [tests/octane/deltablue.js](tests/octane/deltablue.js).
+
+    node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/tutorial/TraceAll.js tests/octane/deltablue.js
 
 **Analysis in node.js with explicit one-file-at-a-time offline instrumentation**
 
@@ -100,7 +120,8 @@ The use of the cache can be disabled during development by passing the `--no-cac
 
 ### Developing an analysis in Jalangi2
 
-Refer to [docs/index.html](docs/index.html) and [docs/commands.md](docs/commands.md) for further information.
+Refer to [docs/index.html](docs/index.html) and [docs/commands.md](docs/commands.md) for further information.  A tutorial
+on writing a Jalangi analysis can be found in [docs/tutorial1.md](docs/tutorial1.md).  
 
 ### Supported ECMAScript versions
 

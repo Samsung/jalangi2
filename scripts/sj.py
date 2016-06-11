@@ -99,6 +99,8 @@ INST_DIR_SCRIPT = JALANGI_HOME + "/src/js/commands/instrument.js"
 
 ANALYSIS_SCRIPT = JALANGI_HOME + "/src/js/commands/direct.js"
 
+JALANGI_SCRIPT = JALANGI_HOME + "/src/js/commands/jalangi.js"
+
 
 def create_and_cd_jalangi_tmp():
     try:

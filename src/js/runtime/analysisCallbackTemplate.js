@@ -127,7 +127,8 @@
          * @param {Array} args - The array of arguments passed to <tt>f</tt>
          * @param {boolean} isConstructor - True if <tt>f</tt> is invoked as a constructor
          * @param {boolean} isMethod - True if <tt>f</tt> is invoked as a method
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
+         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
          * {@link MyAnalysis#functionEnter} when the function <tt>f</tt> is executed.  The <tt>functionIid</tt> can be
          * treated as the static identifier of the function <tt>f</tt>.  Note that a given function code block can
          * create several function objects, but each such object has a common <tt>functionIid</tt>, which is the iid
@@ -138,7 +139,7 @@
          * an object is returned.
          *
          */
-        this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid) {
+        this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
             return {f: f, base: base, args: args, skip: false};
         };
 
@@ -175,7 +176,8 @@
          * @param {*} result - The value returned by the invocation
          * @param {boolean} isConstructor - True if <tt>f</tt> is invoked as a constructor
          * @param {boolean} isMethod - True if <tt>f</tt> is invoked as a method
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
+         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
          * {@link MyAnalysis#functionEnter} when the function f is executed.  <tt>functionIid</tt> can be treated as the
          * static identifier of the function <tt>f</tt>.  Note that a given function code block can create several function
          * objects, but each such object has a common <tt>functionIid</tt>, which is the iid that is passed to
@@ -185,7 +187,7 @@
          * value that is returned by the actual function invocation.
          *
          */
-        this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid) {
+        this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid) {
             return {result: result};
         };
 
@@ -609,7 +611,8 @@
          * if returns true, instrumented function body is executed, else uninstrumented function body is executed
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function whose body is being executed
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
+         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
          * {@link MyAnalysis#functionEnter} when the function <tt>f</tt> is executed.  The <tt>functionIid</tt> can be
          * treated as the static identifier of the function <tt>f</tt>.  Note that a given function code block can
          * create several function objects, but each such object has a common <tt>functionIid</tt>, which is the iid
@@ -617,7 +620,7 @@
          * @returns {boolean} - If true is returned the instrumented function body is executed, otherwise the
          * uninstrumented function body is executed.
          */
-        this.runInstrumentedFunctionBody = function (iid, f, functionIid) {
+        this.runInstrumentedFunctionBody = function (iid, f, functionIid, functionSid) {
             return false;
         };
 

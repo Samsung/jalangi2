@@ -1,16 +1,32 @@
+
 /**
- * If you want to use smemory you must include --analysis $JALANGI_HOME/src/js/sample_analyses/ChainedAnalyses.js
- * --analysis $JALANGI_HOME/src/js/runtime/SMemory.js as the first two --analysis options during an analysis.
- * smemory can be accessed via J$.smemory or sandbox.smemory.  The smemory object defines two methods: getShadowObject
- * and getShadowFrame.  Those two methods can be used to obtain the shadow memory for an object property or a program variable,
- * respectively.  getShadowObject should be used in getFieldPre, putFieldPre, and literal callbacks.  (In a literal
- * callback with an object literal, one must go over all the own properties of the literal object to suitably update
- * shadow object.) getShadowFrame should only be used in declare, read, and write callbacks.
+ * @file A library to associate shadow objects and unique ids to JavaScript objects and activation frames.
+ * @author  Koushik Sen
  *
  */
 
 (function (sandbox) {
-    var smemory = sandbox.smemory = new function () {
+    /**
+     * <p>
+     * SMemory associates a unique object with every JavaScript object, function, and activation frame during an execution.
+     * (Note that a shadow object cannot associated with primitive values, undefined, or null.)  A shadow object can be used
+     * to store meta-information about an object (e.g. the location at which the object was created).  Each shadow
+     * object has an unique id, which can be treated as the logical address of the corresponding JavaScript object or
+     * activation frame.
+     * <p>
+     * To use smemory, one must include --analysis $JALANGI_HOME/src/js/sample_analyses/ChainedAnalyses.js
+     * --analysis $JALANGI_HOME/src/js/runtime/SMemory.js as the first two --analysis options during an analysis.
+     * smemory can be accessed via J$.smemory or sandbox.smemory.  The smemory object defines several methods.
+     * Those methods can be used to obtain the shadow memory for an object property or a program variable,
+     * respectively.  getShadowObject should be used in getFieldPre, putFieldPre, and literal callbacks.  (In a literal
+     * callback with an object literal, one must go over all the own properties of the literal object to suitably update
+     * shadow object.) getShadowFrame should only be used in declare, read, and write callbacks.
+     *<p>
+     *
+     * @global
+     * @class
+     */
+    function SMemory() {
         var Constants = sandbox.Constants;
 
         var PREFIX = Constants.JALANGI_VAR;
@@ -47,7 +63,7 @@
          * @param isGetField - True if the property access is a getField operation
          * @returns {{owner: Object, isProperty: boolean}}
          */
-        this.getShadowObject = function(obj, prop, isGetField) {
+        this.getShadowObject = function (obj, prop, isGetField) {
             var ownerAndAccess = getOwnerAndAccess(obj, prop, isGetField);
             if (ownerAndAccess.owner !== undefined) {
                 ownerAndAccess.owner = this.getShadowObjectOfObject(ownerAndAccess.owner);
@@ -77,12 +93,14 @@
 
         // public function
         /**
-         * Given a shadow object or frame, it returns the unique id of the shadow objects or frame.
+         * Given a shadow object or frame, it returns the unique id of the shadow object or frame.  It returns undefined,
+         * if obj is undefined, null, or not a valid shadow object.
          * @param obj
-         * @returns {*}
+         * @returns {number|undefined}
          */
 
         this.getIDFromShadowObjectOrFrame = function (obj) {
+            if (obj === undefined || obj === null) return undefined;
             return obj[SPECIAL_PROP_SOBJECT];
         };
 
@@ -99,9 +117,9 @@
         };
 
 
-
         /**
-         * This method returns the shadow object associated with the activation frame that contains the variable "name".
+         * This method returns the shadow object associated with the activation frame that contains the variable "name".  To get the current activation frame,
+         * call J$.smemory.getFrame("this");
          *
          * @param name - Name of the variable whose owner activation frame's shadow object we want to retrieve
          * @returns {Object} -  The shadow object of the activation frame owning the variable.
@@ -119,6 +137,27 @@
         };
 
 
+        /**
+         * This method returns the shadow object associated with the argument.  If the argument cannot be associated with a shadow
+         * object, the function returns undefined.
+         *
+         * @param val - The object whose shadow object the function returns
+         * @returns {Object|undefined} - Returns the shadow object associated with val.  Return undefined if there is no shadow object assocaited with val
+         * Note that a shadow object cannot be associated with a primitive value: number, string, boolean, undefined, or null.
+         */
+        this.getShadowObjectOfObject = function (val) {
+            var value;
+            createShadowObject(val);
+            var type = typeof val;
+            if ((type === 'object' || type === 'function') && val !== null && HOP(val, SPECIAL_PROP_SOBJECT)) {
+                value = val[SPECIAL_PROP_SOBJECT];
+            } else {
+                value = undefined;
+            }
+            return value;
+        };
+
+
 
         function getOwnerAndAccess(obj, prop, isGetField) {
             if (typeof Object.getOwnPropertyDescriptor !== 'function') {
@@ -132,21 +171,21 @@
                 var desc = Object.getOwnPropertyDescriptor(obj, prop);
                 if (desc !== undefined) {
                     if (isGetField && typeof desc.get === 'function') {
-                        return {"owner":obj, "isProperty":false};
+                        return {"owner": obj, "isProperty": false};
                     }
                     if (!isGetField && typeof desc.set === 'function') {
-                        return {"owner":obj, "isProperty":false};
+                        return {"owner": obj, "isProperty": false};
                     }
                 }
                 if (isGetField && HOP(obj, prop)) {
-                    return {"owner":obj, "isProperty":true};
+                    return {"owner": obj, "isProperty": true};
                 }
                 obj = obj.__proto__;
             }
             if (!isGetField) {
-                return {"owner":oldObj, "isProperty":true};
+                return {"owner": oldObj, "isProperty": true};
             } else {
-                return {"owner":undefined, "isProperty":true};
+                return {"owner": undefined, "isProperty": true};
             }
         }
 
@@ -174,19 +213,6 @@
             }
 
         }
-
-        this.getShadowObjectOfObject = function (val) {
-            var value;
-            createShadowObject(val);
-            var type = typeof val;
-            if ((type === 'object' || type === 'function') && val !== null && HOP(val, SPECIAL_PROP_SOBJECT)) {
-                value = val[SPECIAL_PROP_SOBJECT];
-            } else {
-                value = undefined;
-            }
-            return value;
-        };
-
 
         this.defineFunction = function (f) {
             if (typeof f === 'function') {
@@ -241,7 +267,7 @@
         this.scriptEnter = function (instrumentedFileName, originalFileName) {
             scriptCount++;
             if (scriptCount > 0) {
-                if (!(originalFileName === 'eval'  && instrumentedFileName === originalFileName)) {
+                if (!(originalFileName === 'eval' && instrumentedFileName === originalFileName)) {
                     if (Constants.isBrowser) {
                         frame = frameStack[0];
                     } else {
@@ -265,8 +291,9 @@
             scriptCount--;
         };
 
-    };
+    }
 
+    var smemory = sandbox.smemory = new SMemory();
 
     function MyAnalysis() {
         this.literal = function (iid, val, hasGetterSetter) {
