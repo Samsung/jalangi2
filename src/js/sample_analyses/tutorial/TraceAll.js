@@ -25,6 +25,11 @@
  */
 
 (function (sandbox) {
+
+    if (sandbox.Constants.isBrowser) {
+        sandbox.Results = {};
+    }
+
     function MyAnalysis() {
         var MAX_STRING_LENGTH = 20;
 
@@ -49,6 +54,8 @@
         var cacheCount = 0;
         var cacheIndentStr = "";
 
+        var logs = [];
+
         function log(str) {
             if (cacheCount !== indentationCount) {
                 cacheIndentStr = "";
@@ -57,7 +64,11 @@
                 }
                 cacheCount = indentationCount;
             }
-            console.log(cacheIndentStr+str);
+            if (sandbox.Results) {
+                logs.push("<li> " +str+ " </li>");
+            } else {
+                console.log(cacheIndentStr + str)
+            }
         }
 
         this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
@@ -268,6 +279,11 @@
         this.endExecution = function () {
             var ret = "endExpression()";
             log(ret);
+            if (sandbox.Results) {
+                for (var i = 0; i < logs.length; i++) {
+                    sandbox.log(logs[i]);
+                }
+            }
         };
 
         this.runInstrumentedFunctionBody = function (iid, f, functionIid, functionSid) {
@@ -286,5 +302,11 @@
     sandbox.analysis = new MyAnalysis();
 })(J$);
 
+/*
+ node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/tutorial/TraceAll.js tests/pldi16/TraceAllTest.js
+ node src/js/commands/esnstrument_cli.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/tutorial/TraceAll.js --out /tmp/pldi16/TraceAllTest.html  tests/pldi16/TraceAllTest.html
+ node src/js/commands/esnstrument_cli.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/tutorial/TraceAll.js --out /tmp/pldi16/TraceAllTest.js  tests/pldi16/TraceAllTest.js
+ open file:///tmp/pldi16/TraceAllTest.html
+ */
 
 

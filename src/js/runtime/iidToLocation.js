@@ -33,6 +33,8 @@ if (typeof J$ === 'undefined') {
                 sid = sid.split(':');
                 iid = parseInt(sid[1]);
                 sid = parseInt(sid[0]);
+            } else {
+                gid = sid+":"+iid;
             }
             if ((ret = sandbox.smap[sid])) {
                 var fname = ret.originalCodeFileName;
