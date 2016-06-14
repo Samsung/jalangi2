@@ -65,7 +65,7 @@
                 cacheCount = indentationCount;
             }
             if (sandbox.Results) {
-                logs.push("<li> " +str+ " </li>");
+                logs.push("<li>" + cacheIndentStr.replace(/ /g, '\u00a0') +str+ " </li>");
             } else {
                 console.log(cacheIndentStr + str)
             }
