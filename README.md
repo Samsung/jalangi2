@@ -73,12 +73,12 @@ The implementation of an analysis requires the implementation of several callbac
 an writing analysis using the template file [src/js/runtime/analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js).
 A documentation of these call back functions can be found at [docs/MyAnalysis.html](docs/MyAnalysis.html).
 A tutorial on writing a Jalangi analysis can be found at [docs/tutorial1.md](docs/tutorial1.md). While writing 
-an analysis one could run [src/js/sample_analyses/tutorial/TraceAll.js](src/js/sample_analyses/tutorial/TraceAll.js) 
+an analysis one could run [src/js/sample_analyses/pldi16/TraceAll.js](src/js/sample_analyses/pldi16/TraceAll.js) 
 analysis on a JavaScript file to print all the callback functions that got 
 called during the execution of the file.  Such a trace is useful to see what callbacks get called during an 
 execution.  The following command runs the TraceAll.js analysis on the file [tests/octane/deltablue.js](tests/octane/deltablue.js).
 
-    node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/tutorial/TraceAll.js tests/octane/deltablue.js
+    node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/runtime/SMemory.js --analysis src/js/sample_analyses/pldi16/TraceAll.js tests/octane/deltablue.js
 
 **Analysis in node.js with explicit one-file-at-a-time offline instrumentation**
 
