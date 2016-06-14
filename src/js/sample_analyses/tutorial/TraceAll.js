@@ -119,7 +119,6 @@
         };
 
         this.getFieldPre = function (iid, base, offset, isComputed, isOpAssign, isMethodCall) {
-            console.log("offset = "+offset);
             var actualObjectId = sandbox.smemory.getIDFromShadowObjectOrFrame(sandbox.smemory.getShadowObject(base, offset, true).owner);
             var ret = "getFieldPre(iid="+iid+", base="+getValue(base)+", offset="+getValue(offset+"")+
                 ", isComputed="+isComputed+", isOpAssign="+isOpAssign+", isMethodCall="+isMethodCall+") with actualBase=object(id="+actualObjectId+")";
