@@ -5,7 +5,16 @@ import sys
 import inspect
 import traceback
 
-from libmproxy.script import concurrent
+from subprocess import CalledProcessError, Popen, PIPE, STDOUT
+
+p = Popen(['mitmdump --version'], stdout=PIPE, stdin=PIPE, stderr=STDOUT, shell=True)
+stdout = p.communicate()[0]
+mitmversion = float(stdout.decode()[9:]) # remove "mitmdump "
+
+if mitmversion >= 0.17:
+    from mitmproxy.script import concurrent
+else:
+    from libmproxy.script import concurrent
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 JALANGI_HOME = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(filename)), os.pardir))
@@ -34,16 +43,9 @@ def processFile (flow, content, ext):
         if not useCache or not os.path.isfile(instrumentedFileName):
             print('Instrumenting: ' + fileName + ' from ' + url)
             with open(fileName, 'w') as file:
-                if content.startswith(codecs.BOM_UTF16):
-                    file.write(content.decode('utf-16').encode('utf-8'))
-                elif content.startswith(codecs.BOM_UTF16_BE):
-                    file.write(content.decode('utf-16-be').encode('utf-8'))
-                elif content.startswith(codecs.BOM_UTF16_LE):
-                    file.write(content.decode('utf-16-le').encode('utf-8'))
-                else:
-                    file.write(content)
+                file.write(sj.encode_input(content))
             sub_env = { 'JALANGI_URL': url }
-            sj.execute(sj.INSTRUMENTATION_SCRIPT + ' ' + jalangiArgs + ' ' + fileName + ' --out ' + instrumentedFileName + ' --outDir ' + os.path.dirname(instrumentedFileName), sub_env)
+            sj.execute(sj.INSTRUMENTATION_SCRIPT + ' ' + jalangiArgs + ' ' + fileName + ' --out ' + instrumentedFileName + ' --outDir ' + os.path.dirname(instrumentedFileName), None, sub_env)
         else:
             print('Already instrumented: ' + fileName + ' from ' + url)
         with open (instrumentedFileName, "r") as file:
