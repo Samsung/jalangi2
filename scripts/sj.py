@@ -1,3 +1,4 @@
+import codecs
 import os
 import subprocess
 import sys
@@ -8,7 +9,7 @@ import glob
 import os
 from tempfile import mkdtemp
 import time
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import webbrowser
 
 def mkempty(f):
@@ -42,6 +43,15 @@ def find_node():
     find_node.mem = l[0]
     return l[0]
 
+def encode_input(input):
+    if input.startswith(codecs.BOM_UTF16):
+        return input.decode('utf-16').encode('utf-8')
+    elif input.startswith(codecs.BOM_UTF16_BE):
+        return input.decode('utf-16-be').encode('utf-8')
+    elif input.startswith(codecs.BOM_UTF16_LE):
+        return input.decode('utf-16-le').encode('utf-8')
+    return input
+
 def execute_return(script, **kwargs):
     """Execute script and returns output string"""
     saveStdErr = kwargs['savestderr'] if 'savestderr' in kwargs else False
@@ -71,7 +81,7 @@ def execute_return_np(script, **kwargs):
              f.seek(0)
              return f.read()
 
-def execute(script, env=None):
+def execute(script, stdin=None, env=None, quiet=False):
     """Execute script and print output"""
     try:
         cmd = [find_node()] + script.split()
@@ -80,7 +90,11 @@ def execute(script, env=None):
             for key in env.keys():
                 sub_env[key] = env[key]
         print(' '.join(cmd))
-        print(subprocess.check_output(cmd, env=sub_env, stderr=subprocess.STDOUT))
+        p = Popen(cmd, env=sub_env, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT)
+        stdout = p.communicate(input=encode_input(stdin) if stdin else None)[0]
+        if not quiet:
+            print(stdout)
+        return stdout
     except subprocess.CalledProcessError, e:
         print(e.output)
 
