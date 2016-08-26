@@ -34,5 +34,6 @@
     "mocha": "^2.4.5",
     "shelljs": "^0.6.0"
   },
-  "main": "src/js/utils/api.js"
+  "main": "src/js/utils/api.js",
+  "bin": "src/js/commands/jalangi.js"
 }
