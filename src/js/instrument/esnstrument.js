@@ -716,7 +716,7 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed)) + ")",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed, false, false)) + ")",
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
