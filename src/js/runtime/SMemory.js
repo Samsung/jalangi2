@@ -44,10 +44,13 @@
         var frameStack = [frame];
         var evalFrames = [];
 
+        var processEnv = !sandbox.Constants.isBrowser && process && process.env;
         var shadowEnv = Object.create(null);
-        shadowEnv[SPECIAL_PROP_SOBJECT] = objectId;
-        shadowEnv[SPECIAL_PROP_ACTUAL] = process.env;
-        objectId += 2;
+        if (processEnv) {
+            shadowEnv[SPECIAL_PROP_SOBJECT] = objectId;
+            shadowEnv[SPECIAL_PROP_ACTUAL] = process.env;
+            objectId += 2;
+        }
 
 
         // public function
@@ -151,7 +154,7 @@
          * Note that a shadow object cannot be associated with a primitive value: number, string, boolean, undefined, or null.
          */
         this.getShadowObjectOfObject = function (val) {
-            if (val === process.env) {
+            if (processEnv && val === process.env) {
               return shadowEnv;
             }
             var value;
