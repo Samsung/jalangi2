@@ -94,7 +94,7 @@ def response(context, flow):
 
     # Do not invoke jalangi if the requested URL contains the query parameter noInstr
     # (e.g. https://cdn.com/jalangi/jalangi.min.js?noInstr=true)
-    if flow.request.query and flow.request.query['noInstr']:
+    if flow.request.query and flow.request.query.get('noInstr', None):
         return
 
     try:
