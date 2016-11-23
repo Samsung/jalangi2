@@ -61,7 +61,7 @@ def processFile (flow, content, ext):
         print(''.join(lines))
         return content
 
-if mitmversion >= 0.18:
+if LooseVersion(mitmversion) >= LooseVersion("0.18"):
     def start():
         _start(sys.argv)
 else:
@@ -95,7 +95,7 @@ def _start(argv):
         return path if not p.startswith('--') and (os.path.isfile(path) or os.path.isdir(path)) else p
     jalangiArgs = ' '.join(map(mapper, [x for x in argv[1:]]))
 
-if (mitmversion >= 0.18):
+if LooseVersion(mitmversion) >= LooseVersion("0.18"):
     @concurrent
     def response(flow):
         _response(flow)
