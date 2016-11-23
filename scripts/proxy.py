@@ -5,13 +5,16 @@ import sys
 import inspect
 import traceback
 
+from distutils.version import LooseVersion
+
 from subprocess import CalledProcessError, Popen, PIPE, STDOUT
 
 p = Popen(['mitmdump --version'], stdout=PIPE, stdin=PIPE, stderr=STDOUT, shell=True)
 stdout = p.communicate()[0]
-mitmversion = float(stdout.decode()[9:]) # remove "mitmdump "
+mitmversion = stdout.decode()[9:] # remove "mitmdump "
 
-if mitmversion >= 0.17:
+
+if LooseVersion(mitmversion) >= LooseVersion("0.17"):
     from mitmproxy.script import concurrent
 else:
     from libmproxy.script import concurrent
