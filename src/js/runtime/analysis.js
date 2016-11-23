@@ -294,9 +294,9 @@ if (typeof J$ === 'undefined') {
         }
         if (!bFlags[1] && sandbox.analysis && sandbox.analysis.declare) {
             if (bFlags[0] && argIndex > 1) {
-                sandbox.analysis.declare(iid, name, val, bFlags[0], argIndex - 2, bFlags[2]);
+                aret = sandbox.analysis.declare(iid, name, val, bFlags[0], argIndex - 2, bFlags[2]);
             } else {
-                sandbox.analysis.declare(iid, name, val, bFlags[0], -1, bFlags[2]);
+                aret = sandbox.analysis.declare(iid, name, val, bFlags[0], -1, bFlags[2]);
             }
             if (aret) {
                 val = aret.result;
