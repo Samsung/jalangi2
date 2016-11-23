@@ -1949,7 +1949,8 @@ if (typeof J$ === 'undefined') {
                 var newCode = esotope.generate(newAst, {comment: true});
                 code = newCode + "\n" + noInstr + "\n";
             } catch(ex) {
-                console.log("Failed to instrument "+code+"\n"+ex);
+                console.log("Failed to instrument", code);
+                throw ex;
             }
         }
 

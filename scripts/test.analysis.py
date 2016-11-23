@@ -5,17 +5,21 @@ status = 0
 
 def test(prefix, file, rest):
     sj.create_and_cd_jalangi_tmp()
-    sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
-    normal = sj.execute_return_np(prefix+file+'.js '+rest, savestderr=True)
-    ana = sj.execute_return_np(sj.ANALYSIS_SCRIPT+'  --analysis ../src/js/sample_analyses/ChainedAnalyses.js --analysis ../src/js/runtime/analysisCallbackTemplate.js '+prefix+file+'_jalangi_.js '+rest, savestderr=True)
+    status = sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
 
-    if normal != ana:
-        print "{} failed".format(file)
-        print normal
-        print ana
-        status = 1
-    else:
+    if status == 0:
+        normal = sj.execute_return_np(prefix+file+'.js '+rest, savestderr=True)
+        ana = sj.execute_return_np(sj.ANALYSIS_SCRIPT+'  --analysis ../src/js/sample_analyses/ChainedAnalyses.js --analysis ../src/js/runtime/analysisCallbackTemplate.js '+prefix+file+'_jalangi_.js '+rest, savestderr=True)
+        if normal != ana:
+            status = 1
+
+    if status == 0:
         print "{} passed".format(file)
+    else:
+        print "{} failed".format(file)
+        if "normal" in locals() and "ana" in locals():
+            print normal
+            print ana
     sj.cd_parent()
 
 with open('tests/unit/unitTests.txt') as fp:
