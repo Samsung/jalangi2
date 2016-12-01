@@ -1226,7 +1226,7 @@ if (typeof J$ === 'undefined') {
 		);
 		return ret;
 	}
-
+	
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
     // code to indicate script entry and exit, etc.?
     // we need this flag since when we're instrumenting eval'd code, the code is parsed
