@@ -1223,8 +1223,8 @@ if (typeof J$ === 'undefined') {
 			RP+"1+"+RP+"2",
 			lhs,
 			rhs
-		);
-		return ret;
+		); 
+		return ret; 
 	}
 	
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
