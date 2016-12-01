@@ -1799,6 +1799,9 @@ if (typeof J$ === 'undefined') {
 
     // START of Liang Gong's AST post-processor
     function hoistFunctionDeclaration(ast, hoisteredFunctions) {
+        if (!hoisteredFunctions) {
+            hoisteredFunctions = [];
+        }
         var key, child, startIndex = 0;
         if (ast.body) {
             var newBody = [];
@@ -1851,17 +1854,15 @@ if (typeof J$ === 'undefined') {
 
             }
         }
-
-        return ast;
     }
 
     // END of Liang Gong's AST post-processor
 
-    function transformString(code, visitorsPost, visitorsPre) {
+    function transformAst(newAst, visitorsPost, visitorsPre) {
 //         StatCollector.resumeTimer("parse");
 //        console.time("parse")
 //        var newAst = esprima.parse(code, {loc:true, range:true});
-        var newAst = acorn.parse(code, {locations: true, ecmaVersion: 6 });
+//        var newAst = acorn.parse(code, {locations: true, ecmaVersion: 6 });
 //        console.timeEnd("parse")
 //        StatCollector.suspendTimer("parse");
 //        StatCollector.resumeTimer("transform");
@@ -1879,7 +1880,7 @@ if (typeof J$ === 'undefined') {
 
     // if this string is discovered inside code passed to instrumentCode(),
     // the code will not be instrumented
-    var noInstr = "// JALANGI DO NOT INSTRUMENT";
+    var noInstr = "JALANGI DO NOT INSTRUMENT";
 
     function initializeIIDCounters(forEval) {
         var adj = forEval ? IID_INC_STEP / 2 : 0;
@@ -1910,14 +1911,14 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments the provided code.
      *
-     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string, isDirect: boolean }} options
+     * @param {{allowReturnOutsideFunction: boolean, isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string, isDirect: boolean }} options
      * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
     function instrumentCode(options) {
         var aret, skip = false;
         var isEval = options.isEval,
-            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
+            code = removeShebang(options.code), thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
@@ -1933,21 +1934,31 @@ if (typeof J$ === 'undefined') {
             }
         }
 
-        if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
+        var instrument = !skip && typeof code === 'string';
+        var newAst = acorn.parse(code, {
+            allowReturnOutsideFunction: options.allowReturnOutsideFunction,
+            ecmaVersion: 6,
+            locations: true,
+            onComment: function (block, text, start, end) {
+                // "JALANGI DO NOT INSTRUMENT" could be in a JavaScript string literal, it must be a comment
+                if (text.trim() === noInstr) {
+                    instrument = false;
+                }
+            }
+        });
+
+        if (instrument) {
             try {
-                code = removeShebang(code);
                 iidSourceInfo = {};
-                var newAst;
                 if (Config.ENABLE_SAMPLING) {
-                    newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
+                    newAst = transformAst(newAst, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
                 } else {
-                    newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+                    newAst = transformAst(newAst, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
                 }
                 // post-process AST to hoist function declarations (required for Firefox)
-                var hoistedFcts = [];
-                newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
+                hoistFunctionDeclaration(newAst);
                 var newCode = esotope.generate(newAst, {comment: true});
-                code = newCode + "\n" + noInstr + "\n";
+                code = newCode + "\n// " + noInstr + "\n";
             } catch(ex) {
                 console.log("Failed to instrument", code);
                 throw ex;
