@@ -620,12 +620,17 @@ if (typeof J$ === 'undefined') {
                     internalFunId
                 );
             } else {
-                ret = replaceInExpr(
-                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
-                    getIid(),
-                    ast,
-                    createLiteralAst(funId)
-                );
+                var stringSplitIndex;
+                if(funId == N_LOG_STRING_LIT && ast.value.length>=9 && (stringSplitIndex=ast.value.indexOf("<"+"/script>"))!=-1){
+                    ret = splitClosingScriptTag(ast,stringSplitIndex);
+                }else{
+                    ret = replaceInExpr(
+                        logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
+                        getIid(),
+                        ast,
+                        createLiteralAst(funId)
+                    );
+                }
             }
             transferLoc(ret, node);
             return ret;
@@ -1211,6 +1216,16 @@ if (typeof J$ === 'undefined') {
         return ret;
     }
 
+    function splitClosingScriptTag(node,splitIndex){
+		var lhs = wrapLiteral(node, createLiteralAst(node.value.substring(0,splitIndex+1)), N_LOG_STRING_LIT);
+		var rhs = wrapLiteral(node, createLiteralAst(node.value.substring(splitIndex+1)), N_LOG_STRING_LIT);
+		var ret = replaceInExpr(
+			RP+"1+"+RP+"2",
+			lhs,
+			rhs
+		);
+		return ret;
+	}
 
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
     // code to indicate script entry and exit, etc.?
