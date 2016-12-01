@@ -1217,15 +1217,15 @@ if (typeof J$ === 'undefined') {
     }
 
     function splitClosingScriptTag(node,splitIndex){
-		var lhs = wrapLiteral(node, createLiteralAst(node.value.substring(0,splitIndex+1)), N_LOG_STRING_LIT);
-		var rhs = wrapLiteral(node, createLiteralAst(node.value.substring(splitIndex+1)), N_LOG_STRING_LIT);
-		var ret = replaceInExpr(
-			RP+"1+"+RP+"2",
-			lhs,
-			rhs
-		); 
-		return ret; 
-	}
+        var lhs = wrapLiteral(node, createLiteralAst(node.value.substring(0,splitIndex+1)), N_LOG_STRING_LIT);
+        var rhs = wrapLiteral(node, createLiteralAst(node.value.substring(splitIndex+1)), N_LOG_STRING_LIT);
+        var ret = replaceInExpr(
+            RP+"1+"+RP+"2",
+            lhs,
+            rhs
+        );
+        return ret;
+    }
 	
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
     // code to indicate script entry and exit, etc.?
