@@ -620,17 +620,12 @@ if (typeof J$ === 'undefined') {
                     internalFunId
                 );
             } else {
-                var stringSplitIndex;
-                if(funId == N_LOG_STRING_LIT && ast.value.length>=9 && (stringSplitIndex=ast.value.indexOf("<"+"/script>"))!=-1){
-                    ret = splitClosingScriptTag(ast,stringSplitIndex);
-                }else{
-                    ret = replaceInExpr(
-                        logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
-                        getIid(),
-                        ast,
-                        createLiteralAst(funId)
-                    );
-                }
+                ret = replaceInExpr(
+                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
+                    getIid(),
+                    ast,
+                    createLiteralAst(funId)
+                );
             }
             transferLoc(ret, node);
             return ret;
@@ -1213,17 +1208,6 @@ if (typeof J$ === 'undefined') {
         var right = createLiteralAst(1);
         right = wrapLiteral(right, right, N_LOG_NUMBER_LIT);
         var ret = wrapRHSOfModStore(ast, ast, right, op);
-        return ret;
-    }
-
-    function splitClosingScriptTag(node,splitIndex){
-        var lhs = wrapLiteral(node, createLiteralAst(node.value.substring(0,splitIndex+1)), N_LOG_STRING_LIT);
-        var rhs = wrapLiteral(node, createLiteralAst(node.value.substring(splitIndex+1)), N_LOG_STRING_LIT);
-        var ret = replaceInExpr(
-            RP+"1+"+RP+"2",
-            lhs,
-            rhs
-        );
         return ret;
     }
 	
@@ -1961,7 +1945,7 @@ if (typeof J$ === 'undefined') {
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
                 newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-                var newCode = esotope.generate(newAst, {comment: true});
+                var newCode = esotope.generate(newAst, {comment: true ,parse: acorn.parse});
                 code = newCode + "\n" + noInstr + "\n";
             } catch(ex) {
                 console.log("Failed to instrument "+code+"\n"+ex);
