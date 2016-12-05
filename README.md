@@ -103,22 +103,24 @@ While performing analysis in a browser, one needs to press Alt-Shift-T to end th
 
 You can also setup a proxy to instrument JavaScript files on-the-fly.
 To do so, you need to install [mitmproxy](http://mitmproxy.org/).  We
-highly recommend **version 0.17**; later versions are known to not
+highly recommend **version 0.11.3**; later versions may not
 work with Jalangi.  On Linux, you can follow
 [the standard installation instructions](http://docs.mitmproxy.org/en/stable/install.html),
-but instead of running `sudo pip install mitmproxy`, run `sudo pip install mitmproxy==0.17` to get the right version.  On Mac OS,
+but instead of running `sudo pip install mitmproxy`, run `sudo pip install mitmproxy==0.11.3` to get the right version.  On Mac OS,
 the easiest path we have found is to use [Homebrew](http://brew.sh/).
 With Homebrew installed, you can install the right version by running:
 
     brew install python
-    pip install mitmproxy==0.17
+    pip install -U pip
+    pip install mitmproxy==0.11.3
 
 Note that you might need to restart your shell afterward, to ensure
 the python being used is `/usr/local/bin/python`.
 
 For instrumenting code served over HTTPS, you will additionally need
 to set up a root certificate for mitmproxy.  See
-[their instructions](http://docs.mitmproxy.org/en/stable/certinstall.html).
+[their instructions](http://docs.mitmproxy.org/en/stable/certinstall.html)
+or [this document](https://github.com/ksen007/jalangi2analyses/blob/master/doc/mitmproxy-install.pdf).
 
 After installation, you can run the Jalangi instrumentation proxy by
 issuing the following command:
