@@ -1210,8 +1210,7 @@ if (typeof J$ === 'undefined') {
         var ret = wrapRHSOfModStore(ast, ast, right, op);
         return ret;
     }
-
-
+	
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
     // code to indicate script entry and exit, etc.?
     // we need this flag since when we're instrumenting eval'd code, the code is parsed
@@ -1946,7 +1945,7 @@ if (typeof J$ === 'undefined') {
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
                 newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-                var newCode = esotope.generate(newAst, {comment: true});
+                var newCode = esotope.generate(newAst, {comment: true ,parse: acorn.parse});
                 code = newCode + "\n" + noInstr + "\n";
             } catch(ex) {
                 console.log("Failed to instrument", code);
