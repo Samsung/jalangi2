@@ -36,7 +36,7 @@ ignore = []
 def processFile (flow, content, ext):
     try:
         url = flow.request.scheme + '://' + flow.request.host + ':' + str(flow.request.port) + flow.request.path
-        name = os.path.splitext(flow.request.path_components[-1])[0] if len(flow.request.path_components) else 'index'
+        name = os.path.splitext(flow.request.path_components[-1])[0] if hasattr(flow.request,'path_components') and len(flow.request.path_components) else 'index'
 
         hash = hashlib.md5(content).hexdigest()
         fileName = 'cache/' + flow.request.host + '/' + hash + '/' + name + '.' + ext
@@ -112,7 +112,7 @@ def _response(flow):
 
     # Do not invoke jalangi if the requested URL contains the query parameter noInstr
     # (e.g. https://cdn.com/jalangi/jalangi.min.js?noInstr=true)
-    if flow.request.query and flow.request.query.get('noInstr', None):
+    if LooseVersion(mitmversion) >= LooseVersion("0.17") and flow.request.query and flow.request.query.get('noInstr', None):
         return
 
     try:
@@ -122,7 +122,10 @@ def _response(flow):
         csp_key = None
         for key in flow.response.headers.keys():
             if key.lower() == "content-type":
-                content_type = flow.response.headers[key].lower()
+                if LooseVersion(mitmversion) >= LooseVersion("0.17"):
+                    content_type = flow.response.headers[key].lower()
+                else:
+                    content_type = flow.response.headers[key][0].lower()
             elif key.lower() == "content-security-policy":
                 csp_key = key
 
@@ -134,7 +137,10 @@ def _response(flow):
 
         # Disable the content security policy since it may prevent jalangi from executing
         if csp_key:
-            flow.response.headers.pop(csp_key, None)
+            if LooseVersion(mitmversion) >= LooseVersion("0.17"):
+                flow.response.headers.pop(csp_key, None)
+            else:
+                flow.response.headers[csp_key] = None
     except:
         print('Exception in response() @ proxy.py')
         exc_type, exc_value, exc_traceback = sys.exc_info()
