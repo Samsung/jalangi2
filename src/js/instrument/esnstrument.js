@@ -1176,9 +1176,9 @@ if (typeof J$ === 'undefined') {
 
             var tmp2;
             if (scope.hasVar(node.left.name)) {
-                tmp2 = wrapWrite(node.right, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name), false);
+                tmp2 = wrapWrite(node, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name), false);
             } else {
-                tmp2 = wrapWriteWithUndefinedCheck(node.right, createLiteralAst(node.left.name), tmp1, node.left);
+                tmp2 = wrapWriteWithUndefinedCheck(node, createLiteralAst(node.left.name), tmp1, node.left);
 
             }
             tmp2 = wrapLHSOfModStore(node, node.left, tmp2);
