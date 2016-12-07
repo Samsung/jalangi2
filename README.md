@@ -15,6 +15,8 @@ In the Jalangi2 distribution you will find several analyses:
   * [analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js): a template for writing a dynamic analysis.
   * and [more ...](src/js/sample_analyses/)
 
+See [our tutorial slides](http://manu.sridharan.net/files/JalangiTutorial.pdf) for a detailed overview of Jalangi and some client analyses.
+
 ### Requirements
 
 We tested Jalangi on Mac OS X 10.10 with Chromium browser.  Jalangi should work on Mac OS
