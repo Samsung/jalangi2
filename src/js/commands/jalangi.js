@@ -115,11 +115,10 @@ function startProgram() {
     var newArgs = [process.argv[0], script];
     newArgs = newArgs.concat(args.script_and_args);
     process.argv = newArgs;
-    try {
-        Module.Module.runMain(script, null, true);
-    } finally {
-        J$.endExecution();
-    }
+    // this assumes that the endExecution() callback of the analysis
+    // does not make any asynchronous calls
+    process.on('exit', function () { J$.endExecution(); });
+    Module.Module.runMain(script, null, true);
 }
 
 if (J$.analysis && J$.analysis.onReady) {
