@@ -50,6 +50,12 @@ if (typeof J$ === 'undefined') {
     var SPECIAL_PROP_SID = sandbox.Constants.SPECIAL_PROP_SID;
     var SPECIAL_PROP_IID = sandbox.Constants.SPECIAL_PROP_IID;
 
+    function getPropSafe(base, prop){
+      if(base === null || base === undefined){
+        return undefined;
+      }
+      return base[prop];
+    }
 
     function decodeBitPattern(i, len) {
         var ret = new Array(len);
@@ -103,7 +109,7 @@ if (typeof J$ === 'undefined') {
 
     function updateSid(f) {
         sidStack.push(sandbox.sid);
-        sandbox.sid = f[SPECIAL_PROP_SID];
+        sandbox.sid = getPropSafe(f, SPECIAL_PROP_SID);
     }
 
 
@@ -199,7 +205,7 @@ if (typeof J$ === 'undefined') {
         var aret, skip = false, result;
 
         if (sandbox.analysis && sandbox.analysis.invokeFunPre) {
-            aret = sandbox.analysis.invokeFunPre(iid, f, base, args, isConstructor, isMethod, f[SPECIAL_PROP_IID], f[SPECIAL_PROP_SID]);
+            aret = sandbox.analysis.invokeFunPre(iid, f, base, args, isConstructor, isMethod, getPropSafe(f, SPECIAL_PROP_IID), getPropSafe(f, SPECIAL_PROP_SID));
             if (aret) {
                 f = aret.f;
                 base = aret.base;
@@ -211,7 +217,7 @@ if (typeof J$ === 'undefined') {
             result = callFun(f, base, args, isConstructor, iid);
         }
         if (sandbox.analysis && sandbox.analysis.invokeFun) {
-            aret = sandbox.analysis.invokeFun(iid, f, base, args, result, isConstructor, isMethod, f[SPECIAL_PROP_IID], f[SPECIAL_PROP_SID]);
+            aret = sandbox.analysis.invokeFun(iid, f, base, args, result, isConstructor, isMethod, getPropSafe(f, SPECIAL_PROP_IID), getPropSafe(f, SPECIAL_PROP_SID));
             if (aret) {
                 result = aret.result;
             }
@@ -728,7 +734,7 @@ if (typeof J$ === 'undefined') {
 
     function S(iid, f) {
         if (sandbox.analysis && sandbox.analysis.runInstrumentedFunctionBody) {
-            return sandbox.analysis.runInstrumentedFunctionBody(iid, f, f[SPECIAL_PROP_IID], f[SPECIAL_PROP_SID]);
+            return sandbox.analysis.runInstrumentedFunctionBody(iid, f, getPropSafe(f, SPECIAL_PROP_IID), getPropSafe(f, SPECIAL_PROP_SID));
         }
         return true;
     }
