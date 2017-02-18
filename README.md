@@ -10,7 +10,7 @@ In the Jalangi2 distribution you will find several analyses:
   * an analysis to [track NaNs](src/js/sample_analyses/dlint/CheckNaN.js).
   * an analysis to [check if an undefined is concatenated to a string](src/js/sample_analyses/dlint/ConcatUndefinedToString.js).
   * [Memory analysis](https://github.com/Samsung/meminsight): a memory-profiler for JavaScript and HTML5.
-  * [DLint](https://github.com/ksen007/jalangi2analyses): a a dynamic checker for JavaScript bad coding practices.
+  * [DLint](https://github.com/ksen007/jalangi2analyses): a dynamic checker for JavaScript bad coding practices.
   * [JITProf](https://github.com/ksen007/jalangi2analyses): a dynamic JIT-unfriendly code snippet detection tool.
   * [analysisCallbackTemplate.js](src/js/runtime/analysisCallbackTemplate.js): a template for writing a dynamic analysis.
   * and [more ...](src/js/sample_analyses/)
