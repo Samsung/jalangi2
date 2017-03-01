@@ -1929,9 +1929,10 @@ if (typeof J$ === 'undefined') {
     }
 
 
-    function instrumentEvalCode(code, iid, isDirect) {
+    function instrumentEvalCode(code, sid, iid, isDirect) {
         return instrumentCode({
             code: code,
+            thisSid: sid,
             thisIid: iid,
             isEval: true,
             inlineSourceMap: true,
