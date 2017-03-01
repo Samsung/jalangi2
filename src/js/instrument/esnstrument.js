@@ -225,6 +225,10 @@ if (typeof J$ === 'undefined') {
         return createLiteralAst(tmpIid);
     }
 
+    function getSid() {
+        var tmpSid = sandbox.sid;
+        return createLiteralAst(tmpSid);
+    }
 
     function printLineInfoAux(i, ast) {
         if (ast && ast.loc) {
@@ -353,7 +357,8 @@ if (typeof J$ === 'undefined') {
             printIidToLoc(node);
             var ret = replaceInExpr(
                 logPutFieldFunName +
-                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed, false)) + ")",
+                "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + RP + "5, " + (createBitPattern(isComputed, false)) + ")",
+                getSid(),
                 getIid(),
                 base,
                 offset,
@@ -370,7 +375,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
             printModIidToLoc(node);
             var ret = replaceInExpr(
-                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (createBitPattern(isComputed)) + ")(" + RP + "5)",
+                logAssignFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + RP + "5, " + (createBitPattern(isComputed)) + ")(" + RP + "5)",
+                getSid(),
                 getIid(),
                 base,
                 offset,
@@ -388,7 +394,8 @@ if (typeof J$ === 'undefined') {
         printIidToLoc(node);
         printSpecialIidToLoc(node.callee);
         var ret = replaceInExpr(
-            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (createBitPattern(isCtor, isComputed)) + ")",
+            logMethodCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + (createBitPattern(isCtor, isComputed)) + ")",
+            getSid(),
             getIid(),
             base,
             offset
@@ -400,7 +407,8 @@ if (typeof J$ === 'undefined') {
     function wrapFunCall(node, ast, isCtor) {
         printIidToLoc(node);
         var ret = replaceInExpr(
-            logFunCallFunName + "(" + RP + "1, " + RP + "2, " + (createBitPattern(isCtor)) + ")",
+            logFunCallFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + (createBitPattern(isCtor)) + ")",
+            getSid(),
             getIid(),
             ast
         );
@@ -412,7 +420,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_GETFIELD || Config.INSTR_GETFIELD(node.computed ? null : offset.value, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (createBitPattern(isComputed,false, false)) + ")",
+                logGetFieldFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + (createBitPattern(isComputed,false, false)) + ")",
+                getSid(),
                 getIid(),
                 base,
                 offset
@@ -428,7 +437,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_READ || Config.INSTR_READ(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + (createBitPattern(isGlobal,isScriptLocal)) + ")",
+                logReadFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + (createBitPattern(isGlobal,isScriptLocal)) + ")",
+                getSid(),
                 isReUseIid ? getPrevIidNoInc() : getIid(),
                 name,
                 val
@@ -477,7 +487,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_WRITE || Config.INSTR_WRITE(name, node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isGlobal,isScriptLocal,isDeclaration)) + ")",
+                logWriteFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + RP + "5, " + (createBitPattern(isGlobal,isScriptLocal,isDeclaration)) + ")",
+                getSid(),
                 getIid(),
                 name,
                 val,
@@ -613,7 +624,8 @@ if (typeof J$ === 'undefined') {
                     internalFunId = getFnIdFromAst(scope.funNodes[node.name]);
                 }
                 ret = replaceInExpr(
-                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ", " + internalFunId + ")",
+                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + hasGetterSetter + ", " + internalFunId + ")",
+                    getSid(),
                     getIid(),
                     ast,
                     createLiteralAst(funId),
@@ -621,7 +633,8 @@ if (typeof J$ === 'undefined') {
                 );
             } else {
                 ret = replaceInExpr(
-                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3," + hasGetterSetter + ")",
+                    logLitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + hasGetterSetter + ")",
+                    getSid(),
                     getIid(),
                     ast,
                     createLiteralAst(funId)
@@ -641,7 +654,8 @@ if (typeof J$ === 'undefined') {
             expr = createIdentifierAst("undefined");
         }
         var ret = replaceInExpr(
-            logReturnFunName + "(" + RP + "1, " + RP + "2)",
+            logReturnFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+            getSid(),
             getIid(),
             expr
         );
@@ -652,7 +666,8 @@ if (typeof J$ === 'undefined') {
     function wrapThrow(node, expr) {
         printIidToLoc(expr);
         var ret = replaceInExpr(
-            logThrowFunName + "(" + RP + "1, " + RP + "2)",
+            logThrowFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+            getSid(),
             getIid(),
             expr
         );
@@ -666,7 +681,11 @@ if (typeof J$ === 'undefined') {
             if (!ast || ast.type.indexOf("Expression") <= 0) return ast;
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logX1FunName + "(" + RP + "1," + RP + "2)", getIid(), ast);
+                logX1FunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                getSid(),
+                getIid(),
+                ast
+            );
             transferLoc(ret, node);
             return ret;
         } else {
@@ -677,7 +696,8 @@ if (typeof J$ === 'undefined') {
     function wrapHash(node, ast) {
         printIidToLoc(node);
         var ret = replaceInExpr(
-            logHashFunName + "(" + RP + "1, " + RP + "2)",
+            logHashFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+            getSid(),
             getIid(),
             ast
         );
@@ -688,8 +708,9 @@ if (typeof J$ === 'undefined') {
     function wrapEvalArg(ast) {
         printIidToLoc(ast);
         var ret = replaceInExpr(
-            instrumentCodeFunName + "(" + RP + "1, " + RP + "2, true)",
+            instrumentCodeFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, true)",
             ast,
+            getSid(),
             getIid()
         );
         transferLoc(ret, ast);
@@ -700,7 +721,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_UNARY || Config.INSTR_UNARY(operator, node)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logUnaryOpFunName + "(" + RP + "1," + RP + "2," + RP + "3)",
+                logUnaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, "  + RP + "4)",
+                getSid(),
                 getOpIid(),
                 createLiteralAst(operator),
                 argument
@@ -716,7 +738,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_BINARY || Config.INSTR_BINARY(operator, operator)) {
             printOpIidToLoc(node);
             var ret = replaceInExpr(
-                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4," + (createBitPattern(isComputed, false, false)) + ")",
+                logBinaryOpFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + RP + "5, " + (createBitPattern(isComputed, false, false)) + ")",
+                getSid(),
                 getOpIid(),
                 createLiteralAst(operator),
                 left,
@@ -733,7 +756,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("&&", node)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + RP + "2)?" + RP + "3:" + logLastFunName + "()",
+                logConditionalFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)?" + RP + "3:" + logLastFunName + "()",
+                getSid(),
                 getCondIid(),
                 left,
                 right
@@ -749,7 +773,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("||", node)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + RP + "2)?" + logLastFunName + "():" + RP + "3",
+                logConditionalFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)?" + logLastFunName + "():" + RP + "3",
+                getSid(),
                 getCondIid(),
                 left,
                 right
@@ -765,7 +790,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("switch", node)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logSwitchLeftFunName + "(" + RP + "1, " + RP + "2)",
+                logSwitchLeftFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                getSid(),
                 getCondIid(),
                 discriminant
             );
@@ -780,7 +806,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("switch", node)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logSwitchRightFunName + "(" + RP + "1, " + RP + "2)",
+                logSwitchRightFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                getSid(),
                 getCondIid(),
                 test
             );
@@ -795,7 +822,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("with", node)) {
             printIidToLoc(node);
             var ret = replaceInExpr(
-                logWithFunName + "(" + RP + "1, " + RP + "2)",
+                logWithFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                getSid(),
                 getIid(),
                 node
             );
@@ -814,7 +842,8 @@ if (typeof J$ === 'undefined') {
         if (!Config.INSTR_CONDITIONAL || Config.INSTR_CONDITIONAL("other", node)) {
             printCondIidToLoc(node);
             var ret = replaceInExpr(
-                logConditionalFunName + "(" + RP + "1, " + RP + "2)",
+                logConditionalFunName + "(" + RP + "1, " + RP + "2, " + RP + "3)",
+                getSid(),
                 getCondIid(),
                 test
             );
@@ -853,15 +882,17 @@ if (typeof J$ === 'undefined') {
 
         if (isAssign)
             ret = replaceInStatement(
-                RP + "1 = " + logInitFunName + "(" + RP + "2, " + RP + "3, " + RP + "4, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
+                RP + "1 = " + logInitFunName + "(" + RP + "2, " + RP + "3, " + RP + "4, " + RP + "5, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
                 lhs,
+                getSid(),
                 getIid(),
                 name,
                 val
             );
         else
             ret = replaceInStatement(
-                logInitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
+                logInitFunName + "(" + RP + "1, " + RP + "2, " + RP + "3, " + RP + "4, " + createBitPattern(isArgumentSync, false, isCatchParam) + ")",
+                getSid(),
                 getIid(),
                 name,
                 val
@@ -874,7 +905,8 @@ if (typeof J$ === 'undefined') {
     function createCallAsFunEnterStatement(node) {
         printIidToLoc(node);
         var ret = replaceInStatement(
-            logFunctionEnterFunName + "(" + RP + "1,arguments.callee, this, arguments)",
+            logFunctionEnterFunName + "(" + RP + "1, " + RP + "2, arguments.callee, this, arguments)",
+            getSid(),
             getIid()
         );
         transferLoc(ret[0].expression, node);
@@ -883,7 +915,8 @@ if (typeof J$ === 'undefined') {
 
     function createCallAsScriptEnterStatement(node) {
         printIidToLoc(node);
-        var ret = replaceInStatement(logScriptEntryFunName + "(" + RP + "1," + RP + "2, " + RP + "3)",
+        var ret = replaceInStatement(logScriptEntryFunName + "(" + RP + "1," + RP + "2, " + RP + "3, " + RP + "4)",
+            getSid(),
             getIid(),
             createLiteralAst(instCodeFileName), createLiteralAst(origCodeFileName));
         transferLoc(ret[0].expression, node);
@@ -953,10 +986,13 @@ if (typeof J$ === 'undefined') {
             var ret = replaceInStatement(
                 "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
                 "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-                JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                JALANGI_VAR + "e.stack);\n  " + logUncaughtExceptionFunName + "(" + RP + "2, " + RP + "3, " + JALANGI_VAR +
                 "e); } finally { if (" + logScriptExitFunName + "(" +
-                RP + "3)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}", body,
+                RP + "4, " + RP + "5)) { " + logLastComputedFunName + "(); continue jalangiLabel" + l + ";\n } else {\n  " + logLastComputedFunName + "(); break jalangiLabel" + l + ";\n }}\n }}",
+                body,
+                getSid(),
                 iid1,
+                getSid(),
                 getIid()
             );
             //console.log(JSON.stringify(ret));
@@ -978,10 +1014,13 @@ if (typeof J$ === 'undefined') {
             var ret = replaceInStatement(
                 "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
                 "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
-                JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
+                JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2, " + RP + "3, " + JALANGI_VAR +
                 "e); } finally { if (" + logFunctionReturnFunName + "(" +
-                RP + "3)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}", body,
+                RP + "3, " + RP + "4)) continue jalangiLabel" + l + ";\n else \n  return " + logReturnAggrFunName + "();\n }\n }}",
+                body,
+                getSid(),
                 iid1,
+                getSid(),
                 getIid()
             );
             //console.log(JSON.stringify(ret));
@@ -1176,9 +1215,9 @@ if (typeof J$ === 'undefined') {
 
             var tmp2;
             if (scope.hasVar(node.left.name)) {
-                tmp2 = wrapWrite(node, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name), false);
+                tmp2 = wrapWrite(node.right, createLiteralAst(node.left.name), tmp1, node.left, false, scope.isGlobal(node.left.name), false);
             } else {
-                tmp2 = wrapWriteWithUndefinedCheck(node, createLiteralAst(node.left.name), tmp1, node.left);
+                tmp2 = wrapWriteWithUndefinedCheck(node.right, createLiteralAst(node.left.name), tmp1, node.left);
 
             }
             tmp2 = wrapLHSOfModStore(node, node.left, tmp2);
@@ -1210,7 +1249,8 @@ if (typeof J$ === 'undefined') {
         var ret = wrapRHSOfModStore(ast, ast, right, op);
         return ret;
     }
-	
+
+
     // Should 'Program' nodes in the AST be wrapped with prefix code to load libraries,
     // code to indicate script entry and exit, etc.?
     // we need this flag since when we're instrumenting eval'd code, the code is parsed
@@ -1232,7 +1272,8 @@ if (typeof J$ === 'undefined') {
     function mergeBodies(node) {
         printIidToLoc(node);
         var ret = replaceInStatement(
-            "function n() { if (!" + logSampleFunName + "(" + RP + "1, arguments.callee)){" + RP + "2} else {" + RP + "3}}",
+            "function n() { if (!" + logSampleFunName + "(" + RP + "1, " + RP + "2, arguments.callee)){" + RP + "3} else {" + RP + "4}}",
+            getSid(),
             getIid(),
             node.bodyOrig.body,
             node.body.body
@@ -1909,23 +1950,28 @@ if (typeof J$ === 'undefined') {
     /**
      * Instruments the provided code.
      *
-     * @param {{isEval: boolean, code: string, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string, isDirect: boolean }} options
+     * @param {{isEval: boolean, code: string, thisSid: int, thisIid: int, origCodeFileName: string, instCodeFileName: string, inlineSourceMap: boolean, inlineSource: boolean, url: string, isDirect: boolean }} options
      * @return {{code:string, instAST: object, sourceMapObject: object, sourceMapString: string}}
      *
      */
     function instrumentCode(options) {
         var aret, skip = false;
         var isEval = options.isEval,
-            code = options.code, thisIid = options.thisIid, inlineSource = options.inlineSource, url = options.url;
+            code = options.code,
+            thisSid = options.thisSid || (sandbox.globalSid || (sandbox.globalSid = 0)) + 1,
+            thisIid = options.thisIid,
+            inlineSource = options.inlineSource,
+            url = options.url;
 
         iidSourceInfo = {};
         initializeIIDCounters(isEval);
         instCodeFileName = options.instCodeFileName ? options.instCodeFileName : (options.isDirect?"eval":"evalIndirect");
         origCodeFileName = options.origCodeFileName ? options.origCodeFileName : (options.isDirect?"eval":"evalIndirect");
 
+        sandbox.sid = thisSid;
 
         if (sandbox.analysis && sandbox.analysis.instrumentCodePre) {
-            aret = sandbox.analysis.instrumentCodePre(thisIid, code, options.isDirect);
+            aret = sandbox.analysis.instrumentCodePre(thisSid, thisIid, code, options.isDirect);
             if (aret) {
                 code = aret.code;
                 skip = aret.skip;
@@ -1945,11 +1991,10 @@ if (typeof J$ === 'undefined') {
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
                 newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
-                var newCode = esotope.generate(newAst, {comment: true ,parse: acorn.parse});
+                var newCode = esotope.generate(newAst, {comment: true});
                 code = newCode + "\n" + noInstr + "\n";
             } catch(ex) {
-                console.log("Failed to instrument", code);
-                throw ex;
+                console.log("Failed to instrument "+code+"\n"+ex);
             }
         }
 
@@ -1978,7 +2023,7 @@ if (typeof J$ === 'undefined') {
         }
 
         if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {
-            aret = sandbox.analysis.instrumentCode(thisIid, instCode, newAst, options.isDirect);
+            aret = sandbox.analysis.instrumentCode(thisSid, thisIid, instCode, newAst, options.isDirect);
             if (aret) {
                 instCode = aret.result;
             }
