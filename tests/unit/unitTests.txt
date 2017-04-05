@@ -1,4 +1,3 @@
-es6_const
 shebang
 cli_args fff
 instrument-test

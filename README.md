@@ -22,8 +22,7 @@ See [our tutorial slides](http://manu.sridharan.net/files/JalangiTutorial.pdf) f
 We tested Jalangi on Mac OS X 10.10 with Chromium browser.  Jalangi should work on Mac OS
 10.7, Ubuntu 11.0 and higher and Windows 7 or higher. Jalangi will NOT work with IE.
 
-  * Node.js v4.x available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v4.x.  Jalangi **does not** 
-    yet work with Node.js v6.x.
+  * Node.js v4.x available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v6.10.1.
   * Chrome browser if you need to test web apps.
   * Python (http://python.org) version 2.7 or higher and less than 3.0.
 
@@ -148,7 +147,7 @@ on writing a Jalangi analysis can be found in [docs/tutorial1.md](docs/tutorial1
 
 ### Supported ECMAScript versions
 
-Jalangi2 supports ECMAScript 5.1, plus the `const` construct from ECMAScript 6.  Other ES6 features may work, but have not been tested.
+Jalangi2 supports ECMAScript 5.1.  Some ES6 features may work, but have not been tested.
 
 License
 -------

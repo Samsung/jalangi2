@@ -11,7 +11,6 @@ bitops-bitwise-and
 controlflow-recursive
 crypto-md5
 crypto-sha1
-date-format-tofte
 date-format-xparb
 math-cordic
 math-partial-sums
