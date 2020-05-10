@@ -19,10 +19,10 @@ See [our tutorial slides](http://manu.sridharan.net/files/JalangiTutorial.pdf) f
 
 ### Requirements
 
-We tested Jalangi on Mac OS X 10.10 with Chromium browser.  Jalangi should work on Mac OS
+We have tested Jalangi on Mac OS X with Chromium browser.  Jalangi should work on Mac OS
 10.7, Ubuntu 11.0 and higher and Windows 7 or higher. Jalangi will NOT work with IE.
 
-  * Node.js v4.x available at https://nodejs.org/en/download/releases/.  We have tested Jalangi with Node v6.10.1.
+  * Node.js available at https://nodejs.org/en/download/releases/.  We primary test Jalangi with the Node LTS version (currently v12).
   * Chrome browser if you need to test web apps.
   * Python (http://python.org) version 2.7 or higher and less than 3.0.
 
@@ -31,7 +31,8 @@ On Windows you need the following extra dependencies:
   * Install Microsoft Visual Studio 2010 (Free express version is fine).
   * If on 64bit also install Windows 7 64-bit SDK.
 
-If you have a fresh installation of Ubuntu, you can install all the requirements by invoking the following commands from a terminal.
+If you have a fresh installation of Ubuntu, you can install all the requirements by invoking the following commands from a terminal
+(package names may be out of date).
 
     sudo apt-get update
     sudo apt-get install python-software-properties python g++ make
