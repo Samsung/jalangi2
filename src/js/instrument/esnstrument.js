@@ -264,11 +264,12 @@ if (typeof J$ === 'undefined') {
         var visitorReplaceInExpr = {
             'Identifier': function (node) {
                 if (node.name.indexOf(RP) === 0) {
-                    var i = parseInt(node.name.substring(RP.length));
-                    return asts[i];
-                } else {
-                    return node;
+                    var suffix = node.name.substring(RP.length);
+                    if (!isNaN(suffix)) {
+                        return asts[suffix];
+                    }
                 }
+                return node;
             },
             'BlockStatement': function (node) {
                 if (node.body[0].type === 'ExpressionStatement' && isArr(node.body[0].expression)) {
@@ -1818,9 +1819,19 @@ if (typeof J$ === 'undefined') {
                 }
             }
             for (var i = startIndex; i < ast.body.length; i++) {
-
                 if (ast.body[i].type === 'FunctionDeclaration') {
-                    newBody.push(ast.body[i]);
+                    var name = ast.body[i].id.name;
+                    var params = ast.body[i].params.map(function (param) { return param.name; }).join(', ');
+                    var assignStmt;
+                    if (ast.body[i].body === null) {
+                        assignStmt = acorn.parse(
+                            "var " + name + " = function " + name + "(" + params + ") {}").body;
+                    } else {
+                        assignStmt = replaceInStatement(
+                            "var " + name + " = function " + name + "(" + params + ") { " + RP + "1 }",
+                            ast.body[i].body.body);
+                    }
+                    newBody.push(assignStmt[0]);
                     if (newBody.length !== i + 1) {
                         hoisteredFunctions.push(ast.body[i].id.name);
                     }
@@ -1834,9 +1845,7 @@ if (typeof J$ === 'undefined') {
             while (ast.body.length > 0) {
                 ast.body.pop();
             }
-            for (var i = 0; i < newBody.length; i++) {
-                ast.body.push(newBody[i]);
-            }
+            Array.prototype.push.apply(ast.body, newBody);
         } else {
             //console.log(typeof ast.body);
         }

@@ -65,3 +65,4 @@ issue78b
 catch1
 scope
 typeofUndef
+es2015_syntax
