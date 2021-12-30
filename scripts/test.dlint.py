@@ -19,14 +19,14 @@ def testDlint (file, output):
     sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource ../tests/dlint/'+file+'.js')
     out = sj.execute_return_np(sj.ANALYSIS_SCRIPT+ analysesStr+' ../tests/dlint/'+file+'_jalangi_.js')
     if output != out:
-        print "{} failed".format(file)
-        print "********** Actual **********"
-        print out
-        print "********** Expected **********"
-        print output
+        print("{} failed".format(file))
+        print("********** Actual **********")
+        print(out)
+        print("********** Expected **********")
+        print(output)
         status = 1
     else:
-        print "{} passed".format(file)
+        print("{} passed".format(file))
     sj.cd_parent()
 
 
