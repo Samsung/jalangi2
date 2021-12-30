@@ -4,6 +4,7 @@ import sys
 status = 0
 
 def test(prefix, file, rest):
+    global status
     sj.create_and_cd_jalangi_tmp()
     status = sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
 

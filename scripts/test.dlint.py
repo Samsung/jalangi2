@@ -15,10 +15,11 @@ analyses = ['../src/js/sample_analyses/ChainedAnalyses.js',
 analysesStr = ' --analysis '+(' --analysis '.join(analyses))
 
 def testDlint (file, output):
+    global status
     sj.create_and_cd_jalangi_tmp()
     sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource ../tests/dlint/'+file+'.js')
     out = sj.execute_return_np(sj.ANALYSIS_SCRIPT+ analysesStr+' ../tests/dlint/'+file+'_jalangi_.js')
-    if output != out:
+    if output != out.decode():
         print("{} failed".format(file))
         print("********** Actual **********")
         print(out)
