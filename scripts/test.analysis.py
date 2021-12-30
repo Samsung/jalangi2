@@ -4,6 +4,7 @@ import sys
 status = 0
 
 def test(prefix, file, rest):
+    global status
     sj.create_and_cd_jalangi_tmp()
     status = sj.execute_np(sj.INSTRUMENTATION_SCRIPT+' --inlineIID --inlineSource '+prefix+file+'.js')
 
@@ -14,12 +15,12 @@ def test(prefix, file, rest):
             status = 1
 
     if status == 0:
-        print "{} passed".format(file)
+        print("{} passed".format(file))
     else:
-        print "{} failed".format(file)
+        print("{} failed".format(file))
         if "normal" in locals() and "ana" in locals():
-            print normal
-            print ana
+            print(normal)
+            print(ana)
     sj.cd_parent()
 
 with open('tests/unit/unitTests.txt') as fp:
