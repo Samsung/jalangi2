@@ -23,7 +23,7 @@
     "esotope"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec node_test && python scripts/runalltests.py"
+    "test": "./node_modules/.bin/mocha --reporter spec node_test && python3 scripts/runalltests.py"
   },
   "license": "Apache-2.0",
   "repository": {
