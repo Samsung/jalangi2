@@ -35,7 +35,7 @@ def find_node():
                  "/usr/local/bin/node",
                  "C:/Program Files/nodejs/node.exe",
                  "C:/Program Files (x86)/nodejs/node.exe"]
-    l = filter(is_node_exe, LOCATIONS)
+    l = list(filter(is_node_exe, LOCATIONS))
     if len(l) == 0:
         print('Could not find the node.js executable. node.js is required for Jalangi')
         print('If you have installed node.js in a non-standard location you can set environment variable NODE_EXECUTABLE to the full path of the node executable.')
@@ -56,7 +56,7 @@ def execute_return(script, **kwargs):
     """Execute script and returns output string"""
     saveStdErr = kwargs['savestderr'] if 'savestderr' in kwargs else False
     cmd = [find_node()] + script.split()
-    print(' '.join(cmd))
+    print((' '.join(cmd)))
     with NamedTemporaryFile() as f:
          try:
              subprocess.check_call(cmd,stdout=f, 
@@ -87,16 +87,16 @@ def execute(script, stdin=None, env=None, quiet=False):
         cmd = [find_node()] + script.split()
         sub_env = os.environ.copy()
         if (env):
-            for key in env.keys():
+            for key in list(env.keys()):
                 sub_env[key] = env[key]
-        print(' '.join(cmd))
+        print((' '.join(cmd)))
         p = Popen(cmd, env=sub_env, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT)
         stdout = p.communicate(input=encode_input(stdin) if stdin else None)[0]
         if not quiet:
             print(stdout)
         return stdout
-    except subprocess.CalledProcessError, e:
-        print(e.output)
+    except subprocess.CalledProcessError as e:
+        print((e.output))
 
 def execute_np(script, *args):
     """Execute script and print output"""
