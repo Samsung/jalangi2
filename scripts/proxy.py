@@ -13,15 +13,9 @@ from mitmproxy.script import concurrent
 
 from subprocess import CalledProcessError, Popen, PIPE, STDOUT
 
-'''p = Popen(['mitmdump --version'], stdout=PIPE, stdin=PIPE, stderr=STDOUT, shell=True)
+p = Popen(['mitmdump --version'], stdout=PIPE, stdin=PIPE, stderr=STDOUT, shell=True)
 stdout = p.communicate()[0]
-mitmversion = stdout.decode()[9:] # remove "mitmdump "'''
-
-
-'''if LooseVersion(mitmversion) >= LooseVersion("0.17"):
-    from mitmproxy.script import concurrent
-else:
-    from libmproxy.script import concurrent'''
+mitmversion = stdout.decode()[9:] # remove "mitmdump "
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 JALANGI_HOME = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(filename)), os.pardir))
