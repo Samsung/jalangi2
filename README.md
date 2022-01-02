@@ -112,7 +112,7 @@ With Homebrew installed, you can install the right version by running:
 
     brew install python
     pip install -U pip
-    pip install mitmproxy
+    pip install mitmproxy==7.0.0
 
 Note that you might need to restart your shell afterward, to ensure
 the python being used is `/usr/local/bin/python`.
