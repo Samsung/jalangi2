@@ -104,9 +104,10 @@ While performing analysis in a browser, one needs to press Alt-Shift-T to end th
 **Analysis in a browser using a proxy and on-the-fly instrumentation**
 
 You can also setup a proxy to instrument JavaScript files on-the-fly.
-To do so, you need to install [mitmproxy](http://mitmproxy.org/). On Linux, you can follow
+To do so, you need to install [mitmproxy](http://mitmproxy.org/).  We have tested mitmproxy version 7.0.
+On Linux, you can follow
 [the standard installation instructions](http://docs.mitmproxy.org/en/stable/install.html),
-but instead of running `sudo pip install mitmproxy`, run `sudo pip install mitmproxy` to get the right version.  On Mac OS,
+but instead of running `sudo pip install mitmproxy`, run `sudo pip install mitmproxy==7.0.0` to get the tested version.  On Mac OS,
 the easiest path we have found is to use [Homebrew](http://brew.sh/).
 With Homebrew installed, you can install the right version by running:
 
