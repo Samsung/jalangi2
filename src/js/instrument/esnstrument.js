@@ -873,8 +873,21 @@ if (typeof J$ === 'undefined') {
 
     function createCallAsFunEnterStatement(node) {
         printIidToLoc(node);
+        var funValueExpr; 
+        if (node.id !== null && node.id.name !== null) {
+            funValueExpr = node.id.name;
+        } else if (HOP(node, "__jalangi__getter__prop__name")) {
+            var propDescCall = "Object.getOwnPropertyDescriptor(this,'" + node["__jalangi__getter__prop__name"] + "')";
+            funValueExpr = logIFunName + "((" + propDescCall + ") ? " + propDescCall + ".get : arguments.callee)";
+        } else if (HOP(node, "__jalangi__setter__prop__name")) {
+            var propDescCall = "Object.getOwnPropertyDescriptor(this,'" + node["__jalangi__setter__prop__name"] + "')";
+            funValueExpr = logIFunName + "((" + propDescCall + ") ? " + propDescCall + ".set : arguments.callee)";
+        } else {
+            throw new Error("no function name found! " + JSON.stringify(node));
+            //funValueExpr = "arguments.callee";
+        }
         var ret = replaceInStatement(
-            logFunctionEnterFunName + "(" + RP + "1,arguments.callee, this, arguments)",
+            logFunctionEnterFunName + "(" + RP + "1," + funValueExpr + ", this, arguments)",
             getIid()
         );
         transferLoc(ret[0].expression, node);
@@ -1460,6 +1473,9 @@ if (typeof J$ === 'undefined') {
             return ret1;
         },
         "FunctionExpression": function (node, context) {
+            if (node.id === null && !(context === astUtil.CONTEXT.GETTER || context === astUtil.CONTEXT.SETTER)) {
+                node.id = createIdentifierAst("__jalangi__anon__" + memIid);
+            }
             node.body.body = instrumentFunctionEntryExit(node, node.body.body);
             var ret1;
             if (context === astUtil.CONTEXT.GETTER || context === astUtil.CONTEXT.SETTER) {
