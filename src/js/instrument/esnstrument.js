@@ -576,6 +576,9 @@ if (typeof J$ === 'undefined') {
 
     function getFnIdFromAst(ast) {
         var entryExpr = ast.body.body[0];
+        if (entryExpr.directive === 'use strict') {
+            entryExpr = ast.body.body[1];
+        }
         if (entryExpr.type != 'ExpressionStatement') {
             console.log(JSON.stringify(entryExpr));
             throw new Error("IllegalStateException");
@@ -984,12 +987,17 @@ if (typeof J$ === 'undefined') {
 
     function wrapFunBodyWithTryCatch(node, body) {
         if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            var hasUseStrict = body[0].directive === "use strict";
+            if (hasUseStrict) {
+                // we'll insert it earlier so get rid of it from body
+                body.shift();
+            }
             printIidToLoc(node);
             var iid1 = getIid();
             printIidToLoc(node);
             var l = labelCounter++;
             var ret = replaceInStatement(
-                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "function n() { " + (hasUseStrict ? "'use strict';\n" : "") + "jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
                 "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
                 JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
                 "e); } finally { if (" + logFunctionReturnFunName + "(" +
@@ -1012,12 +1020,12 @@ if (typeof J$ === 'undefined') {
         if (!isScript) {
             if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
                 if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
-                    ident = createIdentifierAst("arguments");
-                    ret = ret.concat(createCallInitAsStatement(node,
-                        createLiteralAst("arguments"),
-                        ident,
-                        true,
-                        ident, false, true));
+                    // ident = createIdentifierAst("arguments");
+                    // ret = ret.concat(createCallInitAsStatement(node,
+                    //     createLiteralAst("arguments"),
+                    //     ident,
+                    //     true,
+                    //     ident, false, true));
                 }
             }
         }
@@ -1085,6 +1093,9 @@ if (typeof J$ === 'undefined') {
             body = createCallAsFunEnterStatement(node);
         } else {
             body = [];
+        }
+        if (node.body && node.body.body && node.body.body.length > 0 && node.body.body[0].directive === 'use strict') {
+            body = [node.body.body[0]].concat(body);
         }
         body = body.concat(syncDefuns(node, scope, false)).concat(ast);
         return body;
