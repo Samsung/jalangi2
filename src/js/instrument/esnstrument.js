@@ -1877,6 +1877,7 @@ if (typeof J$ === 'undefined') {
 //        console.time("parse")
 //        var newAst = esprima.parse(code, {loc:true, range:true});
         var newAst = acorn.parse(code, {locations: true, ecmaVersion: 6 });
+        var hasUseStrict = newAst.type === 'Program' && newAst.body && newAst.body.length > 0 && newAst.body[0].directive === 'use strict';
 //        console.timeEnd("parse")
 //        StatCollector.suspendTimer("parse");
 //        StatCollector.resumeTimer("transform");
@@ -1889,7 +1890,7 @@ if (typeof J$ === 'undefined') {
 //        console.timeEnd("transform")
 //        StatCollector.suspendTimer("transform");
 //        console.log(JSON.stringify(newAst,null,"  "));
-        return newAst;
+        return { ast: newAst, hasUseStrict: hasUseStrict};
     }
 
     // if this string is discovered inside code passed to instrumentCode(),
@@ -1948,16 +1949,19 @@ if (typeof J$ === 'undefined') {
             }
         }
 
+        var hasUseStrict = false;
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
             try {
                 code = removeShebang(code);
                 iidSourceInfo = {};
-                var newAst;
+                var transformStringResult;
                 if (Config.ENABLE_SAMPLING) {
-                    newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
+                    transformStringResult = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
                 } else {
-                    newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+                    transformStringResult = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
                 }
+                var newAst = transformStringResult.ast;
+                hasUseStrict = transformStringResult.hasUseStrict;
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
                 newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
@@ -1991,6 +1995,10 @@ if (typeof J$ === 'undefined') {
             instCode = JALANGI_VAR + ".iids = " + prepend + ";\n" + code;
         } else {
             instCode = JALANGI_VAR + ".iids = " + JSON.stringify(tmp) + ";\n" + code;
+        }
+
+        if (hasUseStrict) {
+            instCode = "'use strict';\n" + instCode;
         }
 
         if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {
