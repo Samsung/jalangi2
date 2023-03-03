@@ -11,7 +11,7 @@
     "esotope": "1.4.5",
     "estraverse": "4.0.0",
     "jquery": "3.5.0",
-    "mkdirp": "0.5.0",
+    "mkdirp": "0.5.6",
     "graceful-ncp": "3.0.0",
     "parse5": "2.1.5",
     "q": "1.2.0",
