@@ -24,7 +24,7 @@ We have tested Jalangi on Mac OS X with Chromium browser.  Jalangi should work o
 
   * Node.js available at https://nodejs.org/en/download/releases/.  We primarily test Jalangi with the Node LTS version (currently v12).
   * Chrome browser if you need to test web apps.
-  * Python (http://python.org) version 2.7 or higher and less than 3.0.
+  * Python (http://python.org) version 3.x.
 
 On Windows you need the following extra dependencies:
 
