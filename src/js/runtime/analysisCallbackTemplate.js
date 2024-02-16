@@ -121,6 +121,7 @@
          *     f.apply(y, args);
          * }
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function object that going to be invoked
          * @param {object} base - The receiver object for the function <tt>f</tt>
@@ -139,7 +140,7 @@
          * an object is returned.
          *
          */
-        this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
+        this.invokeFunPre = function (sid, iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
             return {f: f, base: base, args: args, skip: false};
         };
 
@@ -152,7 +153,7 @@
          * // the above call roughly gets instrumented as follows:
          *
          * var skip = false;
-         * var aret = analysis.invokeFunPre(113, f, y, [a, b, c], false, true);
+         * var aret = analysis.invokeFunPre(1, 113, f, y, [a, b, c], false, true);
          * if (aret) {
          *     f = aret.f;
          *     y = aret.y;
@@ -162,13 +163,14 @@
          * if (!skip) {
          *     result =f.apply(y, args);
          * }
-         * aret = analysis.invokeFun(117, f, y, args, result, false, true);
+         * aret = analysis.invokeFun(1, 117, f, y, args, result, false, true);
          * if (aret) {
          *     x = aret.result
          * } else {
          *     x = result;
          * }
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function object that was invoked
          * @param {*} base - The receiver object for the function <tt>f</tt>
@@ -187,7 +189,7 @@
          * value that is returned by the actual function invocation.
          *
          */
-        this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid) {
+        this.invokeFun = function (sid, iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid) {
             return {result: result};
         };
 
@@ -201,13 +203,14 @@
          * // the above call roughly gets instrumented as follows:
          *
          * var result = "Hello";
-         * var aret = analysis.literal(201, result, false);
+         * var aret = analysis.literal(1, 201, result, false);
          * if (aret) {
          *     result = aret.result;
          * }
          * x = result;
          *
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} val - The literal value
          * @param {boolean} hasGetterSetter - True if the literal is an object and the object defines getters and setters
@@ -215,7 +218,7 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          *
          */
-        this.literal = function (iid, val, hasGetterSetter) {
+        this.literal = function (sid, iid, val, hasGetterSetter) {
             return {result: val};
         };
 
@@ -227,12 +230,13 @@
          *
          * // the above call roughly gets instrumented as follows:
          *
-         * var aret = analysis.forinObject(iid, y);
+         * var aret = analysis.forinObject(sid, iid, y);
          * if (aret) {
          *     y = aret.result;
          * }
          * for (x in y) {}
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} val - Objects whose properties are iterated in a for-in loop.
          * @returns {{result: *} | undefined} - If the function returns an object, then the original object whose
@@ -240,7 +244,7 @@
          * returned object.
          *
          */
-        this.forinObject = function (iid, val) {
+        this.forinObject = function (sid, iid, val) {
             return {result: val};
         };
 
@@ -249,6 +253,7 @@
          * every formal parameter, for every function defined using a function statement, for <tt>arguments</tt>
          * variable, and for the formal parameter passed in a catch statement.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} name - Name of the variable that is declared
          * @param {*} val - Initial value of the variable that is declared.  Variables can be local variables, function
@@ -265,13 +270,14 @@
          * variables declared with <tt>var</tt>.
          *
          */
-        this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam) {
+        this.declare = function (sid, iid, name, val, isArgument, argumentIndex, isCatchParam) {
             return {result: val};
         };
 
         /**
          * This callback is called before a property of an object is accessed.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} base - Base object
          * @param {string|*} offset - Property
@@ -285,13 +291,14 @@
          * <tt>offset</tt> are replaced with that from the returned object if an object is returned.
          *
          */
-        this.getFieldPre = function (iid, base, offset, isComputed, isOpAssign, isMethodCall) {
+        this.getFieldPre = function (sid, iid, base, offset, isComputed, isOpAssign, isMethodCall) {
             return {base: base, offset: offset, skip: false};
         };
 
         /**
          * This callback is called after a property of an object is accessed.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} base - Base object
          * @param {string|*} offset - Property
@@ -304,13 +311,14 @@
          * @returns {{result: *} | undefined} - If an object is returned, the value of the get field operation  is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
+        this.getField = function (sid, iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
             return {result: val};
         };
 
         /**
          * This callback is called before a property of an object is written.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} base - Base object
          * @param {*} offset - Property
@@ -323,13 +331,14 @@
          * property is true, then the put field operation is skipped.  Original <tt>base</tt>, <tt>offset</tt>, and
          * <tt>val</tt> are replaced with that from the returned object if an object is returned.
          */
-        this.putFieldPre = function (iid, base, offset, val, isComputed, isOpAssign) {
+        this.putFieldPre = function (sid, iid, base, offset, val, isComputed, isOpAssign) {
             return {base: base, offset: offset, val: val, skip: false};
         };
 
         /**
          * This callback is called after a property of an object is written.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} base - Base object
          * @param {*} offset - Property
@@ -341,13 +350,14 @@
          * @returns {{result: *} | undefined} -   If an object is returned, the result of the put field operation is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.putField = function (iid, base, offset, val, isComputed, isOpAssign) {
+        this.putField = function (sid, iid, base, offset, val, isComputed, isOpAssign) {
             return {result: val};
         };
 
         /**
          * This callback is called after a variable is read.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} name - Name of the variable being read
          * @param {*} val - Value read from the variable
@@ -356,13 +366,14 @@
          * @returns {{result: *} | undefined} - If an object is returned, the result of the read operation is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.read = function (iid, name, val, isGlobal, isScriptLocal) {
+        this.read = function (sid, iid, name, val, isGlobal, isScriptLocal) {
             return {result: val};
         };
 
         /**
          * This callback is called before a variable is written.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} name - Name of the variable being read
          * @param {*} val - Value to be written to the variable
@@ -372,61 +383,66 @@
          * @returns {{result: *} | undefined} - If an object is returned, the result of the write operation is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.write = function (iid, name, val, lhs, isGlobal, isScriptLocal) {
+        this.write = function (sid, iid, name, val, lhs, isGlobal, isScriptLocal) {
             return {result: val};
         };
 
         /**
          * This callback is called before a value is returned from a function using the <tt>return</tt> keyword.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} val - Value to be returned
          * @returns {{result: *} | undefined} - If an object is returned, the value to be returned is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this._return = function (iid, val) {
+        this._return = function (sid, iid, val) {
             return {result: val};
         };
 
         /**
          * This callback is called before a value is thrown using the <tt>throw</tt> keyword.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} val - Value to be thrown
          * @returns {{result: *} | undefined} - If an object is returned, the value to be thrown is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this._throw = function (iid, val) {
+        this._throw = function (sid, iid, val) {
             return {result: val};
         };
 
         /**
          * This callback is called when a <tt>with</tt> statement is executed
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} val - Value used as an argument to <tt>with</tt>
          * @returns {{result: *} | undefined} - If an object is returned, the value to be used in <tt>with</tt> is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this._with = function (iid, val) {
+        this._with = function (sid, iid, val) {
             return {result: val};
         };
 
         /**
          * This callback is called before the execution of a function body starts.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function object whose body is about to get executed
          * @param {*} dis - The value of the <tt>this</tt> variable in the function body
          * @param {Array} args - List of the arguments with which the function is called
          * @returns {undefined} - Any return value is ignored
          */
-        this.functionEnter = function (iid, f, dis, args) {
+        this.functionEnter = function (sid, iid, f, dis, args) {
         };
 
         /**
          * This callback is called when the execution of a function body completes
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} returnVal - The value returned by the function
          * @param {{exception:*} | undefined} wrappedExceptionVal - If this parameter is an object, the function
@@ -439,23 +455,25 @@
          * <tt>isBacktrack</tt> can be set to <tt>true</tt> to repeatedly execute the function body as in MultiSE
          * symbolic execution.
          */
-        this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
+        this.functionExit = function (sid, iid, returnVal, wrappedExceptionVal) {
             return {returnVal: returnVal, wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
         /**
          * This callback is called before the execution of a JavaScript file
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} instrumentedFileName - Name of the instrumented script file
          * @param {string} originalFileName - Name of the original script file
          */
-        this.scriptEnter = function (iid, instrumentedFileName, originalFileName) {
+        this.scriptEnter = function (sid, iid, instrumentedFileName, originalFileName) {
         };
 
         /**
          * This callback is called when the execution of a JavaScript file completes
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {{exception:*} | undefined} wrappedExceptionVal - If this parameter is an object, the script
          * execution has thrown an uncaught exception and the exception is being stored in the <tt>exception</tt>
@@ -467,7 +485,7 @@
          * <tt>isBacktrack</tt> can be set to <tt>true</tt> to repeatedly execute the script body as in MultiSE
          * symbolic execution.
          */
-        this.scriptExit = function (iid, wrappedExceptionVal) {
+        this.scriptExit = function (sid, iid, wrappedExceptionVal) {
             return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -476,6 +494,7 @@
          * <<, >>, >>>, <, >, <=, >=, ==, !=, ===, !==, instanceof, delete, in.  No callback for <code>delete x</code>
          * because this operation cannot be performed reflectively.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} op - Operation to be performed
          * @param {*} left - Left operand
@@ -490,7 +509,7 @@
          * <tt>skip</tt> property is true, then the binary operation is skipped.  Original <tt>op</tt>, <tt>left</tt>,
          * and <tt>right</tt> are replaced with that from the returned object if an object is returned.
          */
-        this.binaryPre = function (iid, op, left, right, isOpAssign, isSwitchCaseComparison, isComputed) {
+        this.binaryPre = function (sid, iid, op, left, right, isOpAssign, isSwitchCaseComparison, isComputed) {
             return {op: op, left: left, right: right, skip: false};
         };
 
@@ -498,6 +517,7 @@
          * This callback is called after a binary operation. Binary operations include  +, -, *, /, %, &, |, ^,
          * <<, >>, >>>, <, >, <=, >=, ==, !=, ===, !==, instanceof, delete, in.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} op - Operation to be performed
          * @param {*} left - Left operand
@@ -512,13 +532,14 @@
          * @returns {{result: *}|undefined} - If an object is returned, the result of the binary operation is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.binary = function (iid, op, left, right, result, isOpAssign, isSwitchCaseComparison, isComputed) {
+        this.binary = function (sid, iid, op, left, right, result, isOpAssign, isSwitchCaseComparison, isComputed) {
             return {result: result};
         };
 
         /**
          * This callback is called before a unary operation. Unary operations include  +, -, ~, !, typeof, void.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} op - Operation to be performed
          * @param {*} left - Left operand
@@ -526,13 +547,14 @@
          * <tt>skip</tt> property is true, then the unary operation is skipped.  Original <tt>op</tt> and <tt>left</tt>
          * are replaced with that from the returned object if an object is returned.
          */
-        this.unaryPre = function (iid, op, left) {
+        this.unaryPre = function (sid, iid, op, left) {
             return {op: op, left: left, skip: false};
         };
 
         /**
          * This callback is called after a unary operation. Unary operations include  +, -, ~, !, typeof, void.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {string} op - Operation to be performed
          * @param {*} left - Left operand
@@ -541,7 +563,7 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          *
          */
-        this.unary = function (iid, op, left, result) {
+        this.unary = function (sid, iid, op, left, result) {
             return {result: result};
         };
 
@@ -549,18 +571,20 @@
          * This callback is called after a condition check before branching. Branching can happen in various statements
          * including if-then-else, switch-case, while, for, ||, &&, ?:.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} result - The value of the conditional expression
          * @returns {{result: *}|undefined} - If an object is returned, the result of the conditional expression is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.conditional = function (iid, result) {
+        this.conditional = function (sid, iid, result) {
             return {result: result};
         };
 
         /**
          * This callback is called before a string passed as an argument to eval or Function is instrumented.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} code - Code that is going to get instrumented
          * @param {boolean} isDirect - true if this is a direct call to eval
@@ -568,13 +592,14 @@
          * <tt>skip</tt> property is true, then the instrumentation of <tt>code</tt> is skipped.
          * Original <tt>code</tt> is replaced with that from the returned object if an object is returned.
          */
-        this.instrumentCodePre = function (iid, code, isDirect) {
+        this.instrumentCodePre = function (sid, iid, code, isDirect) {
             return {code: code, skip: false};
         };
 
         /**
          * This callback is called after a string passed as an argument to eval or Function is instrumented.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {*} newCode - Instrumented code
          * @param {Object} newAst - The AST of the instrumented code
@@ -582,7 +607,7 @@
          * @returns {{result: *}|undefined} - If an object is returned, the instrumented code is
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
-        this.instrumentCode = function (iid, newCode, newAst, isDirect) {
+        this.instrumentCode = function (sid, iid, newCode, newAst, isDirect) {
             return {result: newCode};
         };
 
@@ -590,10 +615,11 @@
          * This callback is called when an expression is evaluated and its value is discarded.  For example, this
          * callback is called when an expression statement completes its execution.
          *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @returns {undefined} - Any return value is ignored
          */
-        this.endExpression = function (iid) {
+        this.endExpression = function (sid, iid) {
         };
 
         /**
@@ -609,6 +635,8 @@
          * This callback is called only when instrumented with J$.Config.ENABLE_SAMPLING = true
          * This callback is called before the body of a function, method, or constructor is executed
          * if returns true, instrumented function body is executed, else uninstrumented function body is executed
+         *
+         * @param {number} sid - Static script identifier of this callback
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function whose body is being executed
          * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
@@ -620,7 +648,7 @@
          * @returns {boolean} - If true is returned the instrumented function body is executed, otherwise the
          * uninstrumented function body is executed.
          */
-        this.runInstrumentedFunctionBody = function (iid, f, functionIid, functionSid) {
+        this.runInstrumentedFunctionBody = function (sid, iid, f, functionIid, functionSid) {
             return false;
         };
 
@@ -641,6 +669,3 @@
 
     sandbox.analysis = new MyAnalysis();
 })(J$);
-
-
-
