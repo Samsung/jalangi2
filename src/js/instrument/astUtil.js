@@ -59,7 +59,9 @@ if (typeof J$ === 'undefined') {
         // inside a setter
         SETTER:7,
 
-        TYPEOF:8
+        TYPEOF:8,
+        // inside a directive ("use strict")
+        DIRECTIVE:9,
     };
 
     /**
@@ -132,12 +134,16 @@ if (typeof J$ === 'undefined') {
                         newContext = CONTEXT.IGNORE;
                     } else if (object.key && key === 'value' && object.kind === 'get') {
                         newContext = CONTEXT.GETTER;
+                        child["__jalangi__getter__prop__name"] = object.key.name;
                     } else if (object.key && key === 'value' && object.kind === 'set') {
                         newContext = CONTEXT.SETTER;
+                        child["__jalangi__setter__prop__name"] = object.key.name;
                     } else if (type === 'CallExpression' && key === 'callee' && child.type === 'Identifier' && child.name === 'eval') {
                         newContext = CONTEXT.IGNORE;
                     } else if (type === 'UnaryExpression' && key === 'argument' && object.operator === 'typeof' && child.type === 'Identifier') {
                         newContext = CONTEXT.TYPEOF;
+                    } else if (object.directive && type === 'ExpressionStatement' && key === 'expression') {
+                        newContext = CONTEXT.DIRECTIVE;
                     } else {
                             newContext = CONTEXT.RHS;
                     }
