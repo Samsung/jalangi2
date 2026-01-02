@@ -169,7 +169,7 @@ if (typeof J$ === 'undefined') {
 
     function invokeFunctionDecl(base, f, args, iid) {
         // Otherwise input is valid, so instrument and invoke via eval
-        var newArgs = [].slice.call(args).map((v) => String(new String(v)));
+        var newArgs = [].slice.call(args).map(function (v) { return String(new String(v)); });
         // Invoke with the original parameters to preserve exceptional behavior if input is invalid
         f.apply(base, newArgs);
         var code = '(function(' + newArgs.slice(0, newArgs.length - 1).join(', ') + ') { ' + newArgs[newArgs.length-1] + ' })';
