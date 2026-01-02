@@ -41,6 +41,7 @@ local_inc_dec
 monkeypatch
 method_sub
 null_instr
+new_function_toString
 object_lit
 object_tracking
 op_assign
