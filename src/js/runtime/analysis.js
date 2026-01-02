@@ -168,14 +168,11 @@ if (typeof J$ === 'undefined') {
     }
 
     function invokeFunctionDecl(base, f, args, iid) {
-        // Invoke with the original parameters to preserve exceptional behavior if input is invalid
-        f.apply(base, args);
         // Otherwise input is valid, so instrument and invoke via eval
-        var newArgs = [];
-        for (var i = 0; i < args.length-1; i++) {
-            newArgs[i] = args[i];
-        }
-        var code = '(function(' + newArgs.join(', ') + ') { ' + args[args.length-1] + ' })';
+        var newArgs = [].slice.call(args).map(function (v) { return String(new String(v)); });
+        // Invoke with the original parameters to preserve exceptional behavior if input is invalid
+        f.apply(base, newArgs);
+        var code = '(function(' + newArgs.slice(0, newArgs.length - 1).join(', ') + ') { ' + newArgs[newArgs.length-1] + ' })';
         var code = sandbox.instrumentEvalCode(code, iid, false);
         // Using EVAL_ORG instead of eval() is important as it preserves the scoping semantics of Function()
         var out = EVAL_ORG(code);
