@@ -45,6 +45,7 @@ new_function_toString
 object_lit
 object_tracking
 op_assign
+prop_inc_nan
 prototype_property
 scope_rr
 shadow-arguments-real
