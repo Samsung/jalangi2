@@ -517,9 +517,12 @@ if (typeof J$ === 'undefined') {
 
     // Modify and assign +=, -= ...
     function A(iid, base, offset, op, flags) {
-        var bFlags = decodeBitPattern(flags, 1); // [isComputed]
+        var bFlags = decodeBitPattern(flags, 2); // [isComputed, isNumber]
         // avoid iid collision: make sure that iid+2 has the same source map as iid (@todo)
         var oprnd1 = G(iid+2, base, offset, createBitPattern(bFlags[0], true, false));
+        if (bFlags[1]) {
+            oprnd1 = +oprnd1;
+        }
         return function (oprnd2) {
             // still possible to get iid collision with a mem operation
             var val = B(iid, op, oprnd1, oprnd2, createBitPattern(false, true, false));
