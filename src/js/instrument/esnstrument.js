@@ -366,11 +366,11 @@ if (typeof J$ === 'undefined') {
         }
     }
 
-    function wrapModAssign(node, base, offset, op, rvalue, isComputed) {
+    function wrapModAssign(node, base, offset, op, rvalue, isComputed, isNumber) {
         if (!Config.INSTR_PROPERTY_BINARY_ASSIGNMENT || Config.INSTR_PROPERTY_BINARY_ASSIGNMENT(op, node.computed ? null : offset.value, node)) {
             printModIidToLoc(node);
             var ret = replaceInExpr(
-                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (createBitPattern(isComputed)) + ")(" + RP + "5)",
+                logAssignFunName + "(" + RP + "1," + RP + "2," + RP + "3," + RP + "4," + (createBitPattern(isComputed, isNumber)) + ")(" + RP + "5)",
                 getIid(),
                 base,
                 offset,
@@ -1187,7 +1187,7 @@ if (typeof J$ === 'undefined') {
             var ret = wrapModAssign(node, node.left.object,
                 getPropertyAsAst(node.left),
                 node.operator.substring(0, node.operator.length - 1),
-                node.right, node.left.computed);
+                node.right, node.left.computed, !!isNumber);
             return ret;
         }
     }
