@@ -576,6 +576,9 @@ if (typeof J$ === 'undefined') {
 
     function getFnIdFromAst(ast) {
         var entryExpr = ast.body.body[0];
+        if (entryExpr.directive === 'use strict') {
+            entryExpr = ast.body.body[1];
+        }
         if (entryExpr.type != 'ExpressionStatement') {
             console.log(JSON.stringify(entryExpr));
             throw new Error("IllegalStateException");
@@ -873,8 +876,21 @@ if (typeof J$ === 'undefined') {
 
     function createCallAsFunEnterStatement(node) {
         printIidToLoc(node);
+        var funValueExpr; 
+        if (node.id !== null && node.id.name !== null) {
+            funValueExpr = node.id.name;
+        } else if (HOP(node, "__jalangi__getter__prop__name")) {
+            var propDescCall = "Object.getOwnPropertyDescriptor(this,'" + node["__jalangi__getter__prop__name"] + "')";
+            funValueExpr = logIFunName + "((" + propDescCall + ") ? " + propDescCall + ".get : arguments.callee)";
+        } else if (HOP(node, "__jalangi__setter__prop__name")) {
+            var propDescCall = "Object.getOwnPropertyDescriptor(this,'" + node["__jalangi__setter__prop__name"] + "')";
+            funValueExpr = logIFunName + "((" + propDescCall + ") ? " + propDescCall + ".set : arguments.callee)";
+        } else {
+            throw new Error("no function name found! " + JSON.stringify(node));
+            //funValueExpr = "arguments.callee";
+        }
         var ret = replaceInStatement(
-            logFunctionEnterFunName + "(" + RP + "1,arguments.callee, this, arguments)",
+            logFunctionEnterFunName + "(" + RP + "1," + funValueExpr + ", this, arguments)",
             getIid()
         );
         transferLoc(ret[0].expression, node);
@@ -971,12 +987,17 @@ if (typeof J$ === 'undefined') {
 
     function wrapFunBodyWithTryCatch(node, body) {
         if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
+            var hasUseStrict = body[0].directive === "use strict";
+            if (hasUseStrict) {
+                // we'll insert it earlier so get rid of it from body
+                body.shift();
+            }
             printIidToLoc(node);
             var iid1 = getIid();
             printIidToLoc(node);
             var l = labelCounter++;
             var ret = replaceInStatement(
-                "function n() { jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
+                "function n() { " + (hasUseStrict ? "'use strict';\n" : "") + "jalangiLabel" + l + ": while(true) { try {" + RP + "1} catch(" + JALANGI_VAR +
                 "e) { //console.log(" + JALANGI_VAR + "e); console.log(" +
                 JALANGI_VAR + "e.stack);\n " + logUncaughtExceptionFunName + "(" + RP + "2," + JALANGI_VAR +
                 "e); } finally { if (" + logFunctionReturnFunName + "(" +
@@ -999,12 +1020,12 @@ if (typeof J$ === 'undefined') {
         if (!isScript) {
             if (!Config.INSTR_TRY_CATCH_ARGUMENTS || Config.INSTR_TRY_CATCH_ARGUMENTS(node)) {
                 if (!Config.INSTR_INIT || Config.INSTR_INIT(node)) {
-                    ident = createIdentifierAst("arguments");
-                    ret = ret.concat(createCallInitAsStatement(node,
-                        createLiteralAst("arguments"),
-                        ident,
-                        true,
-                        ident, false, true));
+                    // ident = createIdentifierAst("arguments");
+                    // ret = ret.concat(createCallInitAsStatement(node,
+                    //     createLiteralAst("arguments"),
+                    //     ident,
+                    //     true,
+                    //     ident, false, true));
                 }
             }
         }
@@ -1072,6 +1093,9 @@ if (typeof J$ === 'undefined') {
             body = createCallAsFunEnterStatement(node);
         } else {
             body = [];
+        }
+        if (node.body && node.body.body && node.body.body.length > 0 && node.body.body[0].directive === 'use strict') {
+            body = [node.body.body[0]].concat(body);
         }
         body = body.concat(syncDefuns(node, scope, false)).concat(ast);
         return body;
@@ -1460,6 +1484,9 @@ if (typeof J$ === 'undefined') {
             return ret1;
         },
         "FunctionExpression": function (node, context) {
+            if (node.id === null && !(context === astUtil.CONTEXT.GETTER || context === astUtil.CONTEXT.SETTER)) {
+                node.id = createIdentifierAst("__jalangi__anon__" + memIid);
+            }
             node.body.body = instrumentFunctionEntryExit(node, node.body.body);
             var ret1;
             if (context === astUtil.CONTEXT.GETTER || context === astUtil.CONTEXT.SETTER) {
@@ -1861,6 +1888,7 @@ if (typeof J$ === 'undefined') {
 //        console.time("parse")
 //        var newAst = esprima.parse(code, {loc:true, range:true});
         var newAst = acorn.parse(code, {locations: true, ecmaVersion: 6 });
+        var hasUseStrict = newAst.type === 'Program' && newAst.body && newAst.body.length > 0 && newAst.body[0].directive === 'use strict';
 //        console.timeEnd("parse")
 //        StatCollector.suspendTimer("parse");
 //        StatCollector.resumeTimer("transform");
@@ -1873,7 +1901,7 @@ if (typeof J$ === 'undefined') {
 //        console.timeEnd("transform")
 //        StatCollector.suspendTimer("transform");
 //        console.log(JSON.stringify(newAst,null,"  "));
-        return newAst;
+        return { ast: newAst, hasUseStrict: hasUseStrict};
     }
 
     // if this string is discovered inside code passed to instrumentCode(),
@@ -1932,16 +1960,19 @@ if (typeof J$ === 'undefined') {
             }
         }
 
+        var hasUseStrict = false;
         if (!skip && typeof code === 'string' && code.indexOf(noInstr) < 0) {
             try {
                 code = removeShebang(code);
                 iidSourceInfo = {};
-                var newAst;
+                var transformStringResult;
                 if (Config.ENABLE_SAMPLING) {
-                    newAst = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
+                    transformStringResult = transformString(code, [visitorCloneBodyPre, visitorRRPost, visitorOps, visitorMergeBodyPre], [undefined, visitorRRPre, undefined, undefined]);
                 } else {
-                    newAst = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
+                    transformStringResult = transformString(code, [visitorRRPost, visitorOps], [visitorRRPre, undefined]);
                 }
+                var newAst = transformStringResult.ast;
+                hasUseStrict = transformStringResult.hasUseStrict;
                 // post-process AST to hoist function declarations (required for Firefox)
                 var hoistedFcts = [];
                 newAst = hoistFunctionDeclaration(newAst, hoistedFcts);
@@ -1975,6 +2006,10 @@ if (typeof J$ === 'undefined') {
             instCode = JALANGI_VAR + ".iids = " + prepend + ";\n" + code;
         } else {
             instCode = JALANGI_VAR + ".iids = " + JSON.stringify(tmp) + ";\n" + code;
+        }
+
+        if (hasUseStrict) {
+            instCode = "'use strict';\n" + instCode;
         }
 
         if (isEval && sandbox.analysis && sandbox.analysis.instrumentCode) {

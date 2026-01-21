@@ -50,6 +50,7 @@ prototype_property
 scope_rr
 shadow-arguments-real
 str_proto
+strict-mode
 switch
 switch2
 string
